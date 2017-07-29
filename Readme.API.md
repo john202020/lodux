@@ -52,19 +52,19 @@ store.dispatch({type:'add person', name:'Sam'}, subscription => {
 ```
 __update(new_state[, type])__  
 <small>since version 0.1.34</small>  
-A shortcut to accomplish simple task, and satisfy a full dispatch/reduce cycle.  
-Internally, it joins the new_state with a custom or system created type (i.e. an action) , then dispatches this action.  
-'type', if provided, will be the custom type (system prefix will be prepended), otherwise, system will create a type.  
-Reducer will then update the store exactly as the new state is provided.  
+A shortcut to accomplish simple task. Internally it invokes a full dispatch/reduce cycle.  
 
-'new state' is sometimes quite confusion. Here, don't have to worry about Object.assign() or spreading. update() will internally Object.assign() the 'new state' to the current state (i.e. store.state()). There is no harm, though, to duplicate Object.assign().  
+Consider update() as just dispatches(). 'type', is optional.  
 
-<small>Just for easy to remember. Since the reducer is internally invoked, you don't have control over the manuplication of the action, therefore, it returns exactly what the action (i.e. the new_state) is provided.</small>
+Internally, a reducer will return the {...store.state(), ...new_state}.    
+
+One can treat the 'new state' as an action without explicit type.    
+
 ```javascript
 //don't have to Object.assign() because update() will internally do it. Though no harm.
-const new_state = {...store.state(), ...new_state};
+//const new_state = {...store.state(), ...new_state};
 
-//system will create an action type
+//new_state as action without explicit type
 store.update(new_state);
 
 //prvoide custom action type
