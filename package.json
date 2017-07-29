@@ -1,0 +1,36 @@
+{
+  "name": "lodux",
+  "version": "0.2.65",
+  "description": "Single store in a one-way observable pattern.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "production": "webpack --env.prod",
+    "push": "npm run production && npm publish"
+  },
+  "keywords": [
+    "single store",
+    "state",
+    "reducer",
+    "dispatch",
+    "simple",
+    "communication",
+    "web module",
+    "web component",
+    "redux model"
+  ],
+  "author": "john202020",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/john202020/lodux.git"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "typescript": "^2.4.2",
+    "webpack": "^2.5.1"
+  },
+  "dependencies": {}
+}
