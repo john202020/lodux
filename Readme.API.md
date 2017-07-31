@@ -52,22 +52,20 @@ store.dispatch({type:'add person', name:'Sam'}, subscription => {
 ```
 __update(new_state[, type])__  
 <small>since version 0.1.34</small>  
-A shortcut to accomplish simple task. Internally it invokes a full dispatch/reduce cycle.  
+Consider update() as just dispatch(), with 'type' is optional.  
 
-Consider update() as just dispatches(). 'type', is optional.  
+Internally it invokes a full dispatch/reduce cycle. The reducer will return {...store.state(), ...new_state}.  
 
-Internally, a reducer will return the {...store.state(), ...new_state}.    
-
-One can treat the 'new state' as an action without explicit type.    
+The 'new state' is just an 'action' without explicit type.    
 
 ```javascript
-//don't have to Object.assign() because update() will internally do it. Though no harm.
+//this is redundant, though no harm.
 //const new_state = {...store.state(), ...new_state};
 
-//new_state as action without explicit type
+//new_state as action without type
 store.update(new_state);
 
-//prvoide custom action type
+//prvoide custom type
 store.update(new_state, 'update user name');
 ```
 
@@ -97,7 +95,7 @@ Firstly, it clones the store, then applies the middleware to the cloned store.
 ```javascript
 const store = Store.createStore();
 ...
-const middlewares = [...] // refer to applyMiddleware usage
+const middlewares = [...] // refer to middleware plugins
 ...
 const cloned_store = store.use(middlewares);
 ```

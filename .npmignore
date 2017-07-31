@@ -2,8 +2,8 @@
 bin
 obj
 *.pdb
-*.vscode
-*.vscode/**
+.vscode
+.vscode/**
 **/*.ts
 **/*.map
 desktop.ini
@@ -11,3 +11,5 @@ desktop.ini
 npm-debug.log
 node_modules
 webpack.config.js
+tsconfig.json
+.npmignore
