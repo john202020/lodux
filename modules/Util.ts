@@ -16,7 +16,7 @@ function update(store, state, type?: string) {
     system_.notNull(arguments);
     assure_.required(store).required(state).nonFunc(state);
 
-    console.warn("This util.update() is deprecated! Please use store instance update() instead.");
+    console.warn("This util.update() is deprecated! Please use store instance store.diduce() instead.");
 
     const typename = "update" + unique_prefix + (type || '');
 

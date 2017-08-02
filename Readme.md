@@ -1,11 +1,11 @@
 # Single store management for web modules.
-Single store in a one-way observable pattern.
+Single store in a one-way observable pattern. Similar to Redux.
 
 ## `Store`(capital S)  
-It is the collection of all stores, or the 'entire store'. It has four methods, `createStore()` creates a unique store, `subscribe()` observes state changes of the entire store, and `state()` returns the entire store state, `reset_initial()` update the entire store to its initial state (trigger Store's subsriber handler).
+It is the collection of all stores, or the 'entire store'. It has four methods, `createStore()` creates a unique store, `subscribe()` observes state changes of the entire store, and `state()` returns snapshot of the entire store state, `reset_initial()` update the entire store to its initial state (trigger Store's subsriber handler).
 
 ## store instance
-Usually, each web module should obtain a unique store. Similar to Redux, a store can `dispatch()` an action, `reduce()` its store state, `state()` returns its store state, `update()` mimic dispatch/reduce updating the store state, `subscribe()` observes state changes of this store, `use()` apply middlewares to the `cloned store`.  A store will not affect other store.
+Usually, each web module should obtain a unique store. A store instance can `dispatch()` an action, `reduce()` its store state, `state()` returns snapshot of the store state, `diduce()` simplify dispatch/reduce cycle, `subscribe()` observes state changes of this store, `use()` apply middlewares to the `cloned store`.  A store will not affect other store.
 
 ## cloned store instance
 A cloned store shares the same data under the hood, kind of the twins. It serves as a separate working space for applying middlewares.
@@ -28,6 +28,7 @@ subscribe(), reduce(), and dispatch() return disposable. Disposing will stop fur
 3. there is no need to set an initial store state.
 4. never try to pass null argument, because error will be thrown.
 5. `this` is intentionally not being used. do not try to use `this`, as in other frameworks (i.e. jquery). using `this` to reference store or any reference will not be guaranteed.
+6. Method and subscription are synchronous execution.
 
 ## Example
 ```javascript
@@ -69,7 +70,6 @@ npm install --save lodux
 
 # notes
 ES6 compilation (e.g. webpack ES6 configuration).  
-Lightweight.  
 No dependencies.  
 
 

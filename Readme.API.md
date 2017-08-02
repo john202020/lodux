@@ -27,6 +27,13 @@ Store.reset_initial();
 
 
 ## store instance
+
+__state()__  
+Return snapshot of store instance state. 
+```javascript
+const store_state = store.state();
+```
+
 __reduce(type: string, callback_fn):  disposable__  
 ```javascript
 const {Store} from "lodux";
@@ -50,30 +57,16 @@ store.dispatch({type:'add person', name:'Sam'}, subscription => {
     subscription.dispose();
 });
 ```
-__update(new_state[, type])__  
-<small>since version 0.1.34</small>  
-Consider update() as just dispatch(), with 'type' is optional.  
 
-Internally it invokes a full dispatch/reduce cycle. The reducer will return {...store.state(), ...new_state}.  
+__diduce(action)__  
+Consider diduce() as dispatch() plus internally reduce().  
 
-The 'new state' is just an 'action' without explicit type.    
+Internally it invokes a full dispatch/reduce cycle. The reducer will return {...store.state(), ...action}.  
 
 ```javascript
-//this is redundant, though no harm.
-//const new_state = {...store.state(), ...new_state};
-
-//new_state as action without type
-store.update(new_state);
-
-//prvoide custom type
-store.update(new_state, 'update user name');
+store.diduce(action);
 ```
 
-__state()__  
-Return snapshot of store instance state
-```javascript
-const store_state = store.state();
-```
 
 __subscribe(callback_fn): disposable__  
 Subscribe to changes of this store state. Each store can have multiple subscriptions

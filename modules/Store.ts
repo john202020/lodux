@@ -1,17 +1,14 @@
 ﻿
 import { assure_, system_ } from "../helpers/assure";
 import { reduce_, dispatch_ } from "./Dispatcher";
-import emitter_factory from "../helpers/emitter.js";
-import { get_unique_id, unique_prefix, get_without_type } from "./Util.js";
-import { get_store_object, get_store_object_initial, set_store_object } from "./Entire_store.js";
+import emitter_factory from "../helpers/emitter";
+import { get_unique_id, unique_prefix, get_without_type } from "./Util";
+import { get_store_object, get_store_object_initial, set_store_object } from "./Entire_store";
 
 let Store_subscribers: Array<Function | undefined> = [];
 const stores_subscribers = {};
 
-
-const store_ = getStoreFunction(emitter_factory.local());
-
-function getStoreFunction(emitter) {
+const store_ = (() => {
 
     function func(store_key) {
 
@@ -26,17 +23,21 @@ function getStoreFunction(emitter) {
             enumerable: true,
             configurable: false,
             writable: false,
-            value: emitter
+            value: emitter_factory.local()
         });
 
         this.state = this.state.bind(this);
         this.dispatch = this.dispatch.bind(this);
         this.reduce = this.reduce.bind(this);
         this.use = this.use.bind(this);
-        this.update = this.update.bind(this);
+        this.diduce = this.diduce.bind(this);
         this.subscribe = this.subscribe.bind(this);
 
+        //****** deprecated */
+        this.update = this.update.bind(this);
+        // ******//
     }
+
 
     func.prototype.state = function () {
 
@@ -44,6 +45,7 @@ function getStoreFunction(emitter) {
 
         return get_store_object()[this.name];
     }
+
 
     func.prototype.dispatch = function (action, feedback_fn?: Function) {
 
@@ -54,6 +56,7 @@ function getStoreFunction(emitter) {
         return dispatch_(this, action, feedback_fn);
     }
 
+
     func.prototype.reduce = function (type: string, callback_fn: Function) {
 
         system_.notNull(arguments);
@@ -61,32 +64,34 @@ function getStoreFunction(emitter) {
         return reduce_(this, update_state, type, callback_fn);
     }
 
+
     func.prototype.use = function (wares) {
 
         system_.notNull(arguments);
 
         const clone = Store.clone(this);
 
-        clone.dispatch
-            = wares
-                .reduce((acc, ware) => {
-                    acc.unshift(ware); return acc;
-                }, [])
-                .reduce((dispatch, ware) => {
-                    return ware(clone)(dispatch.bind(clone));
-                }, clone.dispatch);
+        clone.dispatch = wares
+            .reduce((acc, ware) => {
+                acc.unshift(ware); return acc;
+            }, [])
+            .reduce((dispatch, ware) => {
+                return ware(clone)(dispatch.bind(clone));
+            }, clone.dispatch);
 
         return clone;
     }
 
-    func.prototype.update = function (state, typename?: string) {
+
+    func.prototype.diduce = function (action) {
 
         system_.notNull(arguments);
+        assure_.string(action.type);
 
-        const type = "update" + unique_prefix + (typename || '') + get_unique_id();
-        this.reduce(type, action => { return { ...this.state(), ...action } });
-        this.dispatch({ ...state, ...{ type } });
+        this.reduce(action.type, action => { return { ...this.state(), ...action } });
+        this.dispatch(action);
     }
+
 
     func.prototype.subscribe = function (func: Function) {
 
@@ -112,15 +117,29 @@ function getStoreFunction(emitter) {
         };
     }
 
+    //****** deprecated */
+    func.prototype.update = function (state, typename?: string) {
+
+        system_.notNull(arguments);
+        console.warn("store.update() is deprecated. Use store.diduce() instead.");
+
+        const type = "update" + unique_prefix + (typename || '') + get_unique_id();
+        this.reduce(type, action => { return { ...this.state(), ...action } });
+        this.dispatch({ ...state, ...{ type } });
+    }
+    // *******//
+
+
     return func;
-}
+
+})();
 
 
 /*
  *  
  * const store = Store.createStore('name');
    store.reduce('test', function(action){        
-        return {...store.state(), top:false, time : action.test.time};
+        return {...store.state, top:false, time : action.test.time};
     });
  */
 //function 
@@ -128,12 +147,11 @@ function createStore(name: string = get_unique_id()) {
 
     system_.notNull(arguments);
 
-    const store_key = `store[${name}]`;
+    const store_key = name;
 
     if (get_store_object()[store_key]) {
         throw new Error(store_key + " duplicated!");
     }
-
 
     return new store_(store_key);
 
@@ -144,7 +162,7 @@ export const Store = {
 
     createStore,
 
-    clone: function (store, properties?) {
+    clone(store, properties?) {
 
         system_.notNull(arguments);
 
@@ -152,7 +170,7 @@ export const Store = {
 
     },
 
-    subscribe: function (func: Function) {
+    subscribe(func: Function) {
 
         system_.notNull(arguments);
 
@@ -173,23 +191,20 @@ export const Store = {
         };
     },
 
-    state: function () {
-
-        system_.notNull(arguments);
-
-        return get_store_object();
-    },
-
-    reset_initial: function () {
+    reset_initial() {
 
         system_.notNull(arguments);
 
         Object.entries(get_store_object_initial()).forEach(([key, value]) => {
             update_state(key, value);
         });
+    },
+
+    state() {
+        system_.notNull(arguments);
+        return get_store_object();
     }
 };
-
 
 
 /**

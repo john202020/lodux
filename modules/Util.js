@@ -22,7 +22,7 @@ exports.unique_prefix = unique_prefix;
 function update(store, state, type) {
     assure_1.system_.notNull(arguments);
     assure_1.assure_.required(store).required(state).nonFunc(state);
-    console.warn("This util.update() is deprecated! Please use store instance update() instead.");
+    console.warn("This util.update() is deprecated! Please use store instance store.diduce() instead.");
     var typename = "update" + unique_prefix + (type || '');
     var subscription = store.reduce(typename, function (action) {
         subscription.dispose();

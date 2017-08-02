@@ -1,15 +1,14 @@
-*.csproj.user
 bin
 obj
 *.pdb
 .vscode
-.vscode/**
 **/*.ts
 **/*.map
+tests
 desktop.ini
 .DS_Store
 npm-debug.log
-node_modules
 webpack.config.js
 tsconfig.json
 .npmignore
+node_modules
