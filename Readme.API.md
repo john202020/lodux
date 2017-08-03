@@ -25,7 +25,6 @@ Reset all the stores to their initial values
 Store.reset_initial();
 ```
 
-
 ## store instance
 
 __state()__  
@@ -67,18 +66,12 @@ Internally it invokes a full dispatch/reduce cycle. The reducer will return {...
 store.diduce(action);
 ```
 
-
 __subscribe(callback_fn): disposable__  
-Subscribe to changes of this store state. Each store can have multiple subscriptions
+Subscribe to changes of this store state.
 ```javascript
 const subscription_0 = store.subscribe(()=>{
      ...
      subscription_0.dispose();
-});
-
-const subscription_1 = store.subscribe(()=>{
-     ...
-     subscription_1.dispose();
 });
 ```
 
@@ -92,7 +85,6 @@ const middlewares = [...] // refer to middleware plugins
 ...
 const cloned_store = store.use(middlewares);
 ```
-
 
 ## {lodux}
 _noConflict()_

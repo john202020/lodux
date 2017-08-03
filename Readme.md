@@ -7,15 +7,17 @@ It is the collection of all stores, or the 'entire store'. It has four methods, 
 ## store instance
 Usually, each web module should obtain a unique store. A store instance can `dispatch()` an action, `reduce()` its store state, `state()` returns snapshot of the store state, `diduce()` simplify dispatch/reduce cycle, `subscribe()` observes state changes of this store, `use()` apply middlewares to the `cloned store`.  A store will not affect other store.
 
-## cloned store instance
-A cloned store shares the same data under the hood, kind of the twins. It serves as a separate working space for applying middlewares.
+## clone store instance
+A clone store shares the same data, kind of the twins. It serves as a separate working space for applying middlewares.
 
 ```javascript
 const store = Store.createStore('project1');
-const cloned_store = store.use([middleware1, ...]);
+const cloned_store = store.use(middlewares1);
 
-store.dispatch({type: 'call', name:'Tom'}) // ignored by middleware1, ...
-clone_store.dispatch({type:'call',name:'Mary'}) // intercepted by middleware1, ...
+// ignored by middlewares1
+store.dispatch({type: 'call', name:'Tom'})
+// intercepted by middlewares1
+clone_store.dispatch({type:'call',name:'Mary'})
 ```
 
 ## disposable  
@@ -47,16 +49,9 @@ store.dispatch({type:'add person', name:'Sam'});
 
 ## middleware plugins
 Following Redux's guidelines to middleware.  
-store => next => action => { return next(action); }.  
+store => next => ( action[,feedback_fn] ) => { return next(action[,feedback_fn]); }.  
 ```javascript
-//to not include feedback_fn
-const log = store => next => action => {
-            //.. do somthing like logging the action
-            return next(action);
-        };
-
-//to include feedback_fn
-//since middleware intercept dispatch, manually indicating feedback_fn as the second argument is required
+//feedback_fn is optional but recommended.
 const log = store => next => (action, feedback_fn) => {
             //.. do somthing like logging the action
             return next(action, feedback_fn);
