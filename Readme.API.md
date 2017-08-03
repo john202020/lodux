@@ -9,8 +9,10 @@ Subscribe to changes of the entire store state
 ```javascript
 const {Store} from "lodux";
 
-Store.subscribe(function(){ 
+const subscription = Store.subscribe(() => { 
     //entire store state has some change(s)
+    ...
+    subscription.dispose();
 });
 ```
 __state()__  
@@ -39,9 +41,12 @@ const {Store} from "lodux";
 
 const store = Store.createStore();
 
-store.reduce(type, function(action){ 
+const subscription = store.reduce(type, action => { 
+    //...
+    subscription.dispose();
     return {...store.state(), ...action};
 });
+
 ```
 __dispatch(action[, feedback_fn]):  disposable__  
 <small>starting from 0.2.36, disposable will be passed to the feedback_fn.</small>
@@ -53,6 +58,7 @@ store.dispatch({type:'add person', name:'Sam'});
 store.dispatch({type:'add person', name:'Sam'}, subscription => {
     // reducer has just returned
     ...    
+    //stop subscription to reduce return
     subscription.dispose();
 });
 ```
@@ -69,21 +75,21 @@ store.diduce(action);
 __subscribe(callback_fn): disposable__  
 Subscribe to changes of this store state.
 ```javascript
-const subscription_0 = store.subscribe(()=>{
+const subscription = store.subscribe(() => {
      ...
-     subscription_0.dispose();
+     subscription.dispose();
 });
 ```
 
-__use(array of middlewares): <s>new store instance</s> store (cloned)__  
+__use(array of middlewares): <s>new store instance</s> store (clone)__  
 <small>starting from 0.2.54.</small>
-Firstly, it clones the store, then applies the middleware to the cloned store.
+Firstly, it clones the store, then applies the middleware to the `clone store`.
 ```javascript
 const store = Store.createStore();
 ...
 const middlewares = [...] // refer to middleware plugins
 ...
-const cloned_store = store.use(middlewares);
+const clone_store = store.use(middlewares);
 ```
 
 ## {lodux}

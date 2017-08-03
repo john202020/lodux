@@ -21,8 +21,7 @@ clone_store.dispatch({type:'call',name:'Mary'})
 ```
 
 ## disposable  
-subscribe(), reduce(), and dispatch() return disposable. Disposing will stop further observing.  
-<small>Starting from 0.2.36, Disposable will be passed to the feedback_fn.</small>
+subscribe(), reduce(), and dispatch() return disposable.
 
 ## Principles:
 1. action and state are required to be JSON serializable.
