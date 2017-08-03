@@ -12,7 +12,7 @@ A clone store shares the same data, kind of the twins. It serves as a separate w
 
 ```javascript
 const store = Store.createStore('project1');
-const cloned_store = store.use(middlewares1);
+const clone_store = store.use(middlewares1);
 
 // ignored by middlewares1
 store.dispatch({type: 'call', name:'Tom'})
