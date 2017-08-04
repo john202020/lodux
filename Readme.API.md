@@ -32,15 +32,15 @@ Store.reset_initial();
 __state()__  
 Return snapshot of store instance state. 
 ```javascript
+const {Store} from "lodux";
+
+const store = Store.createStore();
+
 const store_state = store.state();
 ```
 
 __reduce(type: string, callback_fn):  disposable__  
 ```javascript
-const {Store} from "lodux";
-
-const store = Store.createStore();
-
 const subscription = store.reduce(type, action => { 
     //...
     subscription.dispose();
@@ -85,8 +85,6 @@ __use(array of middlewares): <s>new store instance</s> store (clone)__
 <small>starting from 0.2.54.</small>
 Firstly, it clones the store, then applies the middleware to the `clone store`.
 ```javascript
-const store = Store.createStore();
-...
 const middlewares = [...] // refer to middleware plugins
 ...
 const clone_store = store.use(middlewares);
