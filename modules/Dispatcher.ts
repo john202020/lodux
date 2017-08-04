@@ -3,7 +3,7 @@ import { assure_, system_ } from "../helpers/assure";
 import { get_unique_id } from "./Util.js";
 
 function dispatch_(module, action, feedback_fn?: Function) {
-
+    
     system_.notNull(arguments);
     assure_.required(action)
         .nonFunc(action)
@@ -22,7 +22,7 @@ function dispatch_(module, action, feedback_fn?: Function) {
         });
     }
 
-    module.emitter.emit(action.type, { ...action, ...{feedback_type} });
+    module.emitter.emit(action.type, { ...action, ...{ feedback_type } });
 
     return {
         dispose: () => {

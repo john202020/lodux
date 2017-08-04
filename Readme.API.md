@@ -64,7 +64,7 @@ store.dispatch({type:'add person', name:'Sam'}, subscription => {
 ```
 
 __diduce(action)__  
-Consider diduce() as dispatch() plus internally reduce().  
+Consider diduce() as dispatch() plus internal reduce().  
 
 Internally it invokes a full dispatch/reduce cycle. The reducer will return {...store.state(), ...action}.  
 
