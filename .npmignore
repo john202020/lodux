@@ -9,6 +9,7 @@ desktop.ini
 .DS_Store
 npm-debug.log
 webpack.config.js
+package-lock.json
 tsconfig.json
 .npmignore
 node_modules

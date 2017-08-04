@@ -2,10 +2,10 @@
 Single store in a one-way observable pattern. Similar to Redux.
 
 ## `Store`(capital S)  
-It is the collection of all stores, or the 'entire store'. It has four methods, `createStore()` creates a unique store, `subscribe()` observes state changes of the entire store, and `state()` returns snapshot of the entire store state, `reset_initial()` update the entire store to its initial state (trigger Store's subsriber handler).
+It is the collection of all stores, or the 'entire store'. It has four methods, `createStore()` creates a unique store, `subscribe()` observes state changes of the entire store, `state()` returns snapshot of the entire store state, and `reset_initial()` update the entire store to its initial state (trigger Store's subsriber handler).
 
 ## store instance
-Usually, each web module should obtain a unique store. A store instance can `dispatch()` an action, `reduce()` its store state, `state()` returns snapshot of the store state, `diduce()` simplify dispatch/reduce cycle, `subscribe()` observes state changes of this store, `use()` apply middlewares to the `cloned store`.  A store will not affect other store.
+Each web module should obtain a unique store. A store instance can `dispatch()` an action, `reduce()` its store state, `state()` returns snapshot of the store state, `diduce()` simplify dispatch/reduce cycle, `subscribe()` observes state changes of this store, `use()` apply middlewares to the `cloned store`.  A store will not affect other store.
 
 ## clone store instance
 A clone store shares the same data, kind of the twins. It serves as a separate working space for applying middlewares.
@@ -15,9 +15,10 @@ const store = Store.createStore('project1');
 const clone_store = store.use(middlewares1);
 
 // ignored by middlewares1
-store.dispatch({type: 'call', name:'Tom'})
+store.dispatch({type: 'call', name:'Tom'});
+
 // intercepted by middlewares1
-clone_store.dispatch({type:'call',name:'Mary'})
+clone_store.dispatch({type:'call',name:'Mary'});
 ```
 
 ## disposable  
@@ -35,11 +36,10 @@ subscribe(), reduce(), and dispatch() return disposable.
 ```javascript
 import {Store} from "lodux";
 
-//each store is unqiue
 const store = Store.createStore();
 
-//set up reducer before dispatch
-store.reduce("add person", functiom(action){
+store.reduce("add person", action => {
+    //do something
     return {...store.state(),  ...action};
 });
 
