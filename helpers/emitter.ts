@@ -41,15 +41,18 @@ Emitter.prototype.listen = function (name, handler) {
 
     emitter.subjects[name] = emitter.subjects[name] || [];
 
-    const id = emitter.subjects[name].length;
-
-    emitter.subjects[name][id] = handler;
+    emitter.subjects[name].push(handler);
 
     return {
         dispose: function () {
 
-            const ind = emitter.subjects[name].indexOf(id);
-            emitter.subjects[name] = [...emitter.subjects[name].slice(0, ind), ...emitter.subjects[name].slice(ind)];
+            const ind = emitter.subjects[name].indexOf(handler);
+
+            emitter.subjects[name] = [
+                ...emitter.subjects[name].slice(0, ind),
+                ...emitter.subjects[name].slice(ind+1)
+            ];
+
         }
     };
 };

@@ -37,7 +37,9 @@ function dispatch_(module, action, feedback_fn) {
 exports.dispatch_ = dispatch_;
 function reduce_(module, update_state, type, callback) {
     assure_1.system_.notNull(arguments);
+    //console.log('reduce');
     return module.emitter.listen(type, function (action) {
+        //   console.log('reduce', action);
         assure_1.system_.notNull(arguments);
         var return_state = callback.call({}, get_removed_feedback_type(action));
         if (return_state !== undefined) {

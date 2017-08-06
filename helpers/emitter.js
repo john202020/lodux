@@ -73,12 +73,11 @@ Emitter.prototype.emit = function (name, data) {
 Emitter.prototype.listen = function (name, handler) {
     var emitter = this;
     emitter.subjects[name] = emitter.subjects[name] || [];
-    var id = emitter.subjects[name].length;
-    emitter.subjects[name][id] = handler;
+    emitter.subjects[name].push(handler);
     return {
         dispose: function () {
-            var ind = emitter.subjects[name].indexOf(id);
-            emitter.subjects[name] = __spread(emitter.subjects[name].slice(0, ind), emitter.subjects[name].slice(ind));
+            var ind = emitter.subjects[name].indexOf(handler);
+            emitter.subjects[name] = __spread(emitter.subjects[name].slice(0, ind), emitter.subjects[name].slice(ind + 1));
         }
     };
 };

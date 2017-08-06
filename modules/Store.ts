@@ -88,7 +88,12 @@ const store_ = (() => {
         system_.notNull(arguments);
         assure_.string(action.type);
 
-        this.reduce(action.type, action => { return { ...this.state(), ...action } });
+        const subs = this.reduce(action.type,
+            action => {
+                subs.dispose();
+                return { ...this.state(), ...action };
+            });
+      
         this.dispatch(action);
     }
 
@@ -124,7 +129,10 @@ const store_ = (() => {
         console.warn("store.update() is deprecated. Use store.diduce() instead.");
 
         const type = "update" + unique_prefix + (typename || '') + get_unique_id();
-        this.reduce(type, action => { return { ...this.state(), ...action } });
+        const subs = this.reduce(type, action => {
+            subs.dispose();
+            return { ...this.state(), ...action };
+        });
         this.dispatch({ ...state, ...{ type } });
     }
     // *******//

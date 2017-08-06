@@ -89,7 +89,10 @@ var store_ = (function () {
         var _this = this;
         assure_1.system_.notNull(arguments);
         assure_1.assure_.string(action.type);
-        this.reduce(action.type, function (action) { return __assign({}, _this.state(), action); });
+        var subs = this.reduce(action.type, function (action) {
+            subs.dispose();
+            return __assign({}, _this.state(), action);
+        });
         this.dispatch(action);
     };
     func.prototype.subscribe = function (func) {
@@ -114,7 +117,10 @@ var store_ = (function () {
         assure_1.system_.notNull(arguments);
         console.warn("store.update() is deprecated. Use store.diduce() instead.");
         var type = "update" + Util_1.unique_prefix + (typename || '') + Util_1.get_unique_id();
-        this.reduce(type, function (action) { return __assign({}, _this.state(), action); });
+        var subs = this.reduce(type, function (action) {
+            subs.dispose();
+            return __assign({}, _this.state(), action);
+        });
         this.dispatch(__assign({}, state, { type: type }));
     };
     // *******//
