@@ -1,4 +1,4 @@
-﻿
+﻿import 'core-js/fn/object/entries';
 import { assure_, system_ } from "../helpers/assure";
 import { reduce_, dispatch_ } from "./Dispatcher";
 import emitter_factory from "../helpers/emitter";
@@ -202,7 +202,7 @@ export const Store = {
     reset_initial() {
 
         system_.notNull(arguments);
-
+    
         Object.entries(get_store_object_initial()).forEach(([key, value]) => {
             update_state(key, value);
         });

@@ -28,6 +28,7 @@ var __spread = (this && this.__spread) || function () {
     return ar;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("core-js/fn/object/entries");
 var assure_1 = require("../helpers/assure");
 var Dispatcher_1 = require("./Dispatcher");
 var emitter_1 = require("../helpers/emitter");

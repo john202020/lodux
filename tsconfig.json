@@ -6,7 +6,10 @@
         "strictNullChecks": true,
         "downlevelIteration": true,
         "watch": true,
-        "lib": ["es2015", "es2017", "dom"]
+        "lib": [
+            "es2017",
+            "dom"
+        ]
     },
     "exclude": [
         "node_modules"
