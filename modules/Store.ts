@@ -175,7 +175,7 @@ export const Store = {
         system_.notNull(arguments);
 
         return Object.assign(new store_(store.name), ...(properties || {}));
-
+        
     },
 
     subscribe(func: Function) {
