@@ -45,7 +45,7 @@ var get_unique_id = (function () {
     var _id = 1;
     return function () {
         assure_1.system_.notNull(arguments);
-        return unique_prefix + "[" + _id++ + "]_";
+        return "[" + _id++ + "]";
     };
 }());
 exports.get_unique_id = get_unique_id;

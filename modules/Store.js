@@ -36,6 +36,7 @@ var Util_1 = require("./Util");
 var Entire_store_1 = require("./Entire_store");
 var Store_subscribers = [];
 var stores_subscribers = {};
+var config_ = { isHMR: false };
 var store_ = (function () {
     function func(store_key) {
         Object.defineProperty(this, 'name', {
@@ -136,13 +137,19 @@ var store_ = (function () {
  */
 //function 
 function createStore(name) {
-    if (name === void 0) { name = Util_1.get_unique_id(); }
     assure_1.system_.notNull(arguments);
-    var store_key = name;
-    if (Entire_store_1.get_store_object()[store_key]) {
-        throw new Error(store_key + " duplicated!");
+    var store_key = name || Util_1.get_unique_id();
+    if (exist(store_key)) {
+        if (config_['isHMR'])
+            console.warn(name + " is already exist in store!");
+        else
+            throw new Error(name + " is already exist in store!");
     }
     return new store_(store_key);
+}
+function exist(name) {
+    assure_1.system_.notNull(arguments);
+    return Entire_store_1.get_store_object()[name] !== undefined;
 }
 exports.Store = {
     createStore: createStore,
@@ -150,6 +157,10 @@ exports.Store = {
         assure_1.system_.notNull(arguments);
         return Object.assign.apply(Object, __spread([new store_(store.name)], (properties || {})));
     },
+    config: function (custom_config) {
+        config_ = __assign({}, config_, custom_config);
+    },
+    exist: exist,
     subscribe: function (func) {
         assure_1.system_.notNull(arguments);
         Store_subscribers.push(func);

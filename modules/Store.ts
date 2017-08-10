@@ -7,6 +7,7 @@ import { get_store_object, get_store_object_initial, set_store_object } from "./
 
 let Store_subscribers: Array<Function | undefined> = [];
 const stores_subscribers = {};
+let config_ = { isHMR: false };
 
 const store_ = (() => {
 
@@ -93,7 +94,7 @@ const store_ = (() => {
                 subs.dispose();
                 return { ...this.state(), ...action };
             });
-      
+
         this.dispatch(action);
     }
 
@@ -151,20 +152,27 @@ const store_ = (() => {
     });
  */
 //function 
-function createStore(name: string = get_unique_id()) {
+function createStore(name: string | undefined) {
 
     system_.notNull(arguments);
 
-    const store_key = name;
+    const store_key = name || get_unique_id();
 
-    if (get_store_object()[store_key]) {
-        throw new Error(store_key + " duplicated!");
+    if (exist(store_key)) {
+        if (config_['isHMR'])
+            console.warn(name + " is already exist in store!");
+        else
+            throw new Error(name + " is already exist in store!");
     }
 
     return new store_(store_key);
 
 }
 
+function exist(name: string) {
+    system_.notNull(arguments);
+    return get_store_object()[name] !== undefined;
+}
 
 export const Store = {
 
@@ -175,9 +183,12 @@ export const Store = {
         system_.notNull(arguments);
 
         return Object.assign(new store_(store.name), ...(properties || {}));
-        
-    },
 
+    },
+    config(custom_config) {
+        config_ = { ...config_, ...custom_config };
+    },
+    exist,
     subscribe(func: Function) {
 
         system_.notNull(arguments);
@@ -202,7 +213,7 @@ export const Store = {
     reset_initial() {
 
         system_.notNull(arguments);
-    
+
         Object.entries(get_store_object_initial()).forEach(([key, value]) => {
             update_state(key, value);
         });

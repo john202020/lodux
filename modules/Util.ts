@@ -46,7 +46,7 @@ const get_unique_id = (function () {
 
     return function () {
         system_.notNull(arguments);
-        return unique_prefix + "[" + _id++ + "]_";
+        return "[" + _id++ + "]";
     };
 
 }());
