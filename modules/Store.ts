@@ -54,6 +54,10 @@ const store_ = (() => {
 
         assure_.required(action).string(action.type);
 
+        if (action.type === 'update') {
+            throw new Error("action type 'update' is reserved. Please use a more specific action type.");
+        }
+
         return dispatch_(this, action, feedback_fn);
     }
 
@@ -89,12 +93,11 @@ const store_ = (() => {
         system_.notNull(arguments);
         assure_.string(action.type);
 
-        const subs = this.reduce(action.type,
-            action => {
-                subs.dispose();
-                
-                return { ...this.state(), ...action };
-            });
+        const subs = this.reduce(action.type, action => {
+            subs.dispose();
+            const new_state = pouch(action);
+            return { ...this.state(), ...new_state };
+        });
 
         this.dispatch(action);
     }
@@ -141,6 +144,15 @@ const store_ = (() => {
 
 
     return func;
+
+    //extract action to be an property
+    function pouch(action) {
+        const new_state = Object.entries(action).reduce((acc, val) => {
+            return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
+        }, {});
+        return new_state;
+    }
+
 
 })();
 

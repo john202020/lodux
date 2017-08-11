@@ -68,6 +68,9 @@ var store_ = (function () {
     func.prototype.dispatch = function (action, feedback_fn) {
         assure_1.system_.notNull(arguments);
         assure_1.assure_.required(action).string(action.type);
+        if (action.type === 'update') {
+            throw new Error("action type 'update' is reserved. Please use a more specific action type.");
+        }
         return Dispatcher_1.dispatch_(this, action, feedback_fn);
     };
     func.prototype.reduce = function (type, callback_fn) {
@@ -93,7 +96,8 @@ var store_ = (function () {
         assure_1.assure_.string(action.type);
         var subs = this.reduce(action.type, function (action) {
             subs.dispose();
-            return __assign({}, _this.state(), action);
+            var new_state = pouch(action);
+            return __assign({}, _this.state(), new_state);
         });
         this.dispatch(action);
     };
@@ -127,6 +131,13 @@ var store_ = (function () {
     };
     // *******//
     return func;
+    //extract action to be an property
+    function pouch(action) {
+        var new_state = Object.entries(action).reduce(function (acc, val) {
+            return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
+        }, {});
+        return new_state;
+    }
 })();
 /*
  *

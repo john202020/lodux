@@ -3,7 +3,7 @@ import { assure_, system_ } from "../helpers/assure";
 import { get_unique_id } from "./Util.js";
 
 function dispatch_(module, action, feedback_fn?: Function) {
-    
+
     system_.notNull(arguments);
     assure_.required(action)
         .nonFunc(action)
@@ -38,9 +38,9 @@ function dispatch_(module, action, feedback_fn?: Function) {
 function reduce_(module, update_state, type: string, callback: Function) {
 
     system_.notNull(arguments);
-    
+
     return module.emitter.listen(type, function (action) {
-        
+
         system_.notNull(arguments);
 
         const return_state = callback.call({}, get_removed_feedback_type(action));
@@ -57,9 +57,13 @@ function reduce_(module, update_state, type: string, callback: Function) {
 function get_removed_feedback_type(action) {
     system_.notNull(arguments);
 
-    return Object.keys(action)
-        .filter(function (key) { return key !== 'feedback_type'; })
-        .reduce(function (acc, key) { return { ...acc, [key]: action[key] }; }, {});
+    return Object.entries(action).reduce((acc, val) => {
+        return val[0] !== 'feedback_type' ? (acc[val[0]] = val[1], acc) : acc;
+    }, {});
+
+    // return Object.keys(action)
+    //     .filter(function (key) { return key !== 'feedback_type'; })
+    //     .reduce(function (acc, key) { return { ...acc, [key]: action[key] }; }, {});
 }
 
 

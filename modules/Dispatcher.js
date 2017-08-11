@@ -49,7 +49,10 @@ function reduce_(module, update_state, type, callback) {
 exports.reduce_ = reduce_;
 function get_removed_feedback_type(action) {
     assure_1.system_.notNull(arguments);
-    return Object.keys(action)
-        .filter(function (key) { return key !== 'feedback_type'; })
-        .reduce(function (acc, key) { return __assign({}, acc, (_a = {}, _a[key] = action[key], _a)); var _a; }, {});
+    return Object.entries(action).reduce(function (acc, val) {
+        return val[0] !== 'feedback_type' ? (acc[val[0]] = val[1], acc) : acc;
+    }, {});
+    // return Object.keys(action)
+    //     .filter(function (key) { return key !== 'feedback_type'; })
+    //     .reduce(function (acc, key) { return { ...acc, [key]: action[key] }; }, {});
 }

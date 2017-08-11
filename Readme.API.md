@@ -35,16 +35,17 @@ Return snapshot of store instance state.
 const {Store} from "lodux";
 
 const store = Store.createStore();
-
 const store_state = store.state();
 ```
 
 __reduce(type: string, callback_fn):  disposable__  
 ```javascript
 const subscription = store.reduce(type, action => { 
-    //...
     subscription.dispose();
+    
     return {...store.state(), ...action};
+    // includes action as a property of store state
+    return {...store.state(), ...action, action};
 });
 
 ```
@@ -66,10 +67,25 @@ store.dispatch({type:'add person', name:'Sam'}, subscription => {
 __diduce(action)__  
 Consider diduce() as dispatch() plus internal reduce().  
 
-Internally it invokes a full dispatch/reduce cycle. The reducer will return {...store.state(), ...action}.  
+Internally it invokes a full dispatch/reduce cycle. The internal reducer will return {...store.state(), ...action}.  
 
+Standard implementation of diduce()
 ```javascript
+let type = 'initial';
+let count = 0;
+let action = { type, count };
 store.diduce(action);
+// includes action as a property of store state
+store.diduce({ ...action, action });
+
+type = 'add';
+amount = 1;
+// change state 
+action = { type, count: store.state().count + amount };
+
+store.diduce(action);
+// includes action as a property of store state
+store.diduce({...action, action});
 ```
 
 __subscribe(callback_fn): disposable__  
