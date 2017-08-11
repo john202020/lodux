@@ -140,7 +140,7 @@ function createStore(name) {
     assure_1.system_.notNull(arguments);
     var store_key = name || Util_1.get_unique_id();
     if (exist(store_key)) {
-        if (config_['isHMR'])
+        if (config_['isHMR'] === true)
             console.warn(name + " is already exist in store!");
         else
             throw new Error(name + " is already exist in store!");

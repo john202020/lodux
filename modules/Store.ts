@@ -92,6 +92,7 @@ const store_ = (() => {
         const subs = this.reduce(action.type,
             action => {
                 subs.dispose();
+                
                 return { ...this.state(), ...action };
             });
 
@@ -159,7 +160,7 @@ function createStore(name: string | undefined) {
     const store_key = name || get_unique_id();
 
     if (exist(store_key)) {
-        if (config_['isHMR'])
+        if (config_['isHMR'] === true)
             console.warn(name + " is already exist in store!");
         else
             throw new Error(name + " is already exist in store!");
