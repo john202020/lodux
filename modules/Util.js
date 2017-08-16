@@ -9,7 +9,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
-var unique_prefix = "___";
+var unique_prefix = "_";
 exports.unique_prefix = unique_prefix;
 //psuedo method
 //set up reducer, and dispatch the state to the reducer,
@@ -31,16 +31,6 @@ function update(store, state, type) {
     store.dispatch(__assign({}, state, { type: typename }));
 }
 exports.update = update;
-function get_without_type(action) {
-    assure_1.system_.notNull(arguments);
-    return Object.keys(action)
-        .filter(function (key) { return key !== 'type'; })
-        .reduce(function (acc, key) {
-        return __assign({}, acc, (_a = {}, _a[key] = action[key], _a));
-        var _a;
-    }, {});
-}
-exports.get_without_type = get_without_type;
 var get_unique_id = (function () {
     var _id = 1;
     return function () {

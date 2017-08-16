@@ -16,10 +16,9 @@ function dispatch_(module, action, feedback_fn) {
         .nonFunc(action)
         .required(action.type)
         .required(module.emitter);
-    var feedback_type = '';
+    var feedback_type = Util_js_1.get_unique_id();
     var subscription;
     if (feedback_fn !== undefined) {
-        feedback_type = Util_js_1.get_unique_id();
         subscription = module.emitter.listen(feedback_type, function () {
             feedback_fn.call({}, subscription);
         });
@@ -39,20 +38,18 @@ function reduce_(module, update_state, type, callback) {
     assure_1.system_.notNull(arguments);
     return module.emitter.listen(type, function (action) {
         assure_1.system_.notNull(arguments);
-        var return_state = callback.call({}, get_removed_feedback_type(action));
+        var return_state = callback.call({}, pouch(action));
         if (return_state !== undefined) {
             update_state(module.name, return_state);
         }
         dispatch_(module, { type: action.feedback_type });
     });
+    //remove feedback_type
+    function pouch(action) {
+        assure_1.system_.notNull(arguments);
+        return Object.entries(action).reduce(function (acc, val) {
+            return val[0] !== 'feedback_type' ? (acc[val[0]] = val[1], acc) : acc;
+        }, {});
+    }
 }
 exports.reduce_ = reduce_;
-function get_removed_feedback_type(action) {
-    assure_1.system_.notNull(arguments);
-    return Object.entries(action).reduce(function (acc, val) {
-        return val[0] !== 'feedback_type' ? (acc[val[0]] = val[1], acc) : acc;
-    }, {});
-    // return Object.keys(action)
-    //     .filter(function (key) { return key !== 'feedback_type'; })
-    //     .reduce(function (acc, key) { return { ...acc, [key]: action[key] }; }, {});
-}

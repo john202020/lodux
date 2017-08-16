@@ -80,12 +80,12 @@ var store_ = (function () {
     func.prototype.use = function (wares) {
         assure_1.system_.notNull(arguments);
         var clone = exports.Store.clone(this);
-        clone.dispatch = wares
+        var reversed_wares = wares
             .reduce(function (acc, ware) {
             acc.unshift(ware);
             return acc;
-        }, [])
-            .reduce(function (dispatch, ware) {
+        }, []);
+        clone.dispatch = reversed_wares.reduce(function (dispatch, ware) {
             return ware(clone)(dispatch.bind(clone));
         }, clone.dispatch);
         return clone;
@@ -131,12 +131,11 @@ var store_ = (function () {
     };
     // *******//
     return func;
-    //extract action to be an property
+    //remove type
     function pouch(action) {
-        var new_state = Object.entries(action).reduce(function (acc, val) {
+        return Object.entries(action).reduce(function (acc, val) {
             return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
         }, {});
-        return new_state;
     }
 })();
 /*
