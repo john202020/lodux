@@ -2,7 +2,7 @@
 import { assure_, system_ } from "../helpers/assure";
 import { reduce_, dispatch_ } from "./Dispatcher";
 import emitter_factory from "../helpers/emitter";
-import { get_unique_id, unique_prefix, get_without_type } from "./Util";
+import { get_unique_id, unique_prefix } from "./Util";
 import { get_store_object, get_store_object_initial, set_store_object } from "./Entire_store";
 
 let Store_subscribers: Array<Function | undefined> = [];
@@ -37,7 +37,7 @@ const store_ = (() => {
         //****** deprecated */
         this.update = this.update.bind(this);
         // ******//
-    }d
+    }
 
     func.prototype.state = function () {
 
