@@ -37,8 +37,7 @@ const store_ = (() => {
         //****** deprecated */
         this.update = this.update.bind(this);
         // ******//
-    }
-
+    }d
 
     func.prototype.state = function () {
 
@@ -46,7 +45,6 @@ const store_ = (() => {
 
         return get_store_object()[this.name];
     }
-
 
     func.prototype.dispatch = function (action, feedback_fn?: Function) {
 
@@ -61,7 +59,6 @@ const store_ = (() => {
         return dispatch_(this, action, feedback_fn);
     }
 
-
     func.prototype.reduce = function (type: string, callback_fn: Function) {
 
         system_.notNull(arguments);
@@ -69,24 +66,24 @@ const store_ = (() => {
         return reduce_(this, update_state, type, callback_fn);
     }
 
-
     func.prototype.use = function (wares) {
 
         system_.notNull(arguments);
 
         const clone = Store.clone(this);
 
-        clone.dispatch = wares
+        const reversed_wares = wares
             .reduce((acc, ware) => {
-                acc.unshift(ware); return acc;
-            }, [])
-            .reduce((dispatch, ware) => {
+                acc.unshift(ware);
+                return acc;
+            }, []);
+
+        clone.dispatch = reversed_wares.reduce((dispatch, ware) => {
                 return ware(clone)(dispatch.bind(clone));
             }, clone.dispatch);
 
         return clone;
     }
-
 
     func.prototype.diduce = function (action) {
 
@@ -101,7 +98,6 @@ const store_ = (() => {
 
         this.dispatch(action);
     }
-
 
     func.prototype.subscribe = function (func: Function) {
 
@@ -142,15 +138,13 @@ const store_ = (() => {
     }
     // *******//
 
-
     return func;
 
-    //extract action to be an property
+    //remove type
     function pouch(action) {
-        const new_state = Object.entries(action).reduce((acc, val) => {
+        return Object.entries(action).reduce((acc, val) => {
             return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
         }, {});
-        return new_state;
     }
 
 

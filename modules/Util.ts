@@ -1,7 +1,7 @@
 ﻿
 import { assure_, system_ } from "../helpers/assure";
 
-const unique_prefix = "___";
+const unique_prefix = "_";
 
 //psuedo method
 //set up reducer, and dispatch the state to the reducer,
@@ -28,18 +28,6 @@ function update(store, state, type?: string) {
     store.dispatch({ ...state, type: typename });
 }
 
-
-function get_without_type(action) {
-    system_.notNull(arguments);
-
-    return Object.keys(action)
-        .filter((key) => { return key !== 'type'; })
-        .reduce((acc, key) => {
-            return { ...acc, [key]: action[key] };
-        }, {});
-}
-
-
 const get_unique_id = (function () {
 
     let _id = 1;
@@ -55,7 +43,6 @@ const get_unique_id = (function () {
 export {
     update,
     get_unique_id,
-    unique_prefix,
-    get_without_type
+    unique_prefix
 };
 
