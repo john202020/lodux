@@ -22,14 +22,7 @@ function dispatch_(module, action, feedback_fn?: Function) {
 
     module.emitter.emit(action.type, { ...action, ...{ feedback_type } });
 
-    return {
-        dispose: () => {
-            console.warn("Calling dispose here is not reliable. Instead, dispose the disposable that is passed to the callback_function!");
-            if (subscription) {
-                subscription.dispose();
-            }
-        }
-    };
+    return;
 }
 
 

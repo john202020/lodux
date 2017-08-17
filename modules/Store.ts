@@ -27,23 +27,16 @@ const store_ = (() => {
             value: emitter_factory.local()
         });
 
-        this.state = this.state.bind(this);
+        Object.defineProperty(this, 'state', {            
+            configurable:true,
+            get: function () { return get_store_object()[store_key]; }
+        });
+
         this.dispatch = this.dispatch.bind(this);
         this.reduce = this.reduce.bind(this);
         this.use = this.use.bind(this);
         this.diduce = this.diduce.bind(this);
         this.subscribe = this.subscribe.bind(this);
-
-        //****** deprecated */
-        this.update = this.update.bind(this);
-        // ******//
-    }
-
-    func.prototype.state = function () {
-
-        system_.notNull(arguments);
-
-        return get_store_object()[this.name];
     }
 
     func.prototype.dispatch = function (action, feedback_fn?: Function) {
@@ -79,8 +72,8 @@ const store_ = (() => {
             }, []);
 
         clone.dispatch = reversed_wares.reduce((dispatch, ware) => {
-                return ware(clone)(dispatch.bind(clone));
-            }, clone.dispatch);
+            return ware(clone)(dispatch.bind(clone));
+        }, clone.dispatch);
 
         return clone;
     }
@@ -93,7 +86,7 @@ const store_ = (() => {
         const subs = this.reduce(action.type, action => {
             subs.dispose();
             const new_state = pouch(action);
-            return { ...this.state(), ...new_state };
+            return { ...this.state, ...new_state };
         });
 
         this.dispatch(action);
@@ -123,20 +116,6 @@ const store_ = (() => {
         };
     }
 
-    //****** deprecated */
-    func.prototype.update = function (state, typename?: string) {
-
-        system_.notNull(arguments);
-        console.warn("store.update() is deprecated. Use store.diduce() instead.");
-
-        const type = "update" + unique_prefix + (typename || '') + get_unique_id();
-        const subs = this.reduce(type, action => {
-            subs.dispose();
-            return { ...this.state(), ...action };
-        });
-        this.dispatch({ ...state, ...{ type } });
-    }
-    // *******//
 
     return func;
 
@@ -151,86 +130,87 @@ const store_ = (() => {
 })();
 
 
-/*
- *  
- * const store = Store.createStore('name');
-   store.reduce('test', function(action){        
-        return {...store.state, top:false, time : action.test.time};
-    });
- */
-//function 
-function createStore(name: string | undefined) {
-
-    system_.notNull(arguments);
-
-    const store_key = name || get_unique_id();
-
-    if (exist(store_key)) {
-        if (config_['isHMR'] === true)
-            console.warn(name + " is already exist in store!");
-        else
-            throw new Error(name + " is already exist in store!");
-    }
-
-    return new store_(store_key);
-
-}
-
 function exist(name: string) {
     system_.notNull(arguments);
     return get_store_object()[name] !== undefined;
 }
 
-export const Store = {
+export const Store = (function () {
 
-    createStore,
+    function Store_() {
 
-    clone(store, properties?) {
-
-        system_.notNull(arguments);
-
-        return Object.assign(new store_(store.name), ...(properties || {}));
-
-    },
-    config(custom_config) {
-        config_ = { ...config_, ...custom_config };
-    },
-    exist,
-    subscribe(func: Function) {
-
-        system_.notNull(arguments);
-
-        Store_subscribers.push(func);
-
-        function dispose() {
+        Object.defineProperty(this, 'state', {
+            get: function () { return get_store_object(); }
+        });
+        /*
+         *  
+         * const store = Store.createStore('name');
+           store.reduce('test', function(action){        
+                return {...store.state, top:false, time : action.test.time};
+            });
+         */
+        //function 
+        this.createStore = function (name: string | undefined) {
 
             system_.notNull(arguments);
 
-            const ind = Store_subscribers.indexOf(func);
-            if (ind > -1) {
-                Store_subscribers = [...Store_subscribers.slice(0, ind), ...Store_subscribers.slice(ind + 1)];
+            const store_key = name || get_unique_id();
+
+            if (exist(store_key)) {
+                if (config_['isHMR'] === true)
+                    console.warn(name + " is already exist in store!");
+                else
+                    throw new Error(name + " is already exist in store!");
             }
-        }
 
-        return {
-            dispose
+            return new store_(store_key);
+
         };
-    },
 
-    reset_initial() {
+        this.clone = function (store, properties?) {
+            system_.notNull(arguments);
+            return Object.assign(new store_(store.name), ...(properties || {}));
+        };
 
-        system_.notNull(arguments);
+        this.config = function (custom_config) {
+            config_ = { ...config_, ...custom_config };
+        };
 
-        Object.entries(get_store_object_initial()).forEach(([key, value]) => {
-            update_state(key, value);
-        });
-    },
+        // this.exist = exist;
 
-    state() {
-        system_.notNull(arguments);
-        return get_store_object();
-    }
-};
+        this.subscribe = function (func: Function) {
+
+            system_.notNull(arguments);
+
+            Store_subscribers.push(func);
+
+            function dispose() {
+
+                system_.notNull(arguments);
+
+                const ind = Store_subscribers.indexOf(func);
+                if (ind > -1) {
+                    Store_subscribers = [...Store_subscribers.slice(0, ind), ...Store_subscribers.slice(ind + 1)];
+                }
+            }
+
+            return {
+                dispose
+            };
+        };
+
+        this.reset_initial = function () {
+
+            system_.notNull(arguments);
+
+            Object.entries(get_store_object_initial()).forEach(([key, value]) => {
+                update_state(key, value);
+            });
+        };
+    };
+
+    return new Store_();
+}());
 
 
 /**

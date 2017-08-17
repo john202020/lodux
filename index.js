@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("./helpers/assure");
 var Store_1 = require("./modules/Store");
-var Middlewares_1 = require("./modules/Middlewares");
 var Util_1 = require("./modules/Util");
 var root = (0, eval)('this');
 var previous_lodux = root.lodux;
@@ -15,7 +14,6 @@ var lodux = {
     system_: assure_1.system_,
     assure_: assure_1.assure_,
     Store: Store_1.Store,
-    applyMiddleware: Middlewares_1.default,
     util: util,
     noConflict: noConflict
 };

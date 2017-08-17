@@ -1,6 +1,6 @@
 {
   "name": "lodux",
-  "version": "0.3.79",
+  "version": "1.0.80",
   "description": "Single store in a one-way observable pattern.",
   "main": "index.js",
   "scripts": {

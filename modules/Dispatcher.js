@@ -24,14 +24,7 @@ function dispatch_(module, action, feedback_fn) {
         });
     }
     module.emitter.emit(action.type, __assign({}, action, { feedback_type: feedback_type }));
-    return {
-        dispose: function () {
-            console.warn("Calling dispose here is not reliable. Instead, dispose the disposable that is passed to the callback_function!");
-            if (subscription) {
-                subscription.dispose();
-            }
-        }
-    };
+    return;
 }
 exports.dispatch_ = dispatch_;
 function reduce_(module, update_state, type, callback) {

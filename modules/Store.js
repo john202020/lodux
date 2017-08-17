@@ -51,20 +51,16 @@ var store_ = (function () {
             writable: false,
             value: emitter_1.default.local()
         });
-        this.state = this.state.bind(this);
+        Object.defineProperty(this, 'state', {
+            configurable: true,
+            get: function () { return Entire_store_1.get_store_object()[store_key]; }
+        });
         this.dispatch = this.dispatch.bind(this);
         this.reduce = this.reduce.bind(this);
         this.use = this.use.bind(this);
         this.diduce = this.diduce.bind(this);
         this.subscribe = this.subscribe.bind(this);
-        //****** deprecated */
-        this.update = this.update.bind(this);
-        // ******//
     }
-    func.prototype.state = function () {
-        assure_1.system_.notNull(arguments);
-        return Entire_store_1.get_store_object()[this.name];
-    };
     func.prototype.dispatch = function (action, feedback_fn) {
         assure_1.system_.notNull(arguments);
         assure_1.assure_.required(action).string(action.type);
@@ -97,7 +93,7 @@ var store_ = (function () {
         var subs = this.reduce(action.type, function (action) {
             subs.dispose();
             var new_state = pouch(action);
-            return __assign({}, _this.state(), new_state);
+            return __assign({}, _this.state, new_state);
         });
         this.dispatch(action);
     };
@@ -117,19 +113,6 @@ var store_ = (function () {
             dispose: dispose
         };
     };
-    //****** deprecated */
-    func.prototype.update = function (state, typename) {
-        var _this = this;
-        assure_1.system_.notNull(arguments);
-        console.warn("store.update() is deprecated. Use store.diduce() instead.");
-        var type = "update" + Util_1.unique_prefix + (typename || '') + Util_1.get_unique_id();
-        var subs = this.reduce(type, function (action) {
-            subs.dispose();
-            return __assign({}, _this.state(), action);
-        });
-        this.dispatch(__assign({}, state, { type: type }));
-    };
-    // *******//
     return func;
     //remove type
     function pouch(action) {
@@ -138,65 +121,67 @@ var store_ = (function () {
         }, {});
     }
 })();
-/*
- *
- * const store = Store.createStore('name');
-   store.reduce('test', function(action){
-        return {...store.state, top:false, time : action.test.time};
-    });
- */
-//function 
-function createStore(name) {
-    assure_1.system_.notNull(arguments);
-    var store_key = name || Util_1.get_unique_id();
-    if (exist(store_key)) {
-        if (config_['isHMR'] === true)
-            console.warn(name + " is already exist in store!");
-        else
-            throw new Error(name + " is already exist in store!");
-    }
-    return new store_(store_key);
-}
 function exist(name) {
     assure_1.system_.notNull(arguments);
     return Entire_store_1.get_store_object()[name] !== undefined;
 }
-exports.Store = {
-    createStore: createStore,
-    clone: function (store, properties) {
-        assure_1.system_.notNull(arguments);
-        return Object.assign.apply(Object, __spread([new store_(store.name)], (properties || {})));
-    },
-    config: function (custom_config) {
-        config_ = __assign({}, config_, custom_config);
-    },
-    exist: exist,
-    subscribe: function (func) {
-        assure_1.system_.notNull(arguments);
-        Store_subscribers.push(func);
-        function dispose() {
-            assure_1.system_.notNull(arguments);
-            var ind = Store_subscribers.indexOf(func);
-            if (ind > -1) {
-                Store_subscribers = __spread(Store_subscribers.slice(0, ind), Store_subscribers.slice(ind + 1));
-            }
-        }
-        return {
-            dispose: dispose
-        };
-    },
-    reset_initial: function () {
-        assure_1.system_.notNull(arguments);
-        Object.entries(Entire_store_1.get_store_object_initial()).forEach(function (_a) {
-            var _b = __read(_a, 2), key = _b[0], value = _b[1];
-            update_state(key, value);
+exports.Store = (function () {
+    function Store_() {
+        Object.defineProperty(this, 'state', {
+            get: function () { return Entire_store_1.get_store_object(); }
         });
-    },
-    state: function () {
-        assure_1.system_.notNull(arguments);
-        return Entire_store_1.get_store_object();
+        /*
+         *
+         * const store = Store.createStore('name');
+           store.reduce('test', function(action){
+                return {...store.state, top:false, time : action.test.time};
+            });
+         */
+        //function 
+        this.createStore = function (name) {
+            assure_1.system_.notNull(arguments);
+            var store_key = name || Util_1.get_unique_id();
+            if (exist(store_key)) {
+                if (config_['isHMR'] === true)
+                    console.warn(name + " is already exist in store!");
+                else
+                    throw new Error(name + " is already exist in store!");
+            }
+            return new store_(store_key);
+        };
+        this.clone = function (store, properties) {
+            assure_1.system_.notNull(arguments);
+            return Object.assign.apply(Object, __spread([new store_(store.name)], (properties || {})));
+        };
+        this.config = function (custom_config) {
+            config_ = __assign({}, config_, custom_config);
+        };
+        // this.exist = exist;
+        this.subscribe = function (func) {
+            assure_1.system_.notNull(arguments);
+            Store_subscribers.push(func);
+            function dispose() {
+                assure_1.system_.notNull(arguments);
+                var ind = Store_subscribers.indexOf(func);
+                if (ind > -1) {
+                    Store_subscribers = __spread(Store_subscribers.slice(0, ind), Store_subscribers.slice(ind + 1));
+                }
+            }
+            return {
+                dispose: dispose
+            };
+        };
+        this.reset_initial = function () {
+            assure_1.system_.notNull(arguments);
+            Object.entries(Entire_store_1.get_store_object_initial()).forEach(function (_a) {
+                var _b = __read(_a, 2), key = _b[0], value = _b[1];
+                update_state(key, value);
+            });
+        };
     }
-};
+    ;
+    return new Store_();
+}());
 /**
  * The only place to update state
  * @param {*} name

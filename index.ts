@@ -4,7 +4,6 @@ declare const module;
 
 import { assure_, system_ } from "./helpers/assure";
 import { Store } from "./modules/Store";
-import applyMiddleware from "./modules/Middlewares";
 import { update } from "./modules/Util";
 import { dispatch_ } from "./modules/Dispatcher";
 
@@ -23,7 +22,6 @@ const lodux = {
     system_,
     assure_,
     Store,
-    applyMiddleware,
     util,
     noConflict
 };
