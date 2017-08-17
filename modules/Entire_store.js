@@ -12,6 +12,7 @@ var assure_1 = require("../helpers/assure");
 var store_object = {}; //entire store
 var store_initial = {}; //entire store
 function get_store_object_initial() {
+    assure_1.system_.notNull(arguments);
     return __assign({}, store_initial);
 }
 exports.get_store_object_initial = get_store_object_initial;
@@ -28,7 +29,8 @@ function set_store_object(new_state_of_the_comp, subscribers) {
     if (isInitial) {
         store_initial = __assign({}, store_initial, new_state_of_the_comp);
     }
-    var isNew = isInitial || JSON.stringify(store_object[store_key]) !== JSON.stringify(new_state_of_the_comp[store_key]);
+    var isNew = isInitial ||
+        JSON.stringify(store_object[store_key]) !== JSON.stringify(new_state_of_the_comp[store_key]);
     store_object = __assign({}, store_object, new_state_of_the_comp);
     if (isNew) {
         subscribers.forEach(function (handler) {

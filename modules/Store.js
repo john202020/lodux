@@ -128,7 +128,9 @@ function exist(name) {
 exports.Store = (function () {
     function Store_() {
         Object.defineProperty(this, 'state', {
-            get: function () { return Entire_store_1.get_store_object(); }
+            get: function () {
+                return Entire_store_1.get_store_object();
+            }
         });
         /*
          *

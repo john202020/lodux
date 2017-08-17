@@ -27,8 +27,8 @@ const store_ = (() => {
             value: emitter_factory.local()
         });
 
-        Object.defineProperty(this, 'state', {            
-            configurable:true,
+        Object.defineProperty(this, 'state', {
+            configurable: true,
             get: function () { return get_store_object()[store_key]; }
         });
 
@@ -140,8 +140,12 @@ export const Store = (function () {
     function Store_() {
 
         Object.defineProperty(this, 'state', {
-            get: function () { return get_store_object(); }
+            get: function () {
+                return get_store_object();
+            }
         });
+
+
         /*
          *  
          * const store = Store.createStore('name');
@@ -206,10 +210,12 @@ export const Store = (function () {
             Object.entries(get_store_object_initial()).forEach(([key, value]) => {
                 update_state(key, value);
             });
+
         };
     };
 
     return new Store_();
+
 }());
 
 

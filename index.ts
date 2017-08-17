@@ -4,7 +4,6 @@ declare const module;
 
 import { assure_, system_ } from "./helpers/assure";
 import { Store } from "./modules/Store";
-import { update } from "./modules/Util";
 import { dispatch_ } from "./modules/Dispatcher";
 
 
@@ -12,7 +11,6 @@ const root = (0, eval)('this');
 
 const previous_lodux = root.lodux;
 
-const util = { update };
 const noConflict = () => {
     root.lodux = previous_lodux;
     return lodux;
@@ -22,7 +20,6 @@ const lodux = {
     system_,
     assure_,
     Store,
-    util,
     noConflict
 };
 
