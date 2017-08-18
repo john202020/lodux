@@ -4,14 +4,14 @@ Single store in a one-way observable pattern. Similar to Redux.
 This is the first stable `version 1`.
 
 ## `Store`(capital S)  
-It is the collection of the 'entire store' (all stores).  
+It is the collection of all stores, the 'entire store'.  
 
-It has `createStore()` creates a unique store, `subscribe()` observes state changes of the entire store, and `reset_initial()` update the entire store to its initial state (trigger Store's subsriber handler). One property, `state` returns snapshot of the entire store state.
+It has `createStore()` creates a unique store, `subscribe()` observes state changes of the entire store, and `reset_initial()` update the entire store to its initial state. One property, `state` returns a snapshot of the entire store state.
 
 ## store instance
-Each web module should have a unique store. A store instance has `dispatch()` an action, `reduce()` returns new store state, `diduce()` simplifies dispatch/reduce cycle, `subscribe()` observes state changes of this store, and `use()` applies middlewares to the `cloned store`. It has one property, `state` returns snapshot of this store state.  
+Each web module should have a unique store. A store instance has `dispatch()` an action, `reduce()` returns new store state, `diduce()` simplifies dispatch/reduce cycle, `subscribe()` observes state changes of this store, and `use()` applies middlewares to it's `cloned store`. One property, `state` returns a snapshot of this store state.  
 
-Store instances will not affect each other. 
+Store instances will not affect each other.
 
 ## cloned store instance
 A store and its cloned store share the same store state. Cloned store serves as a separate working space for applying middlewares.
@@ -21,10 +21,10 @@ const store = Store.createStore('project1');
 const cloned_store = store.use(middlewares1);
 
 // ignored by middlewares1
-store.dispatch({type: 'call', name:'Tom'});
+store.dispatch({type: 'call', name: 'Tom'});
 
 // intercepted by middlewares1
-cloned_store.dispatch({type:'call',name:'Mary'});
+cloned_store.dispatch({type: 'call', name:'Mary'});
 ```
 
 ## Principles:
@@ -76,6 +76,6 @@ No dependencies.
 
 # Others
 
-## [API](Readme.API.md)
+## [API](v1/Readme.API.md)
 
-## [Obsoleted properties](Readme.obsoleted.md)
+## [Obsoleted properties](v1/Readme.obsoleted.md)
