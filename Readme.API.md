@@ -52,20 +52,20 @@ const subscription = store.reduce(type, action => {
 
 ```
 __dispatch(action[, (subscription)=>{}])__  
+(subscription)=>{} is the function that observes the corresponding reducer's return.
 ```javascript
 store.dispatch({type:'add person', name:'Sam'});
 
-//(subscription)=>{} as feedback_fn which observes reducer's return
 store.dispatch({type:'add person', name:'Sam'}, subscription => {
     // reducer has just returned
     ...    
-    //stop subscription to reducer's return
+    //stop observing reducer's return
     subscription.dispose();
 });
 ```
 
 __diduce(action)__  
-Consider diduce() as dispatch() plus internal reduce().  
+Consider `diduce()` as `dispatch()` plus internal `reduce()`.  
 
 Internally it invokes a full dispatch/reduce cycle. The internal reducer will return {...store.state, ...action}.  
 
@@ -87,7 +87,7 @@ Subscribe to changes of this store state.
 const subscription = store.subscribe(() => {
      ...
 
-     // want to stop observing
+     // stop observing
      subscription.dispose();
 });
 ```

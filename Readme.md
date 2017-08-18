@@ -27,16 +27,13 @@ store.dispatch({type: 'call', name:'Tom'});
 cloned_store.dispatch({type:'call',name:'Mary'});
 ```
 
-## disposable  
-subscribe(), reduce(), and dispatch() return disposable.
-
 ## Principles:
 1. action and state are required to be JSON serializable.
-2. use reducer to update the store state. directly update store state will not take effect. 
+2. use reducer to update the store state. directly update store state will throw error.
 3. there is no need to set an initial store state.
 4. never try to pass null argument, because error will be thrown.
 5. using `this` will not be guaranteed.
-6. method and subscription are synchronously executed.
+6. methods, subscriptions, and callbacks are synchronously executed.
 
 ## Example
 ```javascript
@@ -47,7 +44,7 @@ const store = Store.createStore();
 store.reduce("add person", action => {
 
     let new_state;// do something to get the new state  
-    return {...store.state,  ...new_state, action};
+    return { ...store.state, ...new_state, action };
 
 });
 
@@ -56,7 +53,9 @@ store.dispatch({type:'add person', name:'Sam', age: 10});
 
 ## middleware plugins
 Following Redux's guidelines to middleware.  
-store => next => ( action[, (subscription)=>{}] ) => { return next(action[, (subscription)=>{}]); }.  
+store => next => ( action[, (subscription)=>{}] ) => { 
+    return next(action[, (subscription)=>{}]); 
+}.  
 ```javascript
 //(subscription)=>{} as feedback_fn, is optional but recommended.
 const log = store => next => (action, feedback_fn) => {
@@ -79,4 +78,4 @@ No dependencies.
 
 ## [API](Readme.API.md)
 
-## [Obseleted properties](Readme.obseleted.md)
+## [Obsoleted properties](Readme.obsoleted.md)
