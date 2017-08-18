@@ -76,6 +76,6 @@ No dependencies.
 
 # Others
 
-## [API](v1/Readme.API.md)
+## [API](Readme.API.md)
 
-## [Obsoleted properties](v1/Readme.obsoleted.md)
+## [Obsoleted properties](Readme.obsoleted.md)
