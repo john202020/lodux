@@ -36,7 +36,8 @@ var Util_1 = require("./Util");
 var Entire_store_1 = require("./Entire_store");
 var Store_subscribers = [];
 var stores_subscribers = {};
-var config_ = { isHMR: false, configurable: false };
+var config_default = { isHMR: false, configurable: false };
+var config_ = __assign({}, config_default);
 var store_ = (function () {
     function func(store_key) {
         Object.defineProperty(this, 'name', {
@@ -145,9 +146,15 @@ exports.Store = new (function () {
         assure_1.system_.notNull(arguments);
         return Object.assign.apply(Object, __spread([new store_(store.name)], (properties || {})));
     };
+    //only effective before store instance creation
     this.config = function (custom_config) {
         assure_1.system_.notNull(arguments);
         config_ = __assign({}, config_, custom_config);
+    };
+    //only effective before store instance creation
+    this.reset_config = function () {
+        assure_1.system_.notNull(arguments);
+        config_ = __assign({}, config_default);
     };
     this.subscribe = function (func) {
         assure_1.system_.notNull(arguments);

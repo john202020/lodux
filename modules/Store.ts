@@ -7,7 +7,8 @@ import { entire_store, entire_store_initial } from "./Entire_store";
 
 let Store_subscribers: Array<Function | undefined> = [];
 const stores_subscribers = {};
-let config_ = { isHMR: false, configurable: false };
+const config_default = { isHMR: false, configurable: false };
+let config_ = { ...config_default };
 
 const store_ = (() => {
 
@@ -162,10 +163,17 @@ export const Store = new (function () {
         return Object.assign(new store_(store.name), ...(properties || {}));
     };
 
+    //only effective before store instance creation
     this.config = function (custom_config) {
         system_.notNull(arguments);
         config_ = { ...config_, ...custom_config };
     };
+
+    //only effective before store instance creation
+    this.reset_config = function(){
+        system_.notNull(arguments);
+        config_ = { ...config_default };
+    }
 
     this.subscribe = function (func: Function) {
 
@@ -195,6 +203,7 @@ export const Store = new (function () {
         });
 
     };
+
 })();
 
 
