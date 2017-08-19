@@ -11,16 +11,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
 var store_object = {}; //entire store
 var store_initial = {}; //entire store
-function get_store_object_initial() {
+function entire_store_initial() {
     assure_1.system_.notNull(arguments);
     return __assign({}, store_initial);
 }
-exports.get_store_object_initial = get_store_object_initial;
+exports.entire_store_initial = entire_store_initial;
+function entire_store(argu) {
+    assure_1.system_.notNull(arguments);
+    if (arguments.length === 1) {
+        var new_state_of_the_comp = argu.new_state_of_the_comp, subscribers = argu.subscribers;
+        set_store_object(new_state_of_the_comp, subscribers);
+    }
+    return __assign({}, store_object);
+}
+exports.entire_store = entire_store;
 function get_store_object() {
     assure_1.system_.notNull(arguments);
     return __assign({}, store_object);
 }
-exports.get_store_object = get_store_object;
 function set_store_object(new_state_of_the_comp, subscribers) {
     assure_1.system_.notNull(arguments);
     assure_1.assure_.required(new_state_of_the_comp);
@@ -40,4 +48,3 @@ function set_store_object(new_state_of_the_comp, subscribers) {
         });
     }
 }
-exports.set_store_object = set_store_object;

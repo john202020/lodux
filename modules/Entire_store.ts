@@ -4,9 +4,22 @@ import { assure_, system_ } from "../helpers/assure";
 let store_object = {};//entire store
 let store_initial = {};//entire store
 
-function get_store_object_initial() {
+function entire_store_initial() {
     system_.notNull(arguments);
     return { ...store_initial };
+}
+
+function entire_store(argu ?: any) {
+    system_.notNull(arguments);
+    
+    if (arguments.length === 1) {
+        const { new_state_of_the_comp, subscribers } = argu;
+
+        set_store_object(new_state_of_the_comp, subscribers);
+
+    }
+    return { ...store_object };
+
 }
 
 function get_store_object() {
@@ -41,4 +54,4 @@ function set_store_object(new_state_of_the_comp, subscribers) {
     }
 }
 
-export { get_store_object, get_store_object_initial, set_store_object };
+export { entire_store, entire_store_initial };

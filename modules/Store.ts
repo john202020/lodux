@@ -3,11 +3,11 @@ import { assure_, system_ } from "../helpers/assure";
 import { reduce_, dispatch_ } from "./Dispatcher";
 import emitter_factory from "../helpers/emitter";
 import { get_unique_id, unique_prefix } from "./Util";
-import { get_store_object, get_store_object_initial, set_store_object } from "./Entire_store";
+import { entire_store, entire_store_initial } from "./Entire_store";
 
 let Store_subscribers: Array<Function | undefined> = [];
 const stores_subscribers = {};
-let config_ = { isHMR: false };
+let config_ = { isHMR: false, configurable: false };
 
 const store_ = (() => {
 
@@ -28,8 +28,8 @@ const store_ = (() => {
         });
 
         Object.defineProperty(this, 'state', {
-            configurable: true,
-            get: function () { return get_store_object()[store_key]; }
+            configurable: config_.configurable,
+            get: function () { return entire_store()[store_key]; }
         });
 
         this.dispatch = this.dispatch.bind(this);
@@ -37,6 +37,7 @@ const store_ = (() => {
         this.use = this.use.bind(this);
         this.diduce = this.diduce.bind(this);
         this.subscribe = this.subscribe.bind(this);
+
     }
 
     func.prototype.dispatch = function (action, feedback_fn?: Function) {
@@ -101,21 +102,18 @@ const store_ = (() => {
 
         subscribes.push(func);
 
-        function dispose() {
-
-            system_.notNull(arguments);
-
-            const ind = subscribes.indexOf(func);
-            if (ind > -1) {
-                subscribes[this.name] = [...subscribes.slice(0, ind), ...subscribes.slice(ind + 1)];
-            }
-        }
-
         return {
-            dispose
+            dispose: function () {
+
+                system_.notNull(arguments);
+
+                const ind = subscribes.indexOf(func);
+                if (ind > -1) {
+                    subscribes[this.name] = [...subscribes.slice(0, ind), ...subscribes.slice(ind + 1)];
+                }
+            }
         };
     }
-
 
     return func;
 
@@ -126,69 +124,57 @@ const store_ = (() => {
         }, {});
     }
 
-
 })();
 
 
 function exist(name: string) {
     system_.notNull(arguments);
-    return get_store_object()[name] !== undefined;
+    return entire_store()[name] !== undefined;
 }
 
-export const Store = (function () {
+export const Store = new (function () {
 
-    function Store_() {
+    Object.defineProperty(this, 'state', {
+        get: function () {
+            return entire_store();
+        }
+    });
 
-        Object.defineProperty(this, 'state', {
-            get: function () {
-                return get_store_object();
-            }
-        });
+    this.createStore = function (name: string | undefined) {
 
+        system_.notNull(arguments);
 
-        /*
-         *  
-         * const store = Store.createStore('name');
-           store.reduce('test', function(action){        
-                return {...store.state, top:false, time : action.test.time};
-            });
-         */
-        //function 
-        this.createStore = function (name: string | undefined) {
+        const store_key = name || get_unique_id();
 
-            system_.notNull(arguments);
+        if (exist(store_key)) {
+            if (config_['isHMR'] === true)
+                console.warn(name + " is already exist in store!");
+            else
+                throw new Error(name + " is already exist in store!");
+        }
 
-            const store_key = name || get_unique_id();
+        return new store_(store_key);
 
-            if (exist(store_key)) {
-                if (config_['isHMR'] === true)
-                    console.warn(name + " is already exist in store!");
-                else
-                    throw new Error(name + " is already exist in store!");
-            }
+    };
 
-            return new store_(store_key);
+    this.clone = function (store, properties?) {
+        system_.notNull(arguments);
+        return Object.assign(new store_(store.name), ...(properties || {}));
+    };
 
-        };
+    this.config = function (custom_config) {
+        system_.notNull(arguments);
+        config_ = { ...config_, ...custom_config };
+    };
 
-        this.clone = function (store, properties?) {
-            system_.notNull(arguments);
-            return Object.assign(new store_(store.name), ...(properties || {}));
-        };
+    this.subscribe = function (func: Function) {
 
-        this.config = function (custom_config) {
-            config_ = { ...config_, ...custom_config };
-        };
+        system_.notNull(arguments);
 
-        // this.exist = exist;
+        Store_subscribers.push(func);
 
-        this.subscribe = function (func: Function) {
-
-            system_.notNull(arguments);
-
-            Store_subscribers.push(func);
-
-            function dispose() {
+        return {
+            dispose: function () {
 
                 system_.notNull(arguments);
 
@@ -197,26 +183,20 @@ export const Store = (function () {
                     Store_subscribers = [...Store_subscribers.slice(0, ind), ...Store_subscribers.slice(ind + 1)];
                 }
             }
-
-            return {
-                dispose
-            };
-        };
-
-        this.reset_initial = function () {
-
-            system_.notNull(arguments);
-
-            Object.entries(get_store_object_initial()).forEach(([key, value]) => {
-                update_state(key, value);
-            });
-
         };
     };
 
-    return new Store_();
+    this.reset_initial = function () {
 
-}());
+        system_.notNull(arguments);
+
+        Object.entries(entire_store_initial()).forEach(([key, value]) => {
+            update_state(key, value);
+        });
+
+    };
+})();
+
 
 
 /**
@@ -228,6 +208,8 @@ function update_state(store_name: string, new_state) {
 
     system_.notNull(arguments);
 
-    set_store_object({ [store_name]: new_state }, Store_subscribers.concat(stores_subscribers[store_name] || []));
+    entire_store({
+        new_state_of_the_comp: { [store_name]: new_state },
+        subscribers: Store_subscribers.concat(stores_subscribers[store_name] || [])
+    });
 }
-
