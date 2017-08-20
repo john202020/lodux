@@ -28,11 +28,6 @@ const store_ = (() => {
             value: emitter_factory.local()
         });
 
-        Object.defineProperty(this, 'state', {
-            configurable: config_.configurable,
-            get: function () { return entire_store()[store_key]; }
-        });
-
         this.dispatch = this.dispatch.bind(this);
         this.reduce = this.reduce.bind(this);
         this.use = this.use.bind(this);
@@ -40,6 +35,7 @@ const store_ = (() => {
         this.subscribe = this.subscribe.bind(this);
 
     }
+
 
     func.prototype.dispatch = function (action, feedback_fn?: Function) {
 
@@ -54,12 +50,14 @@ const store_ = (() => {
         return dispatch_(this, action, feedback_fn);
     }
 
+
     func.prototype.reduce = function (type: string, callback_fn: Function) {
 
         system_.notNull(arguments);
 
         return reduce_(this, update_state, type, callback_fn);
     }
+
 
     func.prototype.use = function (wares) {
 
@@ -80,6 +78,7 @@ const store_ = (() => {
         return clone;
     }
 
+
     func.prototype.diduce = function (action) {
 
         system_.notNull(arguments);
@@ -93,6 +92,7 @@ const store_ = (() => {
 
         this.dispatch(action);
     }
+
 
     func.prototype.subscribe = function (func: Function) {
 
@@ -116,7 +116,9 @@ const store_ = (() => {
         };
     }
 
+
     return func;
+
 
     //remove type
     function pouch(action) {
@@ -133,6 +135,7 @@ function exist(name: string) {
     return entire_store()[name] !== undefined;
 }
 
+
 export const Store = new (function () {
 
     Object.defineProperty(this, 'state', {
@@ -140,6 +143,30 @@ export const Store = new (function () {
             return entire_store();
         }
     });
+
+    
+    //this is specifically for react-lodux
+    this.createConfigurableStore = function (name: string | undefined) {
+
+        system_.notNull(arguments);
+
+        const store_key = name || get_unique_id();
+
+        if (exist(store_key)) {
+            if (config_['isHMR'] === true)
+                console.warn(name + " is already exist in store!");
+            else
+                throw new Error(name + " is already exist in store!");
+        }
+
+        const s = new store_(store_key);
+        Object.defineProperty(s, 'state', {
+            configurable: true,
+            get: function () { return entire_store()[store_key]; }
+        });
+        return s;
+    };
+
 
     this.createStore = function (name: string | undefined) {
 
@@ -154,14 +181,25 @@ export const Store = new (function () {
                 throw new Error(name + " is already exist in store!");
         }
 
-        return new store_(store_key);
-
+        const s = new store_(store_key);
+        Object.defineProperty(s, 'state', {
+            configurable: false,
+            get: function () { return entire_store()[store_key]; }
+        });
+        return s;
     };
+
 
     this.clone = function (store, properties?) {
         system_.notNull(arguments);
-        return Object.assign(new store_(store.name), ...(properties || {}));
+        const s = new store_(store.name);
+        Object.defineProperty(s, 'state', {
+            configurable: Object.getOwnPropertyDescriptor(store, 'state').configurable,
+            get: function () { return entire_store()[store.name]; }
+        });
+        return Object.assign(s, ...(properties || {}));
     };
+
 
     //only effective before store instance creation
     this.config = function (custom_config) {
@@ -169,11 +207,13 @@ export const Store = new (function () {
         config_ = { ...config_, ...custom_config };
     };
 
+
     //only effective before store instance creation
-    this.reset_config = function(){
+    this.reset_config = function () {
         system_.notNull(arguments);
         config_ = { ...config_default };
     }
+
 
     this.subscribe = function (func: Function) {
 
@@ -194,6 +234,7 @@ export const Store = new (function () {
         };
     };
 
+
     this.reset_initial = function () {
 
         system_.notNull(arguments);
@@ -203,6 +244,7 @@ export const Store = new (function () {
         });
 
     };
+
 
 })();
 

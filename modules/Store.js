@@ -52,10 +52,6 @@ var store_ = (function () {
             writable: false,
             value: emitter_1.default.local()
         });
-        Object.defineProperty(this, 'state', {
-            configurable: config_.configurable,
-            get: function () { return Entire_store_1.entire_store()[store_key]; }
-        });
         this.dispatch = this.dispatch.bind(this);
         this.reduce = this.reduce.bind(this);
         this.use = this.use.bind(this);
@@ -131,6 +127,23 @@ exports.Store = new (function () {
             return Entire_store_1.entire_store();
         }
     });
+    //this is specifically for react-lodux
+    this.createConfigurableStore = function (name) {
+        assure_1.system_.notNull(arguments);
+        var store_key = name || Util_1.get_unique_id();
+        if (exist(store_key)) {
+            if (config_['isHMR'] === true)
+                console.warn(name + " is already exist in store!");
+            else
+                throw new Error(name + " is already exist in store!");
+        }
+        var s = new store_(store_key);
+        Object.defineProperty(s, 'state', {
+            configurable: true,
+            get: function () { return Entire_store_1.entire_store()[store_key]; }
+        });
+        return s;
+    };
     this.createStore = function (name) {
         assure_1.system_.notNull(arguments);
         var store_key = name || Util_1.get_unique_id();
@@ -140,11 +153,21 @@ exports.Store = new (function () {
             else
                 throw new Error(name + " is already exist in store!");
         }
-        return new store_(store_key);
+        var s = new store_(store_key);
+        Object.defineProperty(s, 'state', {
+            configurable: false,
+            get: function () { return Entire_store_1.entire_store()[store_key]; }
+        });
+        return s;
     };
     this.clone = function (store, properties) {
         assure_1.system_.notNull(arguments);
-        return Object.assign.apply(Object, __spread([new store_(store.name)], (properties || {})));
+        var s = new store_(store.name);
+        Object.defineProperty(s, 'state', {
+            configurable: Object.getOwnPropertyDescriptor(store, 'state').configurable,
+            get: function () { return Entire_store_1.entire_store()[store.name]; }
+        });
+        return Object.assign.apply(Object, __spread([s], (properties || {})));
     };
     //only effective before store instance creation
     this.config = function (custom_config) {
