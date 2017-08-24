@@ -91,9 +91,6 @@ var assure_ = {
     }
 };
 exports.assure_ = assure_;
-//*********************************//
-//******* local helpers ***********//
-//*********************************//
 function throwError(msg) {
     throw new Error(msg);
 }

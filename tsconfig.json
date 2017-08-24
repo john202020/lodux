@@ -9,7 +9,8 @@
         "lib": [
             "es2017",
             "dom"
-        ]
+        ],
+        "removeComments": true
     },
     "exclude": [
         "node_modules"

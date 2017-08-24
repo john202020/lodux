@@ -9,8 +9,8 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
-var store_object = {}; //entire store
-var store_initial = {}; //entire store
+var store_object = {};
+var store_initial = {};
 function entire_store_initial() {
     assure_1.system_.notNull(arguments);
     return __assign({}, store_initial);

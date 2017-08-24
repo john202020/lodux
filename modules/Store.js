@@ -110,7 +110,6 @@ var store_ = (function () {
         };
     };
     return func;
-    //remove type
     function pouch(action) {
         return Object.entries(action).reduce(function (acc, val) {
             return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
@@ -127,7 +126,6 @@ exports.Store = new (function () {
             return Entire_store_1.entire_store();
         }
     });
-    //this is specifically for react-lodux
     this.createConfigurableStore = function (name) {
         assure_1.system_.notNull(arguments);
         var store_key = name || Util_1.get_unique_id();
@@ -169,12 +167,10 @@ exports.Store = new (function () {
         });
         return Object.assign.apply(Object, __spread([s], (properties || {})));
     };
-    //only effective before store instance creation
     this.config = function (custom_config) {
         assure_1.system_.notNull(arguments);
         config_ = __assign({}, config_, custom_config);
     };
-    //only effective before store instance creation
     this.reset_config = function () {
         assure_1.system_.notNull(arguments);
         config_ = __assign({}, config_default);
@@ -200,11 +196,6 @@ exports.Store = new (function () {
         });
     };
 })();
-/**
- * The only place to update state
- * @param {*} name
- * @param {*} new_state
- */
 function update_state(store_name, new_state) {
     assure_1.system_.notNull(arguments);
     Entire_store_1.entire_store({

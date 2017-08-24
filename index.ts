@@ -1,11 +1,9 @@
 ﻿
-declare const define;
-declare const module;
+declare const define, module;
 
 import { assure_, system_ } from "./helpers/assure";
 import { Store } from "./modules/Store";
 import { dispatch_ } from "./modules/Dispatcher";
-
 
 const root = (0, eval)('this');
 
@@ -23,14 +21,15 @@ const lodux = {
     noConflict
 };
 
+root.lodux = lodux;
+
 if (typeof define === "function" && define.amd) {
     define(function () {
         return lodux;
     });
 }
-else if (typeof module === "object" && module.exports) {
-    module.exports = lodux;
-    module.exports.default = lodux;
-}
 
-root.lodux = lodux;
+if (typeof module === "object" && module.exports) {
+    module.exports.default = { ...lodux };
+    module.exports = { ...lodux };
+}

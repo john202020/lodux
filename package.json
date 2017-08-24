@@ -1,12 +1,12 @@
 {
   "name": "lodux",
-  "version": "1.0.85",
+  "version": "1.0.86",
   "description": "Single store in a one-way observable pattern.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "production": "webpack --env.prod",
-    "push": "npm run production && npm publish"
+    "build": "webpack --env.prod",
+    "push": "npm run build && npm publish"
   },
   "keywords": [
     "single store",
