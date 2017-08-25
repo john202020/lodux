@@ -3,10 +3,10 @@ Single store state management in a one-way observable pattern. Similar to Redux.
 
 This is the first stable `version 1`.
 
-## [lodux/react](/john202020/lodux/tree/v1/react)
+## [lodux/react](https://github.com/john202020/lodux/tree/v1/react/)
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`react`](https://facebook.github.io/react/) component.
 
-## [lodux/vue](/john202020/lodux/tree/v1/vue)
+## [lodux/vue](https://github.com/john202020/lodux/tree/v1/vue/)
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`vuejs`](https://vuejs.org/) component.
 
 ## `Store`(capital S)  
