@@ -1,7 +1,13 @@
 # Single store management for web modules.
-Single store in a one-way observable pattern. Similar to Redux.
+Single store state management in a one-way observable pattern. Similar to Redux.
 
 This is the first stable `version 1`.
+
+## [lodux/react](react/Readme.md)
+Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`react`](https://facebook.github.io/react/) component.
+
+## [lodux/vue](vue/Readme.md)
+Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`vuejs`](https://vuejs.org/) component.
 
 ## `Store`(capital S)  
 It is the collection of all stores, the 'entire store'.  
@@ -37,15 +43,13 @@ cloned_store.dispatch({type: 'call', name:'Mary'});
 
 ## Example
 ```javascript
-import {Store} from "lodux";
+import { Store } from "lodux";
 
 const store = Store.createStore();
 
 store.reduce("add person", action => {
-
     let new_state;// do something to get the new state  
     return { ...store.state, ...new_state, action };
-
 });
 
 store.dispatch({type:'add person', name:'Sam', age: 10});
@@ -73,9 +77,7 @@ npm install --save lodux
 ES6 compilation (e.g. webpack ES6 configuration).  
 No dependencies.  
 
-
 # Others
-
 ## [API](Readme.API.md)
 
 ## [Obsoleted properties](Readme.obsoleted.md)
