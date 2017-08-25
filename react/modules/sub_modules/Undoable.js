@@ -8,9 +8,10 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var index_1 = require("../../../index");
+var assure_1 = require("../../../helpers/assure");
+var Store_1 = require("../../../modules/Store");
 function applyUndoable(store_, creator_) {
-    index_1.system_.notNull(arguments);
+    assure_1.system_.notNull(arguments);
     return {
         store: manipulate_store(store_),
         creator: creator(creator_)
@@ -20,7 +21,7 @@ exports.applyUndoable = applyUndoable;
 function manipulate_store(store) {
     Object.defineProperty(store, 'raw_state', {
         get: function () {
-            return index_1.Store.state[store.name];
+            return Store_1.Store.state[store.name];
         }
     });
     Object.defineProperty(store, 'state', {
@@ -32,7 +33,7 @@ function manipulate_store(store) {
     });
     var proxy_reduce = store.reduce;
     store.reduce = function (type, func) {
-        index_1.system_.notNull(arguments);
+        assure_1.system_.notNull(arguments);
         return proxy_reduce(type, function (action) {
             if (action.undoable) {
                 return action;
@@ -50,9 +51,9 @@ function manipulate_store(store) {
 }
 function creator(creator_) {
     return function (store) {
-        index_1.system_.notNull(arguments);
+        assure_1.system_.notNull(arguments);
         var creator_obj = creator_(store);
-        return __assign({}, creator_obj, { dispatchers: __assign({}, creator_obj.dispatchers, additional_dispatchers(store)) });
+        return __assign({}, creator_obj, creator_obj.dispatchers, additional_dispatchers(store));
     };
 }
 function additional_dispatchers(store) {
