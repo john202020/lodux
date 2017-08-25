@@ -30,7 +30,7 @@ function connect(theClass, creator_) {
         },
         done: function () {
             assure_1.system_.notNull(arguments);
-            var final_store = Store_1.Store.createConfigurableStore(theClass.name);
+            var final_store = Store_1.createConfigurableStore(theClass.name);
             var final_creator = creator_;
             if (hasApplyMiddlewares && logs) {
                 final_store = final_store.use(logs);

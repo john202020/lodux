@@ -100,9 +100,7 @@ const middlewares = [...] // refer to middleware plugins
 const cloned_store = store.use(middlewares);
 ```
 
-## {lodux}
-_noConflict()_
-
+## Download from script tag
 &lt;script src="where /dist/lodux.js is located">&lt;/script>
 ```javascript
 //if in conflict

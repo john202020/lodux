@@ -2,7 +2,6 @@
 import { assure_, system_ } from "../helpers/assure";
 import { reduce_, dispatch_ } from "./Dispatcher";
 import emitter_factory from "../helpers/emitter";
-import { get_unique_id, unique_prefix } from "./Util";
 import { entire_store, entire_store_initial } from "./Entire_store";
 
 let Store_subscribers: Array<Function | undefined> = [];
@@ -10,11 +9,39 @@ const stores_subscribers = {};
 const config_default = { isHMR: false, configurable: false };
 let config_ = { ...config_default };
 
+let _id = 1;
+
+export function get_unique_id(name?: string) {
+    system_.notNull(arguments);
+
+    //check exist again 
+    return name || exist(++_id + "") ? (++_id + "") : (_id + "");
+};
+
+
+function exist(name: string) {
+    system_.notNull(arguments);
+    return entire_store()[name] !== undefined;
+}
+
+
 const store_ = (() => {
 
-    function func(store_key) {
+    function func(store_key: string, isConfigurable: boolean) {
 
-        Object.defineProperty(this, 'name', {
+        if (exist(store_key)) {
+            if (config_['isHMR'] === true)
+                console.warn(store_key + " is already exist in store!");
+            else
+                throw new Error(store_key + " is already exist in store!");
+        }
+
+        Object.defineProperty(this, 'state', {
+            configurable: isConfigurable,
+            get: function () { return entire_store()[store_key]; }
+        });
+
+        Object.defineProperty(this, 'store_key', {
             enumerable: true,
             configurable: false,
             writable: false,
@@ -41,7 +68,7 @@ const store_ = (() => {
 
         system_.notNull(arguments);
 
-        assure_.required(action).string(action.type);
+        assure_.string(action.type);
 
         if (action.type === 'update') {
             throw new Error("action type 'update' is reserved. Please use a more specific action type.");
@@ -98,8 +125,8 @@ const store_ = (() => {
 
         system_.notNull(arguments);
 
-        stores_subscribers[this.name] = stores_subscribers[this.name] || [];
-        const subscribes = stores_subscribers[this.name];
+        stores_subscribers[this.store_key] = stores_subscribers[this.store_key] || [];
+        const subscribes = stores_subscribers[this.store_key];
 
         subscribes.push(func);
 
@@ -110,7 +137,7 @@ const store_ = (() => {
 
                 const ind = subscribes.indexOf(func);
                 if (ind > -1) {
-                    subscribes[this.name] = [...subscribes.slice(0, ind), ...subscribes.slice(ind + 1)];
+                    subscribes[this.store_key] = [...subscribes.slice(0, ind), ...subscribes.slice(ind + 1)];
                 }
             }
         };
@@ -130,10 +157,12 @@ const store_ = (() => {
 })();
 
 
-function exist(name: string) {
+//this is specifically for react-lodux
+export function createConfigurableStore(name: string | undefined) {
     system_.notNull(arguments);
-    return entire_store()[name] !== undefined;
-}
+    const store_key = get_unique_id(name);
+    return new store_(store_key, true);
+};
 
 
 export const Store = new (function () {
@@ -144,59 +173,18 @@ export const Store = new (function () {
         }
     });
 
-    
-    //this is specifically for react-lodux
-    this.createConfigurableStore = function (name: string | undefined) {
 
+    this.createStore = function (name?: string) {
         system_.notNull(arguments);
-
-        const store_key = name || get_unique_id();
-
-        if (exist(store_key)) {
-            if (config_['isHMR'] === true)
-                console.warn(name + " is already exist in store!");
-            else
-                throw new Error(name + " is already exist in store!");
-        }
-
-        const s = new store_(store_key);
-        Object.defineProperty(s, 'state', {
-            configurable: true,
-            get: function () { return entire_store()[store_key]; }
-        });
-        return s;
-    };
-
-
-    this.createStore = function (name: string | undefined) {
-
-        system_.notNull(arguments);
-
-        const store_key = name || get_unique_id();
-
-        if (exist(store_key)) {
-            if (config_['isHMR'] === true)
-                console.warn(name + " is already exist in store!");
-            else
-                throw new Error(name + " is already exist in store!");
-        }
-
-        const s = new store_(store_key);
-        Object.defineProperty(s, 'state', {
-            configurable: false,
-            get: function () { return entire_store()[store_key]; }
-        });
-        return s;
+        const store_key = get_unique_id(name);
+        return new store_(store_key, false);
     };
 
 
     this.clone = function (store, properties?) {
         system_.notNull(arguments);
-        const s = new store_(store.name);
-        Object.defineProperty(s, 'state', {
-            configurable: Object.getOwnPropertyDescriptor(store, 'state').configurable,
-            get: function () { return entire_store()[store.name]; }
-        });
+        const isConfigurable = Object.getOwnPropertyDescriptor(store, 'state').configurable || false;
+        const s = new store_(store.store_key, isConfigurable);
         return Object.assign(s, ...(properties || {}));
     };
 
@@ -255,12 +243,12 @@ export const Store = new (function () {
  * @param {*} name 
  * @param {*} new_state 
  */
-function update_state(store_name: string, new_state) {
+function update_state(store_key: string, new_state) {
 
     system_.notNull(arguments);
 
     entire_store({
-        new_state_of_the_comp: { [store_name]: new_state },
-        subscribers: Store_subscribers.concat(stores_subscribers[store_name] || [])
+        new_state_of_the_comp: { [store_key]: new_state },
+        subscribers: Store_subscribers.concat(stores_subscribers[store_key] || [])
     });
 }

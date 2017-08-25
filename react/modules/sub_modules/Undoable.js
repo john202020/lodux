@@ -21,7 +21,7 @@ exports.applyUndoable = applyUndoable;
 function manipulate_store(store) {
     Object.defineProperty(store, 'raw_state', {
         get: function () {
-            return Store_1.Store.state[store.name];
+            return Store_1.Store.state[store.store_key];
         }
     });
     Object.defineProperty(store, 'state', {

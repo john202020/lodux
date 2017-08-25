@@ -32,8 +32,10 @@ function set_store_object(new_state_of_the_comp, subscribers) {
     system_.notNull(arguments);
     assure_.required(new_state_of_the_comp);
 
-    const store_key = Object.keys(new_state_of_the_comp)[0];
+   // console.log('new_state_of_the_comp', new_state_of_the_comp);
 
+    const store_key = Object.keys(new_state_of_the_comp)[0];
+    
     const isInitial = !store_object[store_key];
 
     if (isInitial) {

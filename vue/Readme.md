@@ -150,3 +150,14 @@ Using `lodux/vue`, you might find the whole page being reloaded rather than modu
 ```javascript
 Store.config({ isHMR: true });
 ```
+
+## Download from script tag
+&lt;script src="where /dist/lodux.js is located">&lt;/script>
+```javascript
+//if in conflict
+var lodux = lodux.noConflict();
+
+var vue = lodux.vue;
+var Store = lodux.vue.Store;
+var connect = lodux.vue.connect;
+```

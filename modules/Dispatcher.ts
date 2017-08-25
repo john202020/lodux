@@ -37,7 +37,7 @@ function reduce_(module, update_state, type: string, callback: Function) {
         const return_state = callback.call({}, pouch(action));
 
         if (return_state !== undefined) {
-            update_state(module.name, return_state);
+            update_state(module.store_key, return_state);
         }
 
         dispatch_(module, { type: action.feedback_type });

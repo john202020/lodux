@@ -137,3 +137,14 @@ To enable modular refresh, set the Store configuration to recognize HMR before d
 ```javascript
 Store.config({ isHMR: true });
 ```
+
+## Download from script tag
+&lt;script src="where /dist/lodux.js is located">&lt;/script>
+```javascript
+//if in conflict
+var lodux = lodux.noConflict();
+
+var react_lodux = lodux.react;
+var Store = lodux.react.Store;
+var connect = lodux.react.connect;
+```
