@@ -2,7 +2,7 @@
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`vuejs`](https://vuejs.org/) component.
 
 
-### Example
+### Example (/src/components/Hello.vue)
 ```javascript
 <template>
   <div class="hello">
