@@ -11,24 +11,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("./helpers/assure");
 var Store_1 = require("./modules/Store");
 var root = (0, eval)('this');
-var previous_lodux = root.lodux;
+var previous_lodux = root['lodux'];
 var noConflict = function () {
-    root.lodux = previous_lodux;
-    return lodux;
+    root['lodux'] = previous_lodux;
+    return modules_;
 };
-var lodux = {
+var modules_ = {
     system_: assure_1.system_,
     assure_: assure_1.assure_,
     Store: Store_1.Store,
     noConflict: noConflict
 };
-root.lodux = lodux;
-if (typeof define === "function" && define.amd) {
+var isAMD = typeof define === "function" && define.amd;
+var isModule = typeof module === "object" && module.exports;
+if (isAMD) {
     define(function () {
-        return lodux;
+        return modules_;
     });
 }
-if (typeof module === "object" && module.exports) {
-    module.exports.default = __assign({}, lodux);
-    module.exports = __assign({}, lodux);
+if (isModule) {
+    module.exports = __assign({}, modules_);
+}
+if (!isAMD && !isModule) {
+    root['lodux'] = modules_;
 }

@@ -7,29 +7,33 @@ import { dispatch_ } from "./modules/Dispatcher";
 
 const root = (0, eval)('this');
 
-const previous_lodux = root.lodux;
+const previous_lodux = root['lodux'];
 
 const noConflict = () => {
-    root.lodux = previous_lodux;
-    return lodux;
+    root['lodux'] = previous_lodux;
+    return modules_;
 };
 
-const lodux = {
+const modules_ = {
     system_,
     assure_,
     Store,
     noConflict
 };
 
-root.lodux = lodux;
+const isAMD = typeof define === "function" && define.amd;
+const isModule = typeof module === "object" && module.exports;
 
-if (typeof define === "function" && define.amd) {
+if (isAMD) {
     define(function () {
-        return lodux;
+        return modules_;
     });
 }
 
-if (typeof module === "object" && module.exports) {
-    module.exports.default = { ...lodux };
-    module.exports = { ...lodux };
+if (isModule) {
+    module.exports = { ...modules_ };
+}
+
+if (!isAMD && !isModule) {
+    root['lodux'] = modules_;
 }
