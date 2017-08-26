@@ -37,20 +37,9 @@ var Store_subscribers = [];
 var stores_subscribers = {};
 var config_default = { isHMR: false, configurable: false };
 var config_ = __assign({}, config_default);
-var _id = 1;
-function get_unique_id(name) {
-    assure_1.system_.notNull(arguments);
-    return name || exist(++_id + "") ? (++_id + "") : (_id + "");
-}
-exports.get_unique_id = get_unique_id;
-;
-function exist(name) {
-    assure_1.system_.notNull(arguments);
-    return Entire_store_1.entire_store()[name] !== undefined;
-}
 var store_ = (function () {
     function func(store_key, isConfigurable) {
-        if (exist(store_key)) {
+        if (Entire_store_1.exist(store_key)) {
             if (config_['isHMR'] === true)
                 console.warn(store_key + " is already exist in store!");
             else
@@ -138,7 +127,7 @@ var store_ = (function () {
 })();
 function createConfigurableStore(name) {
     assure_1.system_.notNull(arguments);
-    var store_key = get_unique_id(name);
+    var store_key = Entire_store_1.get_unique_id(name);
     return new store_(store_key, true);
 }
 exports.createConfigurableStore = createConfigurableStore;
@@ -151,7 +140,7 @@ exports.Store = new (function () {
     });
     this.createStore = function (name) {
         assure_1.system_.notNull(arguments);
-        var store_key = get_unique_id(name);
+        var store_key = Entire_store_1.get_unique_id(name);
         return new store_(store_key, false);
     };
     this.clone = function (store, properties) {

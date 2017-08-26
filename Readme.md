@@ -78,6 +78,6 @@ ES6 compilation (e.g. webpack ES6 configuration).
 No dependencies.  
 
 # Others
-## [API](Readme.API.md)
+## [API](https://github.com/john202020/lodux/tree/v1/Readme.md)
 
-## [Obsoleted properties](Readme.obsoleted.md)
+## [Obsoleted properties](https://github.com/john202020/lodux/tree/v1/Readme.obsoleted.md)

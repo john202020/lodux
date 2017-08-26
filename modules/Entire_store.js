@@ -11,6 +11,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
 var store_object = {};
 var store_initial = {};
+var _id = 1;
+function get_unique_id(name) {
+    assure_1.system_.notNull(arguments);
+    return name || exist(++_id + "") ? (++_id + "") : (_id + "");
+}
+exports.get_unique_id = get_unique_id;
+;
+function exist(name) {
+    assure_1.system_.notNull(arguments);
+    return entire_store()[name] !== undefined;
+}
+exports.exist = exist;
 function entire_store_initial() {
     assure_1.system_.notNull(arguments);
     return __assign({}, store_initial);

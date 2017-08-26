@@ -2,27 +2,12 @@
 import { assure_, system_ } from "../helpers/assure";
 import { reduce_, dispatch_ } from "./Dispatcher";
 import emitter_factory from "../helpers/emitter";
-import { entire_store, entire_store_initial } from "./Entire_store";
+import { entire_store, entire_store_initial, exist, get_unique_id} from "./Entire_store";
 
 let Store_subscribers: Array<Function | undefined> = [];
 const stores_subscribers = {};
 const config_default = { isHMR: false, configurable: false };
 let config_ = { ...config_default };
-
-let _id = 1;
-
-export function get_unique_id(name?: string) {
-    system_.notNull(arguments);
-
-    //check exist again 
-    return name || exist(++_id + "") ? (++_id + "") : (_id + "");
-};
-
-
-function exist(name: string) {
-    system_.notNull(arguments);
-    return entire_store()[name] !== undefined;
-}
 
 
 const store_ = (() => {

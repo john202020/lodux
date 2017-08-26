@@ -1,10 +1,10 @@
 bin
 obj
 *.pdb
+*.ts
+*.map
 desktop.ini
 .DS_Store
 npm-debug.log
 package-lock.json
 node_modules
-**/*.ts
-**/*.map

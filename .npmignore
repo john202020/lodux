@@ -1,9 +1,9 @@
 bin
 obj
 *.pdb
+*.ts
+*.map
 .vscode
-**/*.ts
-**/*.map
 tests
 desktop.ini
 .DS_Store

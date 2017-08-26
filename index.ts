@@ -9,7 +9,6 @@ import react from './react';
 
 const root = (0, eval)('this');
 
-
 const previous_lodux = root['lodux'];
 
 const noConflict = () => {
