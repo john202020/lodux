@@ -1,8 +1,8 @@
 bin
 obj
-*.pdb
-*.ts
-*.map
+**.pdb
+**.ts
+**.map
 .vscode
 tests
 desktop.ini

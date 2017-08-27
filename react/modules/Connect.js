@@ -1,4 +1,12 @@
 "use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../../helpers/assure");
 var Store_1 = require("../../modules/Store");
@@ -40,15 +48,18 @@ function connect(theClass, creator_) {
                 final_store = final.store;
                 final_creator = final.creator;
             }
-            connect_creator(final_store, final_creator);
-            connect_setState(Store_1.Store, final_store, theClass);
+            connect_setState_dispatchers(final_store, final_creator);
+            connect_setState(final_store, theClass);
             return final_store;
         }
     };
     return binder;
 }
 exports.connect = connect;
-function connect_creator(store, creator_) {
+function connect_setState_dispatchers(store, creator_) {
+    var setState = function (new_state) {
+        store.diduce(__assign({ type: 'setState' }, new_state));
+    };
     var dispatchers = creator_(store);
     if (dispatchers !== undefined) {
         for (var key in dispatchers) {
@@ -58,15 +69,16 @@ function connect_creator(store, creator_) {
         }
         Object.assign(store, dispatchers);
     }
+    Object.assign(store, { setState: setState });
     return;
 }
-function connect_setState(Store, store, theClass) {
+function connect_setState(store, theClass) {
     var initial_mount = theClass.prototype.componentDidMount || function () { };
     var initial_unmount = theClass.prototype.componentWillUnmount || function () { };
     var subscriptions = [];
     theClass.prototype.componentDidMount = function () {
         var component = this;
-        subscriptions.push(Store.subscribe(function () {
+        subscriptions.push(store.subscribe(function () {
             component.setState(store.state);
         }));
         initial_mount.call(component);
