@@ -128,6 +128,14 @@ binder = binder.applyMiddleware([log]).applyUndoable();
 const store = binder.done();
 ```
 
+__store.setState(new_state)__  
+Property 'type' is not allowed in new_state.
+```javascript
+const store = binder.done();
+
+store.setState({count: 1});
+```
+
 ## testing with HMR
 When testing with [`react-hot-loader`](https://github.com/gaearon/react-hot-loader), you might find the whole page being reloaded rather than modular refresh.   
 
