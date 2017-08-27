@@ -1,6 +1,6 @@
 {
   "name": "lodux",
-  "version": "1.2.104",
+  "version": "1.2.105",
   "description": "Single store state management in a one-way observable pattern.",
   "main": "index.js",
   "scripts": {

@@ -75,9 +75,9 @@ npm install --save lodux
 
 # notes
 ES6 compilation (e.g. webpack ES6 configuration).  
-No dependencies.  
+No dependencies..  
 
 # Others
-## [API](Readme.md)
+## [API](Readme.API.md)
 
 ## [Obsoleted properties](Readme.obsoleted.md)
