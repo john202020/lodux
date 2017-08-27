@@ -58,6 +58,10 @@ function connect(theClass, creator_) {
 exports.connect = connect;
 function connect_setState_dispatchers(store, creator_) {
     var setState = function (new_state) {
+        assure_1.system_.notNull(arguments);
+        if (new_state.type !== undefined) {
+            throw new Error("Property 'type' is not allowed!");
+        }
         store.diduce(__assign({ type: 'setState' }, new_state));
     };
     var dispatchers = creator_(store);
