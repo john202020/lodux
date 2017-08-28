@@ -7,24 +7,13 @@ import { dispatch_ } from "./modules/Dispatcher";
 import vue from './vue';
 import react from './react';
 
-const root = (0, eval)('this');
-
-const previous_lodux = root['lodux'];
-
-const noConflict = () => {
-    root['lodux'] = previous_lodux;
-    return modules_;
-};
-
 const modules_ = {
     system_,
     assure_,
     Store,
     vue,
-    react,
-    noConflict
+    react
 };
-
 
 const isAMD = typeof define === "function" && define.amd;
 const isModule = typeof module === "object" && module.exports;
@@ -41,5 +30,20 @@ if (isModule) {
 }
 
 if (!isAMD && !isModule) {
-    root['lodux'] = modules_;
+
+    const root = (0, eval)('this');
+    const previous_lodux = root['lodux'];
+
+    const noConflict = () => {
+        root['lodux'] = previous_lodux;
+        return {
+            ...modules_,
+            noConflict: () => { }
+        };
+    };
+
+    root['lodux'] = {
+        ...modules_,
+        noConflict
+    };
 }
