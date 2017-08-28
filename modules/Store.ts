@@ -132,7 +132,7 @@ const store_ = (() => {
     return func;
 
 
-    //remove type
+    //remove property type
     function pouch(action) {
         return Object.entries(action).reduce((acc, val) => {
             return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;

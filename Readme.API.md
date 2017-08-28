@@ -67,18 +67,28 @@ store.dispatch({type:'add person', name:'Sam'}, subscription => {
 __diduce(action)__  
 Consider `diduce()` as `dispatch()` plus internal `reduce()`.  
 
-Internally it invokes a full dispatch/reduce cycle. The internal reducer will return {...store.state, ...action}.  
+Internally it invokes a full dispatch/reduce cycle. The internal reducer will first remove the property 'type' of the action and then return {...store.state, ...new_state}.  
 
-Standard implementation of diduce()
+Standard usage of diduce()
 ```javascript
-const type = 'add';
-const amount = 1;
-
-// prepare new state and wrap into action 
-action = { type, count: store.state ? store.state.count + amount : amount };
-
-// includes action as a property of store state
+let action = {type: 'initial', count: 0};
+store.diduce(action);
+//to leave a trace of the action
 store.diduce({...action, action});
+
+action = {type: 'add', amount: 1};
+// prepare new state (internal reducer), and wrap it as an action 
+let action_as_the_new_state = { type: action.type, count: store.state.count + action.amount };
+store.diduce(action_as_the_new_state);
+//to leave a trace of the action
+store.diduce({...action_as_the_new_state, action});
+
+action = {type: 'minus', amount: 1};
+// prepare new state (internal reducer), and wrap it as an action 
+action_as_the_new_state = { type: action.type, count: store.state.count - action.amount };
+store.diduce(action_as_the_new_state);
+//to leave a trace of the action
+store.diduce({...action_as_the_new_state, action});
 ```
 
 __subscribe(callback_fn): disposable__  
