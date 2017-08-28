@@ -27,10 +27,10 @@ const store = Store.createStore('project1');
 const cloned_store = store.use(middlewares1);
 
 // ignored by middlewares1
-store.dispatch({type: 'call', name: 'Tom'});
+store.dispatch({type : 'call', name : 'Tom'});
 
 // intercepted by middlewares1
-cloned_store.dispatch({type: 'call', name:'Mary'});
+cloned_store.dispatch({type : 'call', name : 'Mary'});
 ```
 
 ## Principles:
@@ -52,16 +52,16 @@ store.reduce("add person", action => {
     return { ...store.state, ...new_state, action };
 });
 
-store.dispatch({type:'add person', name:'Sam', age: 10});
+store.dispatch({type : 'add person', name : 'Sam', age : 10});
 ```
 
 ## middleware plugins
 Following Redux's guidelines to middleware.  
-store => next => ( action[, (subscription)=>{}] ) => { 
-    return next(action[, (subscription)=>{}]); 
+store => next => ( action[, subscription => {}] ) => { 
+    return next(action[, subscription => {}]); 
 }.  
 ```javascript
-//(subscription)=>{} as feedback_fn, is optional but recommended.
+//subscription => {} as feedback_fn, is optional but recommended.
 const log = store => next => (action, feedback_fn) => {
             //.. do somthing like logging the action
             return next(action, feedback_fn);
@@ -73,11 +73,9 @@ const log = store => next => (action, feedback_fn) => {
 npm install --save lodux
 ```
 
-# notes
-ES6 compilation (e.g. webpack ES6 configuration).  
+# notes 
 No dependencies..  
 
 # Others
 ## [API](Readme.API.md)
 
-## [Obsoleted properties](Readme.obsoleted.md)

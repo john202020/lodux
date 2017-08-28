@@ -68,15 +68,14 @@ const creator = store => {
     return dispatchers;
 };
 
-//An alternative is by using the store.diduce(). Using this alternative free you from writing reducers. 
+//An alternative is by using the store.diduce(), it frees you from writing reducers. 
 const creator = store => {
-    const dispatchers = {
-        add: count => {
-            store.diduce({type:'add', count: store.state.count + action.count});
+    //dispatchers
+    return {
+        add: amount => {
+            store.diduce({type:'add', count: store.state.count + amount});
         }
     };
-    
-    return dispatchers;
 };
 ```
 
