@@ -12,15 +12,15 @@ var source = path.join(__dirname);
 var dest_WWWROOT = path.join(__dirname, "dist");
 
 var publishPlugin = [
-    new webpack.optimize.UglifyJsPlugin({
-    compress: true,
-    sourceMap: false,
-    mangle: true,
-    output: {
-        comments: false
-    },
-    exclude: [/node_modules/]
-    })
+    // new webpack.optimize.UglifyJsPlugin({
+    // compress: true,
+    // sourceMap: false,
+    // mangle: true,
+    // output: {
+    //     comments: false
+    // },
+    // exclude: [/node_modules/]
+    // })
 ];
 
 var plugins = [
@@ -41,14 +41,16 @@ module.exports = {
     },
     output: {
         path: dest_WWWROOT,
-        filename: "[name].js"
+        filename: "[name].js",        
+        libraryTarget: "umd"
     },
     plugins: !isDevBuild ? plugins.concat(publishPlugin) : plugins,
     module: {
         loaders: [
             {
                 test: /\.js$/,
-                loader: 'babel-loader', // 'babel-loader' is also a legal name to reference
+                loader: 'babel-loader'
+                , // 'babel-loader' is also a legal name to reference
                 query: {
                     presets: ['es2015']
                 }
