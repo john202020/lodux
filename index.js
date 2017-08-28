@@ -19,8 +19,8 @@ var modules_ = {
     react: react_1.default
 };
 var root = this || (0, eval)('this');
-var isAMD = typeof root.define === "function" && root.define['amd'];
-var isModule = typeof root.module === "object" && root.module.exports;
+var isAMD = typeof define === "function" && define['amd'];
+var isModule = typeof module === "object" && module.exports;
 if (!isAMD && !isModule) {
     var previous_lodux_1 = root['lodux'];
     var noConflict = function () {
