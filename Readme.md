@@ -74,8 +74,7 @@ npm install --save lodux
 ```
 
 # notes 
-No dependencies..  
+No dependencies.  
 
-# Others
 ## [API](Readme.API.md)
 
