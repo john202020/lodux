@@ -49,7 +49,8 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                loader: 'babel-loader', // 'babel-loader' is also a legal name to reference
+                loader: 'babel-loader'
+                , // 'babel-loader' is also a legal name to reference
                 query: {
                     presets: ['es2015']
                 }

@@ -1,8 +1,6 @@
 # Single store management for web modules.
 Single store state management in a one-way observable pattern. Similar to Redux.
 
-This is the first stable `version 1`.
-
 ## [lodux/react](react)
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`react`](https://facebook.github.io/react/) component.
 
@@ -74,8 +72,7 @@ npm install --save lodux
 ```
 
 # notes 
-No dependencies..  
+No dependencies.  
 
-# Others
 ## [API](Readme.API.md)
 
