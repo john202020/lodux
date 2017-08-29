@@ -65,6 +65,7 @@ store.dispatch({type:'add person', name:'Sam'}, d => {
     d.dispose();
 });
 ```
+##### (Anomaly)
 When there is multiple reducers corresponding a dispatcher.  
 <small>(This style of usage is not recommended for normal application)</small>
 ```javascript
@@ -72,24 +73,15 @@ const store = Store.createStore();
 
 store.diduce({ type: 'initial', count: 0 });
 
-store.reduce('add', action => {
-    return { ...store.state, index: 1, count: store.state.count + action.amount };
-});
-store.reduce('add', action => {
-    return { ...store.state, index: 2, count: store.state.count + action.amount };
-});
-store.reduce('add', action => {
-    return { ...store.state, index: 3, count: store.state.count + action.amount };
-});
+store.reduce('add', action => ({ ...store.state, index: 1, count: store.state.count + action.amount }));
+store.reduce('add', action => ({ ...store.state, index: 2, count: store.state.count + action.amount }));
+store.reduce('add', action => ({ ...store.state, index: 3, count: store.state.count + action.amount }));
 
-const action = { type: 'add', amount: 1 };
-store.dispatch(action, d => {
-    if (store.state.index === 1) {
+store.dispatch({ type: 'add', amount: 1 }, d => {
+    if (store.state.index === 1) 
         console.log('count', store.state.count);//count 1
-    }
-    if (store.state.index === 2) {
+    if (store.state.index === 2)
         console.log('count', store.state);//count 2
-    }
     if (store.state.index === 3) {     
         //stop further observing reducers' return.
         d.dispose();
@@ -123,7 +115,6 @@ Subscribe to changes of this store state.
 ```javascript
 const d = store.subscribe(() => {
      ...
-
      // stop observing
      d.dispose();
 });
