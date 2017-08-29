@@ -18,11 +18,11 @@ function manipulate_store(store) {
     Object.defineProperty(store, 'state', {
         configurable: false,
         get: function () {
-            var state = store.raw_state;
+            const state = store.raw_state;
             return state && state.stack !== undefined ? state.stack[state.stack.length - 1] : state;
         }
     });
-    var proxy_reduce = store.reduce;
+    const proxy_reduce = store.reduce;
     store.reduce = function (type, func) {
         system_.notNull(arguments);
         return proxy_reduce(type, function (action) {
@@ -30,11 +30,13 @@ function manipulate_store(store) {
                 return action;
             }
             else {
-                var raw_state = store.raw_state;
-                var _a = slice(raw_state), stack = _a.stack, future = _a.future;
+                const raw_state = store.raw_state;
+                const _a = slice(raw_state);
+                let stack = _a.stack;
+                const future = _a.future;
                 stack = stack.concat(future);
                 stack.push(func(action));
-                return { stack: stack, future: [] };
+                return { stack, future: [] };
             }
         });
     };
@@ -54,15 +56,14 @@ function additional_dispatchers(store) {
                 console.warn('"undo()" will ignore all arguments provided! Please double check your intention.' +
                     "For example, if you are writing onClick='{store.redo}', rewrite it to onClick='{() => store.undo()}'");
             }
-            var state = store.raw_state;
+            const state = store.raw_state;
             if (state === undefined || state.stack === undefined || state.stack.length <= 1) {
                 return;
             }
             else {
-                var _a = slice(state), stack = _a.stack, future = _a.future;
+                const {stack, future} = slice(state);
                 future.unshift(stack.pop());
-                var action = { stack: stack, future: future, type: 'undo', undoable: 'undo' };
-                store.diduce(action);
+                store.diduce({type: 'undo', stack, future,  undoable: 'undo' });
             }
         },
         redo: function () {
@@ -70,18 +71,18 @@ function additional_dispatchers(store) {
                 console.warn('"redo()" will ignore all arguments provided! Please double check your intention.' +
                     "For example, if you are writing onClick='{store.redo}', rewrite it to onClick='{() => store.redo()}'");
             }
-            var state = store.raw_state;
+            const state = store.raw_state;
             if (state.future.length === 0) {
                 return;
             }
-            var _a = slice(state), stack = _a.stack, future = _a.future;
+            const {stack, future} = slice(state);
             stack.push(future.shift());
-            store.diduce({ stack: stack, future: future, type: 'redo', undoable: "redo" });
+            store.diduce({ type: 'redo', stack, future, undoable: "redo" });
         }
     };
 }
 function slice(raw_state) {
-    var stack, future;
+    let stack, future;
     if (raw_state === undefined) {
         stack = [];
         future = [];
@@ -90,5 +91,5 @@ function slice(raw_state) {
         stack = raw_state.stack.slice();
         future = raw_state.future.slice();
     }
-    return { stack: stack, future: future };
+    return { stack, future };
 }

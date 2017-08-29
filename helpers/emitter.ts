@@ -1,5 +1,5 @@
 ﻿/**
-    var subcription = emitter.listen('data', function (data) {
+    let subcription = emitter.listen('data', function (data) {
         console.log('data: ' + data);
     });
 

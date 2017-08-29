@@ -16,12 +16,12 @@ const modules_ = {
 
 export = modules_;
 
-const root =  this || (0, eval)('this');
-
-let isAMD = typeof define === "function" && define['amd'];
-let isModule = typeof module === "object" && module.exports;
+const isAMD = typeof define === "function" && define['amd'];
+const isModule = typeof module === "object" && module.exports;
 
 if (!isAMD && !isModule) {
+    
+    const root =  this || (0, eval)('this');
     
     const previous_lodux = root['lodux'];
     

@@ -40,7 +40,9 @@ function manipulate_store(store) {
             }
             else {
                 var raw_state = store.raw_state;
-                var _a = slice(raw_state), stack = _a.stack, future = _a.future;
+                var _a = slice(raw_state);
+                var stack = _a.stack;
+                var future = _a.future;
                 stack = stack.concat(future);
                 stack.push(func(action));
                 return { stack: stack, future: [] };
@@ -68,10 +70,9 @@ function additional_dispatchers(store) {
                 return;
             }
             else {
-                var _a = slice(state), stack = _a.stack, future = _a.future;
+                var _b = slice(state), stack = _b.stack, future = _b.future;
                 future.unshift(stack.pop());
-                var action = { stack: stack, future: future, type: 'undo', undoable: 'undo' };
-                store.diduce(action);
+                store.diduce({ type: 'undo', stack: stack, future: future, undoable: 'undo' });
             }
         },
         redo: function () {
@@ -83,9 +84,9 @@ function additional_dispatchers(store) {
             if (state.future.length === 0) {
                 return;
             }
-            var _a = slice(state), stack = _a.stack, future = _a.future;
+            var _b = slice(state), stack = _b.stack, future = _b.future;
             stack.push(future.shift());
-            store.diduce({ stack: stack, future: future, type: 'redo', undoable: "redo" });
+            store.diduce({ type: 'redo', stack: stack, future: future, undoable: "redo" });
         }
     };
 }

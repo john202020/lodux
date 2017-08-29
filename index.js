@@ -18,15 +18,15 @@ var modules_ = {
     vue: vue_1.default,
     react: react_1.default
 };
-var root = this || (0, eval)('this');
 var isAMD = typeof define === "function" && define['amd'];
 var isModule = typeof module === "object" && module.exports;
 if (!isAMD && !isModule) {
-    var previous_lodux_1 = root['lodux'];
+    var root_1 = this || (0, eval)('this');
+    var previous_lodux_1 = root_1['lodux'];
     var noConflict = function () {
-        root['lodux'] = previous_lodux_1;
+        root_1['lodux'] = previous_lodux_1;
         return __assign({}, modules_, { noConflict: function () { } });
     };
-    root['lodux'] = __assign({}, modules_, { noConflict: noConflict });
+    root_1['lodux'] = __assign({}, modules_, { noConflict: noConflict });
 }
 module.exports = modules_;

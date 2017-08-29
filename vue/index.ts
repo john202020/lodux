@@ -2,7 +2,7 @@ declare const module;
 
 import { Store } from "../modules/Store";
 import { connect } from "./connect";
-var modules_ = {
+const modules_ = {
     Store,
     connect
 };

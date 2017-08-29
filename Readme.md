@@ -71,8 +71,5 @@ const log = store => next => (action, feedback_fn) => {
 npm install --save lodux
 ```
 
-# notes 
-No dependencies.  
-
 ## [API](Readme.API.md)
 
