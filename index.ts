@@ -1,11 +1,10 @@
-﻿
+﻿declare const define, module;
+
 import { assure_, system_ } from "./helpers/assure";
 import { Store } from "./modules/Store";
 import { dispatch_ } from "./modules/Dispatcher";
 import vue from './vue';
 import react from './react';
-
-//console.log( 'module','define',module,define);
 
 const modules_ = {
     system_,

@@ -14,14 +14,6 @@ var modules_ = {
     Store: Store_1.Store,
     connect: Connect_1.connect
 };
-var isAMD = typeof define === "function" && define.amd;
-var isModule = typeof module === "object" && module.exports;
-if (isAMD) {
-    define(function () {
-        return modules_;
-    });
-}
-if (isModule) {
-    module.exports = __assign({}, modules_);
-    module.exports.default = __assign({}, modules_);
-}
+module.exports = __assign({}, modules_);
+module.exports.default = __assign({}, modules_);
+exports.default = module;

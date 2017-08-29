@@ -1,8 +1,6 @@
 # Single store management for web modules.
 Single store in a one-way observable pattern.
 
-This is the first stable `version 1`.
-
 # API
 
 ## {Store}
@@ -11,10 +9,11 @@ Subscribe to changes of the entire store state
 ```javascript
 const {Store} from "lodux";
 
-const subscription = Store.subscribe(() => { 
+const d = Store.subscribe(() => { 
     //entire store state has some change(s)
     ...
-    subscription.dispose();
+    //observe only once
+    d.dispose();
 });
 ```
 __state__  
@@ -41,26 +40,61 @@ const store_state = store.state;
 
 __reduce(type: string, callback_fn):  disposable__  
 ```javascript
-const subscription = store.reduce(type, action => { 
+const d = store.reduce(type, action => { 
     // observes only once
-    subscription.dispose();
+    d.dispose();
 
-    const new_state  = { count: store.state ? store.state.count + amount : amount };
+    const new_state  = { count: store.state ? store.state.count + action.amount : action.amount };
+
     // includes action as a property of store state
-    return {...store.state, ...new_state, action};
+    // return {...store.state, ...new_state, action};
+
+    return {...store.state, ...new_state};
 });
 
 ```
-__dispatch(action[, (subscription)=>{}])__  
-(subscription)=>{} is the function that observes the corresponding reducer's return.
+__dispatch(action[, (disposable)=>{}])__  
+(disposable)=>{} is the function that observes the reducer's return.
 ```javascript
 store.dispatch({type:'add person', name:'Sam'});
 
-store.dispatch({type:'add person', name:'Sam'}, subscription => {
+store.dispatch({type:'add person', name:'Sam'}, d => {
     // reducer has just returned
     ...    
     //stop observing reducer's return
-    subscription.dispose();
+    d.dispose();
+});
+```
+When there is multiple reducers corresponding a dispatcher.  
+<small>(This style of usage is not recommended for normal application)</small>
+```javascript
+const store = Store.createStore();
+
+store.diduce({ type: 'initial', count: 0 });
+
+store.reduce('add', action => {
+    return { ...store.state, index: 1, count: store.state.count + action.amount };
+});
+store.reduce('add', action => {
+    return { ...store.state, index: 2, count: store.state.count + action.amount };
+});
+store.reduce('add', action => {
+    return { ...store.state, index: 3, count: store.state.count + action.amount };
+});
+
+const action = { type: 'add', amount: 1 };
+store.dispatch(action, d => {
+    if (store.state.index === 1) {
+        console.log('count', store.state.count);//count 1
+    }
+    if (store.state.index === 2) {
+        console.log('count', store.state);//count 2
+    }
+    if (store.state.index === 3) {     
+        //stop further observing reducers' return.
+        d.dispose();
+        console.log('count', store.state);//count 3
+    }
 });
 ```
 
@@ -71,34 +105,27 @@ Internally it invokes a full dispatch/reduce cycle. The internal reducer will fi
 
 Standard usage of diduce()
 ```javascript
-let action = {type: 'initial', count: 0};
-store.diduce(action);
-//to leave a trace of the action
-store.diduce({...action, action});
+store.diduce({type: 'initial', count: 0});
 
-action = {type: 'add', amount: 1};
-// prepare new state (internal reducer), and wrap it as an action 
-let action_as_the_new_state = { type: action.type, count: store.state.count + action.amount };
-store.diduce(action_as_the_new_state);
-//to leave a trace of the action
-store.diduce({...action_as_the_new_state, action});
+let type = 'add';
+// prepare new state (internal reducer)
+let new_state = { count: store.state.count + 1 };
+store.diduce({type, ...new_state});
 
-action = {type: 'minus', amount: 1};
-// prepare new state (internal reducer), and wrap it as an action 
-action_as_the_new_state = { type: action.type, count: store.state.count - action.amount };
-store.diduce(action_as_the_new_state);
-//to leave a trace of the action
-store.diduce({...action_as_the_new_state, action});
+type = 'minus';
+// prepare new state (internal reducer)
+new_state = { count: store.state.count - 1 };
+store.diduce({type, ...new_state});
 ```
 
 __subscribe(callback_fn): disposable__  
 Subscribe to changes of this store state.
 ```javascript
-const subscription = store.subscribe(() => {
+const d = store.subscribe(() => {
      ...
 
      // stop observing
-     subscription.dispose();
+     d.dispose();
 });
 ```
 
