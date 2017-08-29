@@ -1,27 +1,18 @@
-"use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var assure_1 = require("../../../helpers/assure");
-var Store_1 = require("../../../modules/Store");
-function applyUndoable(store_, creator_) {
-    assure_1.system_.notNull(arguments);
+import {assure_, system_} from "../../../helpers/assure";
+import {Store} from "../../../modules/Store";
+
+export function applyUndoable(store_, creator_) {
+    system_.notNull(arguments);
     return {
         store: manipulate_store(store_),
         creator: creator(creator_)
     };
 }
-exports.applyUndoable = applyUndoable;
+
 function manipulate_store(store) {
     Object.defineProperty(store, 'raw_state', {
         get: function () {
-            return Store_1.Store.state[store.store_key];
+            return Store.state[store.store_key];
         }
     });
     Object.defineProperty(store, 'state', {
@@ -33,7 +24,7 @@ function manipulate_store(store) {
     });
     var proxy_reduce = store.reduce;
     store.reduce = function (type, func) {
-        assure_1.system_.notNull(arguments);
+        system_.notNull(arguments);
         return proxy_reduce(type, function (action) {
             if (action.undoable) {
                 return action;
@@ -51,9 +42,9 @@ function manipulate_store(store) {
 }
 function creator(creator_) {
     return function (store) {
-        assure_1.system_.notNull(arguments);
-        var dispatchers = creator_(store);
-        return __assign({}, dispatchers, additional_dispatchers(store));
+        system_.notNull(arguments);
+        const dispatchers = creator_(store);
+        return { ...dispatchers, ...additional_dispatchers(store)};
     };
 }
 function additional_dispatchers(store) {

@@ -41,7 +41,8 @@ module.exports = {
     },
     output: {
         path: dest_WWWROOT,
-        filename: "[name].js"
+        filename: "[name].js",
+        libraryTarget: "umd"
     },
     plugins: !isDevBuild ? plugins.concat(publishPlugin) : plugins,
     module: {

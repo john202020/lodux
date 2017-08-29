@@ -1,5 +1,4 @@
-﻿
-declare const define, module;
+﻿declare const define, module;
 
 import { assure_, system_ } from "./helpers/assure";
 import { Store } from "./modules/Store";
@@ -15,25 +14,17 @@ const modules_ = {
     react
 };
 
-const isAMD = typeof define === "function" && define.amd;
-const isModule = typeof module === "object" && module.exports;
+export = modules_;
 
-if (isAMD) {
-    define(function () {
-        return modules_;
-    });
-}
+const root =  this || (0, eval)('this');
 
-if (isModule) {
-    module.exports = { ...modules_ };
-    module.exports.default = { ...modules_ };
-}
+let isAMD = typeof define === "function" && define['amd'];
+let isModule = typeof module === "object" && module.exports;
 
 if (!isAMD && !isModule) {
-
-    const root = (0, eval)('this');
+    
     const previous_lodux = root['lodux'];
-
+    
     const noConflict = () => {
         root['lodux'] = previous_lodux;
         return {
@@ -41,7 +32,7 @@ if (!isAMD && !isModule) {
             noConflict: () => { }
         };
     };
-
+    
     root['lodux'] = {
         ...modules_,
         noConflict

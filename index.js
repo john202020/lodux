@@ -7,7 +7,6 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("./helpers/assure");
 var Store_1 = require("./modules/Store");
 var vue_1 = require("./vue");
@@ -19,23 +18,15 @@ var modules_ = {
     vue: vue_1.default,
     react: react_1.default
 };
-var isAMD = typeof define === "function" && define.amd;
+var root = this || (0, eval)('this');
+var isAMD = typeof define === "function" && define['amd'];
 var isModule = typeof module === "object" && module.exports;
-if (isAMD) {
-    define(function () {
-        return modules_;
-    });
-}
-if (isModule) {
-    module.exports = __assign({}, modules_);
-    module.exports.default = __assign({}, modules_);
-}
 if (!isAMD && !isModule) {
-    var root_1 = (0, eval)('this');
-    var previous_lodux_1 = root_1['lodux'];
+    var previous_lodux_1 = root['lodux'];
     var noConflict = function () {
-        root_1['lodux'] = previous_lodux_1;
+        root['lodux'] = previous_lodux_1;
         return __assign({}, modules_, { noConflict: function () { } });
     };
-    root_1['lodux'] = __assign({}, modules_, { noConflict: noConflict });
+    root['lodux'] = __assign({}, modules_, { noConflict: noConflict });
 }
+module.exports = modules_;

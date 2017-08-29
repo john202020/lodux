@@ -42,16 +42,19 @@ function watches(store, state) {
     return Object.keys(state)
         .filter(function (k) { return k !== 'action'; })
         .reduce(function (acc, k) {
-        return __assign({}, acc, (_a = {}, _a[k] = {
+        return __assign({}, acc, (_a = {}, _a[k] = h(store, k), _a));
+        var _a;
+    }, {});
+    function h(store, k) {
+        return {
             handler: function (val) {
                 var action = __assign({}, store.state, (_a = {}, _a[k] = val, _a.type = 'change', _a));
                 store.diduce(action);
                 var _a;
             },
             deep: true
-        }, _a));
-        var _a;
-    }, {});
+        };
+    }
 }
 function connect_creator(store, action_creator_) {
     var dispatchers = action_creator_(store);
