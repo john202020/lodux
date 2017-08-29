@@ -6,16 +6,16 @@ To start,
 A 'creator' is a function of dispatchers and reducers, similar to `redux`. Then `connect(the react class, creator)`.
 
 2. within the `constructor()` of React component:  
-set the state as `this.state = store.state`. Here the `store.state` is the value of initial store state. 
+set state as `this.state = store.state`. Here the `store.state` is the value of initial store state. 
 
-3. And within the `render()` of React component:  
-reading the state is the ordinary react `this.state.someproperty`. 
+3. `this.state.someproperty` of React component:  
+reading the state by `this.state.someproperty`. 
 
-4. For activities (updating state):  
-properties of the dispatchers will be the core of state activities. Use `store['any one of the dispatchers property']` to trigger the corresponding dispatcher, then `lodux/react` will trigger react's `setState()` to update the `react` renderer.
+4. activities:  
+properties of the dispatchers will be the core of store activities. Use `store['a dispatcher property']` to trigger the corresponding dispatcher, then `lodux/react` will trigger react's `setState()` to update the `react` renderer.
 
 __summary__  
-trigger a dispatcher -> reducer responses  and update store state -> `lodux/react` trigger `react`'s `setState()` -> `react` renderer refresh
+trigger a dispatcher -> reducer -> `lodux/react` trigger `react`'s `setState()` -> `react` renderer refresh
 
 ### Example
 ```javascript
@@ -46,10 +46,8 @@ const creator = store => {
     return dispatchers;
 };
 
-const initialState = { count: 13 };
-
 const store = connect(Counter, creator).done();
-store.diduce({type:'initial', ...initialState});
+store.diduce({type:'initial', count: 13 });
 ```
 
 ## API
