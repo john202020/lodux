@@ -143,7 +143,7 @@ var Store = lodux_othername.react.Store;
 var connect = lodux_othername.react.connect;
 ```
 
-###Deprecated
+### Deprecated
 within the `constructor()` of React component:  
 <small>(starting from version 1.2.118, constructor() implementation of this.state will be overrided by connect())</small>  
 <s>set state as `this.state = store.state`. Here the `store.state` is the value of initial store state. </s>  
