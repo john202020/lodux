@@ -1,17 +1,11 @@
 # Single store management for react component.
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`react`](https://facebook.github.io/react/) component.
 
-To start, 
-1. write a 'creator':  
+###Principles 
+1. 'creator':  
 A 'creator' is a function of dispatchers and reducers, similar to `redux`. Then `connect(the react class, creator)`.
 
-2. within the `constructor()` of React component:  
-set state as `this.state = store.state`. Here the `store.state` is the value of initial store state. 
-
-3. `this.state.someproperty` of React component:  
-reading the state by `this.state.someproperty`. 
-
-4. activities:  
+2. activities:  
 properties of the dispatchers will be the core of store activities. Use `store['a dispatcher property']` to trigger the corresponding dispatcher, then `lodux/react` will trigger react's `setState()` to update the `react` renderer.
 
 __summary__  
@@ -122,8 +116,6 @@ const store = binder.done();
 
 __store.setState(new_state)__  
 <s>Property 'type' is not allowed in new_state.</s>  
-<small>(starting from version 1.2.116)</small>  
-If property 'type' is optional. If not set, {type:'setState'} will be appended to the new_state;
 ```javascript
 const store = binder.done();
 
@@ -150,3 +142,8 @@ var react_lodux = lodux_othername.react;
 var Store = lodux_othername.react.Store;
 var connect = lodux_othername.react.connect;
 ```
+
+###Deprecated
+within the `constructor()` of React component:  
+<small>(starting from version 1.2.118, constructor() implementation of this.state will be overrided by connect())</small>  
+<s>set state as `this.state = store.state`. Here the `store.state` is the value of initial store state. </s>  
