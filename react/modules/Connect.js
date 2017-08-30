@@ -11,9 +11,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../../helpers/assure");
 var Store_1 = require("../../modules/Store");
 var Undoable = require("./sub_modules/Undoable");
+var hmrstate = (function () {
+    var state = undefined;
+    return function (store) {
+        console.log('state 0', state);
+        store.subscribe(function () {
+            state = store.state;
+        });
+        if (state)
+            store.setState(state);
+        console.log('state 1', state);
+    };
+}());
 function connect(theClass, creator_, initial_state) {
     assure_1.system_.notNull(arguments);
-    assure_1.assure_.func(theClass).required(creator_);
+    assure_1.assure_.func(theClass)
+        .required(creator_)
+        .required(initial_state);
     var hasApplyUndoable = false;
     var hasApplyMiddlewares = false;
     var logs = undefined;
@@ -50,8 +64,9 @@ function connect(theClass, creator_, initial_state) {
             }
             connect_custom_methods(final_store, final_creator);
             connect_setState(final_store, theClass);
-            if (initial_state !== undefined) {
-                final_store.setState(initial_state);
+            final_store.setState(initial_state);
+            if (Store_1.Store.config().isHMR) {
+                hmrstate(final_store);
             }
             return final_store;
         }
@@ -65,7 +80,7 @@ function connect_custom_methods(store, creator_) {
         var t = typeof new_state.type;
         if (t !== "undefined" && t !== "string")
             throw new Error("type of new_state can only be string type if provided!");
-        var type = new_state.type !== undefined ? new_state.type : 'setState';
+        var type = new_state.type || 'setState';
         store.diduce(__assign({}, new_state, { type: type }));
     };
     var dispatchers = creator_(store);
@@ -82,32 +97,51 @@ function connect_custom_methods(store, creator_) {
 }
 function connect_setState(store, theClass) {
     var pro = theClass.prototype;
-    var initial_WillMount = pro.componentWillMount || function () { };
-    var initial_WillUnmount = pro.componentWillUnmount || function () { };
+    var willMount = pro.componentWillMount || function () { };
+    var willUnmount = pro.componentWillUnmount || function () { };
+    var render = pro.render || function () { };
+    var componentWillReceiveProps = pro.componentWillReceiveProps || function () { };
+    var shouldComponentUpdate = pro.shouldComponentUpdate || function () { };
+    var componentDidUpdate = pro.componentDidUpdate || function () { };
     var subscriptions = [];
+    pro.componentDidUpdate = function () {
+        var component = this;
+        componentDidUpdate.call(component);
+    };
+    pro.shouldComponentUpdate = function () {
+        var component = this;
+        return shouldComponentUpdate.call(component) || true;
+    };
+    pro.componentWillReceiveProps = function () {
+        var component = this;
+        componentWillReceiveProps.call(component);
+    };
+    pro.render = function () {
+        var component = this;
+        unsubscribe();
+        subscribe(component, store);
+        component.state = component.state || store.state;
+        return render.call(component);
+    };
     pro.componentWillMount = function () {
         var component = this;
-        unsubscribe(subscriptions);
-        subscribe(component, subscriptions, store);
-        component.state = component.state || store.state;
-        return initial_WillMount.call(component);
+        return willMount.call(component);
     };
     pro.componentWillUnmount = function () {
         var component = this;
-        unsubscribe(subscriptions);
-        console.log('unmount');
-        initial_WillUnmount.call(component);
+        unsubscribe();
+        willUnmount.call(component);
     };
-}
-function subscribe(component, subscriptions, store) {
-    subscriptions.push(store.subscribe(function () {
-        component.setState(store.state);
-    }));
-}
-function unsubscribe(subscriptions) {
-    var _subscriptions = subscriptions.slice();
-    subscriptions.length = 0;
-    _subscriptions.forEach(function (d) {
-        d ? d.dispose() : undefined;
-    });
+    function subscribe(component, store) {
+        subscriptions.push(store.subscribe(function () {
+            component.setState(store.state);
+        }));
+    }
+    function unsubscribe() {
+        var _subscriptions = subscriptions.slice();
+        subscriptions.length = 0;
+        _subscriptions.forEach(function (d) {
+            d ? d.dispose() : undefined;
+        });
+    }
 }

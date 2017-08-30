@@ -82,9 +82,11 @@ const creator = store => {
 ### Binder
 It binds `lodux` to `React` component. Binder invocation is chainable and communtative (order is irrelevant). 
 
-__connect(class, creator): binder__  
+__connect(class, creator, initial_state): binder__  
+<small>(starting from version 1.2.117, initial_state is compulsory)</small>  
 ```javascript
-const binder = connect(Counter, creator);
+const initial_state = { count: 0 };
+const binder = connect(Counter, creator, initial_state);
 ```
 
 __applyUndoable(): binder__  
