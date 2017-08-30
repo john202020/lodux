@@ -23,10 +23,12 @@ import React, { Component } from 'react';
 import { Store, connect } from "lodux/react";
 
 class Counter extends Component {
-    constructor() {
-        super();
-        this.state = store.state;
-    }
+    
+    //this is optional
+    //constructor() {
+    //    super();      
+    //    this.state = store.state;
+    //}
 
     public render() {
         return <div>
@@ -45,9 +47,10 @@ const creator = store => {
    
     return dispatchers;
 };
-
-const store = connect(Counter, creator).done();
-store.diduce({type:'initial', count: 13 });
+const initial_state = {count: 13};
+const store = connect(Counter, creator, initial_state).done();
+//set initial state
+//store.diduce({type:'initial', count: 13 });
 ```
 
 ## API
@@ -57,13 +60,12 @@ __creator__
 
 ```javascript
 const creator = store => {
-    const dispatchers = {
-        add: amount => { store.dispatch({ type: 'add', amount }); }
-    };
-    
     store.reduce('add', action => ({ ...store.state, count: store.state.count + action.amount} })); 
 
-    return dispatchers;
+    //dispatchers
+    return {
+        add: amount => { store.dispatch({ type: 'add', amount }); }
+    };
 };
 
 //An alternative is by using the store.diduce(), it frees you from writing reducers. 
@@ -126,7 +128,8 @@ const store = binder.done();
 ```
 
 __store.setState(new_state)__  
-Property 'type' is not allowed in new_state.
+<s>Property 'type' is not allowed in new_state.</s>
+If property 'type' is optional. If not set, {type:'setState'} will be appended to the new_state;
 ```javascript
 const store = binder.done();
 
@@ -147,9 +150,9 @@ Store.config({ isHMR: true });
 &lt;script src="where /dist/lodux.js is located">&lt;/script>
 ```javascript
 //if in conflict
-var lodux = lodux.noConflict();
+var lodux_othername = lodux.noConflict();
 
-var react_lodux = lodux.react;
-var Store = lodux.react.Store;
-var connect = lodux.react.connect;
+var react_lodux = lodux_othername.react;
+var Store = lodux_othername.react.Store;
+var connect = lodux_othername.react.connect;
 ```

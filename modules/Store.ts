@@ -2,12 +2,12 @@
 import { assure_, system_ } from "../helpers/assure";
 import { reduce_, dispatch_ } from "./Dispatcher";
 import emitter_factory from "../helpers/emitter";
-import { entire_store, entire_store_initial, exist, get_unique_id} from "./Entire_store";
+import { entire_store, entire_store_initial, exist, get_unique_id } from "./Entire_store";
 
 let Store_subscribers: Array<Function | undefined> = [];
 const stores_subscribers = {};
-const config_default = { isHMR: false, configurable: false };
-let config_ = { ...config_default };
+const config_default = { isHMR: false };
+let config_: Object = { ...config_default };
 
 
 const store_ = (() => {
@@ -109,9 +109,11 @@ const store_ = (() => {
     func.prototype.subscribe = function (func: Function) {
 
         system_.notNull(arguments);
+        
+        const store_key = this.store_key;
 
-        stores_subscribers[this.store_key] = stores_subscribers[this.store_key] || [];
-        const subscribes = stores_subscribers[this.store_key];
+        stores_subscribers[store_key] = stores_subscribers[store_key] || [];
+        const subscribes = stores_subscribers[store_key];
 
         subscribes.push(func);
 
@@ -120,9 +122,13 @@ const store_ = (() => {
 
                 system_.notNull(arguments);
 
-                const ind = subscribes.indexOf(func);
+                const ind = stores_subscribers[store_key].indexOf(func);
+
                 if (ind > -1) {
-                    subscribes[this.store_key] = [...subscribes.slice(0, ind), ...subscribes.slice(ind + 1)];
+                    stores_subscribers[store_key] = [
+                        ...stores_subscribers[store_key].slice(0, ind),
+                        ...stores_subscribers[store_key].slice(ind + 1)
+                    ];
                 }
             }
         };
@@ -158,6 +164,15 @@ export const Store = new (function () {
         }
     });
 
+    //only effective before store instance creation
+    this.config = function (custom_config?: Object) {
+        system_.notNull(arguments);
+        if (custom_config !== undefined) {
+            config_ = { ...config_, ...custom_config };
+        }
+        return { ...config_ };
+    };
+
 
     this.createStore = function (name?: string) {
         system_.notNull(arguments);
@@ -173,12 +188,6 @@ export const Store = new (function () {
         return Object.assign(s, ...(properties || {}));
     };
 
-
-    //only effective before store instance creation
-    this.config = function (custom_config) {
-        system_.notNull(arguments);
-        config_ = { ...config_, ...custom_config };
-    };
 
 
     //only effective before store instance creation

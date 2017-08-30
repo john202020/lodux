@@ -5,6 +5,7 @@ let store_object = {};//entire store
 let store_initial = {};//entire store
 
 let _id = 1;
+//let hmrState: Object | undefined = undefined;
 
 export function get_unique_id(name?: string) {
     system_.notNull(arguments);
@@ -22,18 +23,23 @@ export function entire_store_initial() {
     return { ...store_initial };
 }
 
-export function entire_store(argu ?: any) {
+export function entire_store(argu?: any) {
     system_.notNull(arguments);
-    
+
     if (arguments.length === 1) {
         const { new_state_of_the_comp, subscribers } = argu;
 
         set_store_object(new_state_of_the_comp, subscribers);
 
     }
-    return { ...store_object };
 
+  //  hmrState = { ...store_object };
+    return { ...store_object };
 }
+
+// export function get_hmrState() {
+//     return { ...hmrState };
+// }
 
 function get_store_object() {
     system_.notNull(arguments);
@@ -46,7 +52,7 @@ function set_store_object(new_state_of_the_comp, subscribers) {
     assure_.required(new_state_of_the_comp);
 
     const store_key = Object.keys(new_state_of_the_comp)[0];
-    
+
     const isInitial = !store_object[store_key];
 
     if (isInitial) {

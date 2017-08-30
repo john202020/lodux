@@ -35,7 +35,7 @@ var emitter_1 = require("../helpers/emitter");
 var Entire_store_1 = require("./Entire_store");
 var Store_subscribers = [];
 var stores_subscribers = {};
-var config_default = { isHMR: false, configurable: false };
+var config_default = { isHMR: false };
 var config_ = __assign({}, config_default);
 var store_ = (function () {
     function func(store_key, isConfigurable) {
@@ -105,15 +105,16 @@ var store_ = (function () {
     };
     func.prototype.subscribe = function (func) {
         assure_1.system_.notNull(arguments);
-        stores_subscribers[this.store_key] = stores_subscribers[this.store_key] || [];
-        var subscribes = stores_subscribers[this.store_key];
+        var store_key = this.store_key;
+        stores_subscribers[store_key] = stores_subscribers[store_key] || [];
+        var subscribes = stores_subscribers[store_key];
         subscribes.push(func);
         return {
             dispose: function () {
                 assure_1.system_.notNull(arguments);
-                var ind = subscribes.indexOf(func);
+                var ind = stores_subscribers[store_key].indexOf(func);
                 if (ind > -1) {
-                    subscribes[this.store_key] = __spread(subscribes.slice(0, ind), subscribes.slice(ind + 1));
+                    stores_subscribers[store_key] = __spread(stores_subscribers[store_key].slice(0, ind), stores_subscribers[store_key].slice(ind + 1));
                 }
             }
         };
@@ -138,6 +139,13 @@ exports.Store = new (function () {
             return Entire_store_1.entire_store();
         }
     });
+    this.config = function (custom_config) {
+        assure_1.system_.notNull(arguments);
+        if (custom_config !== undefined) {
+            config_ = __assign({}, config_, custom_config);
+        }
+        return __assign({}, config_);
+    };
     this.createStore = function (name) {
         assure_1.system_.notNull(arguments);
         var store_key = Entire_store_1.get_unique_id(name);
@@ -148,10 +156,6 @@ exports.Store = new (function () {
         var isConfigurable = Object.getOwnPropertyDescriptor(store, 'state').configurable || false;
         var s = new store_(store.store_key, isConfigurable);
         return Object.assign.apply(Object, __spread([s], (properties || {})));
-    };
-    this.config = function (custom_config) {
-        assure_1.system_.notNull(arguments);
-        config_ = __assign({}, config_, custom_config);
     };
     this.reset_config = function () {
         assure_1.system_.notNull(arguments);

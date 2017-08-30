@@ -1,5 +1,5 @@
 ﻿
-const system_ = {
+export const system_ = {
     notNull: function (args) {
 
         if (args === undefined) {
@@ -13,25 +13,21 @@ const system_ = {
         return;
 
         function checkProp(obj) {
-            if (obj === undefined)
+            if (obj === undefined || typeof obj !== "object")
                 return;
 
-            const type = typeof obj;
+            if (!obj) {
+                throwError("null is not allowed");
+            }
 
-            if (type === "object") {
-                if (!obj) {
-                    throwError("null is not allowed");
-                }
-
-                for (let key in obj) {
-                    checkProp(obj[key]);
-                }
+            for (let key in Object.getOwnPropertyNames(obj)) {
+                checkProp(obj[key]);
             }
         }
     }
 };
 
-const assure_ = {
+export const assure_ = {
     class: function (theClass, errormsg?: any) {
         if (!(typeof theClass === 'function' && /^\s*class\s+/.test(theClass.toString()))) {
             throwError(errormsg || theClass + " does not seems to be class! class is expected.");
@@ -81,9 +77,6 @@ const assure_ = {
         return assure_;
     }
 };
-
-export { system_, assure_ };
-
 
 
 //*********************************//
