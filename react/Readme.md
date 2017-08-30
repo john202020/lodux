@@ -24,12 +24,6 @@ import { Store, connect } from "lodux/react";
 
 class Counter extends Component {
     
-    //this is optional
-    //constructor() {
-    //    super();      
-    //    this.state = store.state;
-    //}
-
     public render() {
         return <div>
             <p>Current count: {this.state.count}</p> &nbsp;
@@ -49,8 +43,6 @@ const creator = store => {
 };
 const initial_state = {count: 13};
 const store = connect(Counter, creator, initial_state).done();
-//set initial state
-//store.diduce({type:'initial', count: 13 });
 ```
 
 ## API
