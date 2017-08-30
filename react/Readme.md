@@ -1,7 +1,7 @@
 # Single store management for react component.
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`react`](https://facebook.github.io/react/) component.
 
-###Principles 
+### Principles 
 1. 'creator':  
 A 'creator' is a function of dispatchers and reducers, similar to `redux`. Then `connect(the react class, creator)`.
 
