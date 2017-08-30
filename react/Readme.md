@@ -47,8 +47,7 @@ const store = connect(Counter, creator, initial_state).done();
 
 ## API
 
-__creator__  
-'creator' is a collection of dispatchers and reducers. 
+__creator__ is a collection of dispatchers and reducers. 
 
 ```javascript
 const creator = store => {
