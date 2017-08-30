@@ -128,7 +128,8 @@ const store = binder.done();
 ```
 
 __store.setState(new_state)__  
-<s>Property 'type' is not allowed in new_state.</s>
+<s>Property 'type' is not allowed in new_state.</s>  
+<small>(starting from version 1.2.116)</small>  
 If property 'type' is optional. If not set, {type:'setState'} will be appended to the new_state;
 ```javascript
 const store = binder.done();
