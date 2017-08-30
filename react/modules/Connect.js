@@ -14,13 +14,11 @@ var Undoable = require("./sub_modules/Undoable");
 var hmrstate = (function () {
     var state = undefined;
     return function (store) {
-        console.log('state 0', state);
         store.subscribe(function () {
             state = store.state;
         });
         if (state)
             store.setState(state);
-        console.log('state 1', state);
     };
 }());
 function connect(theClass, creator_, initial_state) {

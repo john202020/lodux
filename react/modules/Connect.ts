@@ -2,22 +2,18 @@ import { assure_, system_ } from "../../helpers/assure";
 import { Store, createConfigurableStore } from "../../modules/Store";
 import * as Undoable from "./sub_modules/Undoable";
 
-
 const hmrstate = (function () {
 
     let state = undefined;
 
     return function (store) {
 
-        console.log('state 0', state);
         store.subscribe(() => {
             state = store.state;
         });
 
         if (state)
             store.setState(state);
-
-        console.log('state 1', state);
     }
 }());
 
