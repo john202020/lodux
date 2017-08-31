@@ -9,7 +9,7 @@ Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`vuejs`](htt
 
 ## [API](Readme.API.md)
 
-## `Store`(capital S)  
+## Store(capital S)  
 It is the collection of all stores, the 'entire store'.  
 
 It has `createStore()` creates a unique store, `subscribe()` observes state changes of the entire store, and `reset_initial()` update the entire store to its initial state. One property, `state` returns a snapshot of the entire store state.
@@ -34,14 +34,14 @@ A store and its cloned store share the same store state. Cloned store serves as 
 const store = Store.createStore('project1');
 const cloned_store = store.use(middlewares1);
 
-// ignored by middlewares1
+// ignored by the middlewares1
 store.dispatch({type : 'call', name : 'Tom'});
 
-// intercepted by middlewares1
+// intercepted by the middlewares1
 cloned_store.dispatch({type : 'call', name : 'Mary'});
 ```
 
-## Usage
+## Simple usage
 ```javascript
 import { Store } from "lodux";
 

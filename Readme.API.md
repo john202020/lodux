@@ -1,8 +1,6 @@
 # Single store management for web modules.
 Single store in a one-way observable pattern.
 
-# API
-
 ## {Store}
 __subscribe(callback_fn): disposable__  
 Subscribe to changes of the entire store state
@@ -123,8 +121,8 @@ const d = store.subscribe(() => {
 __use(array of middlewares): store (cloned)__  
 Firstly, it clones the store, then applies the middleware to the `cloned store`.  
 
-### middleware plugins
-Following Redux's guidelines to middleware.  
+#### middleware plugins
+Redux's style middleware.  
 store => next => ( action[, subscription => {}] ) => { 
     return next(action[, subscription => {}]); 
 }.  
