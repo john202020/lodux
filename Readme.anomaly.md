@@ -1,6 +1,4 @@
 # Single store management for web modules.
-Single store in a one-way observable pattern.
-
 Following usage is not recommended for normal application
 
 ## Anomaly
