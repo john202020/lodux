@@ -9,6 +9,8 @@ Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`vuejs`](htt
 
 ## [API](Readme.API.md)
 
+## [Anomaly](Readme.anomaly.md)
+
 ## Store(capital S)  
 It is the collection of all stores, the 'entire store'.  
 
