@@ -121,18 +121,22 @@ const d = store.subscribe(() => {
 ```
 
 __use(array of middlewares): store (cloned)__  
-Firstly, it clones the store, then applies the middleware to the `cloned store`.
+Firstly, it clones the store, then applies the middleware to the `cloned store`.  
+
+### middleware plugins
+Following Redux's guidelines to middleware.  
+store => next => ( action[, subscription => {}] ) => { 
+    return next(action[, subscription => {}]); 
+}.  
 ```javascript
-const middlewares = [...] // refer to middleware plugins
+//subscription => {} as feedback_fn, is optional but recommended.
+const log = store => next => (action, feedback_fn) => {
+            //.. do somthing like logging the action
+            return next(action, feedback_fn);
+        };
+
+const middlewares = [log];
 ...
 const cloned_store = store.use(middlewares);
 ```
 
-## Download from script tag
-&lt;script src="where /dist/lodux.js is located">&lt;/script>
-```javascript
-//if in conflict
-const lodux = lodux.noConflict();
-
-const Store = lodux.Store;
-```

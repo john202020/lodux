@@ -26,15 +26,15 @@ class Counter extends Component {
     }
 }
 
-const creator = store => {
-    const dispatchers = {
-        add: amount => { store.dispatch({ type: 'add', amount }); }
-    };
-    
+const creator = store => {    
     store.reduce('add', action => ({ count: store.state.count + action.amount }));
    
-    return dispatchers;
+    //dispatchers
+    return {
+        add: amount => { store.dispatch({ type: 'add', amount }); }
+    };
 };
+
 const initial_state = {count: 13};
 const store = connect(Counter, creator, initial_state).done();
 ```
@@ -80,10 +80,9 @@ This will add additional methods (undo, redo) to the store, and `applyUndoable()
 public render() {    
     return <div>
         <p>Current count: {this.state.count}</p> &nbsp;
-        <a onClick={() => store.add(10)}>add</a> &nbsp;
-
-        <a onClick={()=>store.undo()}>undo</a> &nbsp;
-        <a onClick={()=>store.redo()}>redo</a>
+        <a onClick={() => store.add(10)}>add</a> <br/>
+        <a onClick={store.undo}>undo</a> &nbsp;
+        <a onClick={store.redo}>redo</a>
     </div>
 }
 
