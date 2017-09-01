@@ -19,9 +19,17 @@ store.dispatch({ type: 'add', amount: 1 }, d => {
         console.log('count', store.state);//count 2
     if (store.state.index === 3) {     
         //stop further observing reducers' return.
-        d.dispose();
+        //d.dispose();
         console.log('count', store.state);//count 3
+        console.log('done');
     }
+
+    // ouput for each dispatch invocation
+    // count 1
+    // count 2
+    // count 3
+    // done
+
 });
 ```
 
