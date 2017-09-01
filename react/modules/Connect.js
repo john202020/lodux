@@ -75,9 +75,10 @@ exports.connect = connect;
 function connect_custom_methods(store, creator_) {
     var setState = function (new_state) {
         assure_1.system_.notNull(arguments);
-        var t = typeof new_state.type;
-        if (t !== "undefined" && t !== "string")
-            throw new Error("type of new_state can only be string type if provided!");
+        assure_1.assure_.nonFunc(new_state);
+        var t = new_state.type;
+        if (t && typeof t !== "string")
+            throw new Error("type of new_state can only be string if provided!");
         var type = new_state.type || 'setState';
         store.diduce(__assign({}, new_state, { type: type }));
     };
@@ -110,9 +111,9 @@ function connect_setState(store, theClass) {
         var component = this;
         return shouldComponentUpdate.call(component) || true;
     };
-    pro.componentWillReceiveProps = function () {
+    pro.componentWillReceiveProps = function (nextProps) {
         var component = this;
-        componentWillReceiveProps.call(component);
+        componentWillReceiveProps.call(component, nextProps);
     };
     pro.render = function () {
         var component = this;
@@ -123,7 +124,7 @@ function connect_setState(store, theClass) {
     };
     pro.componentWillMount = function () {
         var component = this;
-        return willMount.call(component);
+        willMount.call(component);
     };
     pro.componentWillUnmount = function () {
         var component = this;

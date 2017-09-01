@@ -1,7 +1,7 @@
 # Single store management for react component.
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`react`](https://facebook.github.io/react/) component.
 
-### Principles 
+## Principles 
 1. 'creator':  
 A 'creator' is a function of dispatchers and reducers, similar to `redux`. Then `connect(the react class, creator)`.
 
@@ -11,7 +11,7 @@ properties of the dispatchers will be the core of store activities. Use `store['
 __summary__  
 trigger a dispatcher -> reducer -> `lodux/react` trigger `react`'s `setState()` -> `react` renderer refresh
 
-### Example
+## Example
 ```javascript
 import React, { Component } from 'react';
 import { Store, connect } from "lodux/react";
@@ -114,15 +114,23 @@ const store = binder.done();
 ```
 
 __store.setState(new_state)__  
+store.setState() is synchronous.  
 <s>Property 'type' is not allowed in new_state.</s>  
+<strong>Make sure not to mix lodux/react setState() and reactjs setState() in an application.</strong>  
+Learn more about [React's State Updates May Be Asynchronous](https://facebook.github.io/react/docs/state-and-lifecycle.html)
 ```javascript
 const store = binder.done();
 
 store.setState({count: 1});
+//or adding some value
+store.setState({count: store.state.count + 1});
+
+// Wrong mixing state managements
+store.setState({count: this.state.count + 1});
 ```
 
 ## testing with HMR
-When testing with [`react-hot-loader`](https://github.com/gaearon/react-hot-loader), you might find the whole page being reloaded rather than modular refresh.   
+When testing with [`react-hot-loader`](https://github.com/gaearon/react-hot-loader), you might find the whole page being reloaded rather than modular refresh.  
 
 It is because `react-hot-loader` needs to set up duplicate modules. Duplicate modules leads to duplicate stores. The problem is that `lodux` will throw error when there are duplicate stores. When `react-hot-loader` encounters exception, it reloaded the whole page.   
 
@@ -142,7 +150,4 @@ var Store = lodux_othername.react.Store;
 var connect = lodux_othername.react.connect;
 ```
 
-### Deprecated
-within the `constructor()` of React component:  
-<small>(starting from version 1.2.118, constructor() implementation of this.state will be overrided by connect())</small>  
-<s>set state as `this.state = store.state`. Here the `store.state` is the value of initial store state. </s>  
+## [Deprecated](Deprecated.md)

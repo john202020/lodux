@@ -22,8 +22,8 @@ export function connect(theClass, creator_, initial_state) {
 
     system_.notNull(arguments);
     assure_.func(theClass)
-    .required(creator_)
-    .required(initial_state);
+        .required(creator_)
+        .required(initial_state);
 
     let hasApplyUndoable = false;
     let hasApplyMiddlewares = false;
@@ -76,14 +76,17 @@ export function connect(theClass, creator_, initial_state) {
     return binder;
 }
 
+
 function connect_custom_methods(store, creator_) {
 
     const setState = function (new_state) {
         system_.notNull(arguments);
+        assure_.nonFunc(new_state);
 
-        const t = typeof new_state.type;
-        if (t !== "undefined" && t !== "string")
-            throw new Error("type of new_state can only be string type if provided!");
+        const t = new_state.type;
+        
+        if (t && typeof t !== "string")
+            throw new Error("type of new_state can only be string if provided!");
 
         const type = new_state.type || 'setState';
         store.diduce({ ...new_state, type });
@@ -132,10 +135,15 @@ function connect_setState(store, theClass) {
         return shouldComponentUpdate.call(component) || true;
     };
 
-    pro.componentWillReceiveProps = function () {
+    pro.componentWillReceiveProps = function (nextProps) {
         const component = this;
 
-        componentWillReceiveProps.call(component);
+        // if (nextProps.location !== this.props.location) {
+        //     // navigated!
+        //     console.log('navigated!');
+        // }
+
+        componentWillReceiveProps.call(component, nextProps);
     };
 
     pro.render = function () {
@@ -151,7 +159,8 @@ function connect_setState(store, theClass) {
 
     pro.componentWillMount = function () {
         const component = this;
-        return willMount.call(component);
+
+        willMount.call(component);
     }
 
     pro.componentWillUnmount = function () {
@@ -173,7 +182,6 @@ function connect_setState(store, theClass) {
         subscriptions.length = 0;
 
         _subscriptions.forEach(d => {
-            // console.log('dispose', d);
             d ? d.dispose() : undefined
         });
     }
