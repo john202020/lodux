@@ -88,6 +88,8 @@ public render() {
 
 binder = binder.applyUndoable();
 
+const store = binder.done();
+
 //additional properties will be attached to the store
 const { state, raw_state /**stack and future**/, undo, redo, add } = store
 ```
@@ -109,11 +111,14 @@ done() should be the last call because it will break the chain and return a stor
 binder = binder.applyUndoable().applyMiddleware([log]);
 //same as 
 binder = binder.applyMiddleware([log]).applyUndoable();
+```
 
+### {store}
+```javascript
 const store = binder.done();
 ```
 
-__store.setState(new_state)__  
+__setState(new_state)__  
 store.setState() is synchronous.  
 <s>Property 'type' is not allowed in new_state.</s>  
 <strong>Make sure not to mix lodux/react setState() and reactjs setState() in an application.</strong>  
@@ -127,6 +132,57 @@ store.setState({count: store.state.count + 1});
 
 // Wrong mixing state managements
 store.setState({count: this.state.count + 1});
+```
+### Custom Route
+Handy method to composite Route with layout. Props (except {layout, component}) of CRoute will be passed to the component and layout.
+```javascript
+import React from 'react';
+import { Switch, Route } from "react-router-dom";
+import { CRoute } from "lodux/react";
+import HomeLayout from "./HomeLayout";
+import Home from "./Home";
+import PageOne from "./Pageone";
+
+export default function(props){
+    const CustomRoute = CRoute( React, Route );
+
+    return <Switch>
+        <CustomRoute path="/" exact component={Home} layout={HomeLayout} />
+        <CustomRoute path="/pageone" exact component={Pageone} />        
+        <Route component={NotFound} status={404} />
+    </Switch>
+}
+```
+Pageone.jsx
+```javascript
+import React from 'react';
+
+export default function(props) {
+    return <div>This is page one!</div>;
+  }
+}
+```
+Home.jsx
+```javascript
+import React from 'react';
+
+export default function(props) {
+    return <div>Hello my friend, this is the home page!</div>;
+  }
+}
+```
+HomeLayout.jsx
+```javascript
+import React from 'react';
+
+export default function(props) {
+    return <div>
+            <div>some heading</div>
+            {props.children}
+            <div>some footing</div>
+    </div>;
+  }
+}
 ```
 
 ## testing with HMR
@@ -143,11 +199,9 @@ Store.config({ isHMR: true });
 &lt;script src="where /dist/lodux.js is located">&lt;/script>
 ```javascript
 //if in conflict
-var lodux_othername = lodux.noConflict();
+const lodux_othername = lodux.noConflict();
 
-var react_lodux = lodux_othername.react;
-var Store = lodux_othername.react.Store;
-var connect = lodux_othername.react.connect;
+const {Store, connect, CRoute} = lodux_othername.react;
 ```
 
 ## [Deprecated](Deprecated.md)
