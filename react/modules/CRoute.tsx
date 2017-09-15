@@ -4,29 +4,33 @@ export const CRoute = function (React, Route) {
 
   system_.notNull(arguments);
 
-  return class b extends React.Component {
+  return function (props) {
 
-    render() {
-      
-      const TheComponent = this.props.component;
-      const TheLayout = this.props.layout;
+    const TheLayout = props.layout;
+    const TheComponent = props.component;
 
-      const props_ = pick(this.props);
+    let props_ = filter(props);
 
-      return <Route {...props_ }
-        render={(props) => {
-          return <TheLayout {...props_}>
-            <TheComponent {...props_} /></TheLayout>
-        }}
-      />
-    }
-  };
+    return <Route
+      {...props_ }
+      render={
+        props => {
 
-  function pick(props) {
-    const props_ = Object.keys(props)
-      .filter(key => key !== "component" && key !== "layout")
-      .reduce((acc, key) => ({ ...acc, [key]: props[key] }), {});
+         // props_ = {...{...props, ...props_}}
 
-    return props_;
+          return (
+            <TheLayout {...props_}>
+              <TheComponent {...props_}/>
+            </TheLayout>
+          )
+        }
+      }
+    />
   }
+};
+
+function filter(props) {
+  return Object.keys(props)
+    .filter(key => key !== "component" && key !== "layout")
+    .reduce((acc, key) => ({ ...acc, [key]: props[key] }), {});
 }
