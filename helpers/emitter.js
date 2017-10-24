@@ -1,4 +1,13 @@
 "use strict";
+/**
+    let subcription = emitter.listen('data', function (data) {
+        console.log('data: ' + data);
+    });
+
+    emitter.emit('data', 'foo');   //  data: foo
+
+    subscription.dispose();
+**/
 var __values = (this && this.__values) || function (o) {
     var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
     if (m) return m.call(o);
@@ -79,3 +88,4 @@ Emitter.prototype.local = function () {
     return new Emitter();
 };
 exports.default = new Emitter();
+//# sourceMappingURL=emitter.js.map

@@ -13,3 +13,4 @@ package-lock.json
 tsconfig.json
 .npmignore
 node_modules
+seos

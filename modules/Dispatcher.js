@@ -37,6 +37,7 @@ function reduce_(module, update_state, type, callback) {
         }
         dispatch_(module, { type: action.feedback_type });
     });
+    //remove feedback_type
     function pouch(action) {
         assure_1.system_.notNull(arguments);
         return Object.entries(action).reduce(function (acc, val) {
@@ -45,3 +46,4 @@ function reduce_(module, update_state, type, callback) {
     }
 }
 exports.reduce_ = reduce_;
+//# sourceMappingURL=Dispatcher.js.map

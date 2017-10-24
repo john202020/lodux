@@ -101,3 +101,4 @@ function slice(raw_state) {
     }
     return { stack: stack, future: future };
 }
+//# sourceMappingURL=Undoable.js.map

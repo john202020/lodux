@@ -1,36 +1,35 @@
 import { system_ } from "../../helpers/assure";
 
-export const CRoute = function (React, Route) {
+export function CRoute(React, Route) {
 
   system_.notNull(arguments);
 
-  return function (props) {
+  return class cRoute extends Route {
 
-    const TheLayout = props.layout;
-    const TheComponent = props.component;
+    render() {
 
-    let props_ = filter(props);
+      const props = this.props;
 
-    return <Route
-      {...props_ }
-      render={
-        props => {
-
-         // props_ = {...{...props, ...props_}}
-
-          return (
-            <TheLayout {...props_}>
-              <TheComponent {...props_}/>
-            </TheLayout>
-          )
-        }
+      if(props.path.indexOf("..")>-1){
+        throw new Error("path must not include double dots.")
       }
-    />
+
+      if (props.path.indexOf("/") !== 0) {
+        throw new Error("path must have leading slash.")
+      }
+
+      const Lay = props.layout;
+      const Comp = props.component;
+
+      if (Lay) {
+        return <Lay>
+          {Comp ? <Comp /> : super.render()}
+        </Lay>
+      }
+      return super.render();
+
+    }
+
   }
 };
 
-function filter(props) {
-  return Object.keys(props)
-    .filter(key => key !== "component" && key !== "layout")
-    .reduce((acc, key) => ({ ...acc, [key]: props[key] }), {});
-}

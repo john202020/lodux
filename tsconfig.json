@@ -2,16 +2,17 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "sourceMap": false,
+        "sourceMap": true,
         "strictNullChecks": true,
         "downlevelIteration": true,
         "watch": true,
+        // "outDir":"project_public",
         "jsx": "react",
         "lib": [
             "es2017",
             "dom"
         ],
-        "removeComments": true
+        "removeComments": false
     },
     "exclude": [
         "node_modules"

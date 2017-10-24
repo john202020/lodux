@@ -42,6 +42,7 @@ function manipulate_store(store) {
     };
     return store;
 }
+
 function creator(creator_) {
     return function (store) {
         system_.notNull(arguments);
@@ -49,6 +50,7 @@ function creator(creator_) {
         return { ...dispatchers, ...additional_dispatchers(store) };
     };
 }
+
 function additional_dispatchers(store) {
     return {
         undo: function () {
@@ -81,6 +83,7 @@ function additional_dispatchers(store) {
         }
     };
 }
+
 function slice(raw_state) {
     let stack, future;
     if (raw_state === undefined) {

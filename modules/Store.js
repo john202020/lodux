@@ -120,12 +120,14 @@ var store_ = (function () {
         };
     };
     return func;
+    //remove property type
     function pouch(action) {
         return Object.entries(action).reduce(function (acc, val) {
             return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
         }, {});
     }
 })();
+//this is specifically for react-lodux
 function createConfigurableStore(name) {
     assure_1.system_.notNull(arguments);
     var store_key = Entire_store_1.get_unique_id(name);
@@ -139,6 +141,7 @@ exports.Store = new (function () {
             return Entire_store_1.entire_store();
         }
     });
+    //only effective before store instance creation
     this.config = function (custom_config) {
         assure_1.system_.notNull(arguments);
         if (custom_config !== undefined) {
@@ -157,6 +160,7 @@ exports.Store = new (function () {
         var s = new store_(store.store_key, isConfigurable);
         return Object.assign.apply(Object, __spread([s], (properties || {})));
     };
+    //only effective before store instance creation
     this.reset_config = function () {
         assure_1.system_.notNull(arguments);
         config_ = __assign({}, config_default);
@@ -182,6 +186,11 @@ exports.Store = new (function () {
         });
     };
 })();
+/**
+ * The only place to update state
+ * @param {*} name
+ * @param {*} new_state
+ */
 function update_state(store_key, new_state) {
     assure_1.system_.notNull(arguments);
     Entire_store_1.entire_store({
@@ -190,3 +199,4 @@ function update_state(store_key, new_state) {
     });
     var _a;
 }
+//# sourceMappingURL=Store.js.map

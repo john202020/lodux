@@ -1,31 +1,41 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../../helpers/assure");
-exports.CRoute = function (React, Route) {
+function CRoute(React, Route) {
     assure_1.system_.notNull(arguments);
-    return function (props) {
-        var TheLayout = props.layout;
-        var TheComponent = props.component;
-        var props_ = filter(props);
-        return React.createElement(Route, __assign({}, props_, { render: function (props) {
-                return (React.createElement(TheLayout, __assign({}, props_),
-                    React.createElement(TheComponent, __assign({}, props_))));
-            } }));
-    };
-};
-function filter(props) {
-    return Object.keys(props)
-        .filter(function (key) { return key !== "component" && key !== "layout"; })
-        .reduce(function (acc, key) {
-        return (__assign({}, acc, (_a = {}, _a[key] = props[key], _a)));
-        var _a;
-    }, {});
+    return /** @class */ (function (_super) {
+        __extends(cRoute, _super);
+        function cRoute() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        cRoute.prototype.render = function () {
+            var props = this.props;
+            if (props.path.indexOf("..") > -1) {
+                throw new Error("path must not include double dots.");
+            }
+            if (props.path.indexOf("/") !== 0) {
+                throw new Error("path must have leading slash.");
+            }
+            var Lay = props.layout;
+            var Comp = props.component;
+            if (Lay) {
+                return React.createElement(Lay, null, Comp ? React.createElement(Comp, null) : _super.prototype.render.call(this));
+            }
+            return _super.prototype.render.call(this);
+        };
+        return cRoute;
+    }(Route));
 }
+exports.CRoute = CRoute;
+;
+//# sourceMappingURL=CRoute.js.map

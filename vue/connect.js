@@ -68,3 +68,4 @@ function connect_creator(store, action_creator_) {
     }
     return dispatchers;
 }
+//# sourceMappingURL=connect.js.map

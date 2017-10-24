@@ -9,11 +9,13 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
-var store_object = {};
-var store_initial = {};
+var store_object = {}; //entire store
+var store_initial = {}; //entire store
 var _id = 1;
+//let hmrState: Object | undefined = undefined;
 function get_unique_id(name) {
     assure_1.system_.notNull(arguments);
+    //check exist again 
     return name || exist(++_id + "") ? (++_id + "") : (_id + "");
 }
 exports.get_unique_id = get_unique_id;
@@ -34,9 +36,13 @@ function entire_store(argu) {
         var new_state_of_the_comp = argu.new_state_of_the_comp, subscribers = argu.subscribers;
         set_store_object(new_state_of_the_comp, subscribers);
     }
+    //  hmrState = { ...store_object };
     return __assign({}, store_object);
 }
 exports.entire_store = entire_store;
+// export function get_hmrState() {
+//     return { ...hmrState };
+// }
 function get_store_object() {
     assure_1.system_.notNull(arguments);
     return __assign({}, store_object);
@@ -60,3 +66,4 @@ function set_store_object(new_state_of_the_comp, subscribers) {
         });
     }
 }
+//# sourceMappingURL=Entire_store.js.map

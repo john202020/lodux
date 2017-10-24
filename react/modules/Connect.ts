@@ -123,28 +123,28 @@ function connect_setState(store, theClass) {
 
     const subscriptions: Array<any> = [];
 
-    pro.componentDidUpdate = function () {
-        const component = this;
+    // pro.componentDidUpdate = function () {
+    //     const component = this;
 
-        componentDidUpdate.call(component);
-    };
+    //     componentDidUpdate.call(component);
+    // };
 
-    pro.shouldComponentUpdate = function () {
-        const component = this;
+    // pro.shouldComponentUpdate = function () {
+    //     const component = this;
 
-        return shouldComponentUpdate.call(component) || true;
-    };
+    //     return shouldComponentUpdate.call(component) || true;
+    // };
 
-    pro.componentWillReceiveProps = function (nextProps) {
-        const component = this;
+    // pro.componentWillReceiveProps = function (nextProps) {
+    //     const component = this;
 
-        // if (nextProps.location !== this.props.location) {
-        //     // navigated!
-        //     console.log('navigated!');
-        // }
+    //     // if (nextProps.location !== this.props.location) {
+    //     //     // navigated!
+    //     //     console.log('navigated!');
+    //     // }
 
-        componentWillReceiveProps.call(component, nextProps);
-    };
+    //     componentWillReceiveProps.call(component, nextProps);
+    // };
 
     pro.render = function () {
         const component = this;

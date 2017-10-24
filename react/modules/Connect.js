@@ -103,18 +103,22 @@ function connect_setState(store, theClass) {
     var shouldComponentUpdate = pro.shouldComponentUpdate || function () { };
     var componentDidUpdate = pro.componentDidUpdate || function () { };
     var subscriptions = [];
-    pro.componentDidUpdate = function () {
-        var component = this;
-        componentDidUpdate.call(component);
-    };
-    pro.shouldComponentUpdate = function () {
-        var component = this;
-        return shouldComponentUpdate.call(component) || true;
-    };
-    pro.componentWillReceiveProps = function (nextProps) {
-        var component = this;
-        componentWillReceiveProps.call(component, nextProps);
-    };
+    // pro.componentDidUpdate = function () {
+    //     const component = this;
+    //     componentDidUpdate.call(component);
+    // };
+    // pro.shouldComponentUpdate = function () {
+    //     const component = this;
+    //     return shouldComponentUpdate.call(component) || true;
+    // };
+    // pro.componentWillReceiveProps = function (nextProps) {
+    //     const component = this;
+    //     // if (nextProps.location !== this.props.location) {
+    //     //     // navigated!
+    //     //     console.log('navigated!');
+    //     // }
+    //     componentWillReceiveProps.call(component, nextProps);
+    // };
     pro.render = function () {
         var component = this;
         unsubscribe();
@@ -144,3 +148,4 @@ function connect_setState(store, theClass) {
         });
     }
 }
+//# sourceMappingURL=Connect.js.map
