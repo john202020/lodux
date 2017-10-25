@@ -4,6 +4,9 @@ Single store state management in a one-way observable pattern. Similar to Redux.
 ## [lodux/react](react)
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`react`](https://facebook.github.io/react/) component.
 
+## [lodux/recompose](recompose)
+Connects [`lodux`](https://www.npmjs.com/package/lodux) store to [`react`](https://reactjs.org/docs/components-and-props.html) functional components using [recompose](https://www.npmjs.com/package/recompose) 
+
 ## [lodux/vue](vue)
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`vuejs`](https://vuejs.org/) component.
 
