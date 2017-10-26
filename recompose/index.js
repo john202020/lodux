@@ -23,16 +23,16 @@ var state = function (lifecycle) {
         var store = _a.store, Comp = _a.Comp, options = _a.options;
         assure_1.system_.notNull(arguments);
         assure_1.assure_.required(store).required(Comp);
-        return lifecycle(__assign({}, (options || {}), { componentWillMount: function () {
+        var ops = __assign({}, (options || {}), { componentWillMount: function () {
                 var _this = this;
                 store.subscribe(function () {
                     _this.setState(store.state);
                 });
-                alert(options);
                 if (options && options.componentWillMount) {
                     options.componentWillMount();
                 }
-            } }))(Comp);
+            } });
+        return lifecycle(ops)(Comp);
     };
 };
 exports.state = state;

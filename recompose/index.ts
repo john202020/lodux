@@ -13,26 +13,27 @@ import { assure_, system_ } from "../helpers/assure";
 const state = function (lifecycle) {
     system_.notNull(arguments);
     assure_.required(lifecycle);
-    
+
     return function ({ store, Comp, options }) {
         system_.notNull(arguments);
         assure_.required(store).required(Comp);
 
-        return lifecycle(
-            {
-                ...(options || {}),
+        const ops = {
+            ...(options || {}),
+            
+            componentWillMount: function () {
+                
+                store.subscribe(() => {
+                    this.setState(store.state);
+                });
 
-                componentWillMount: function () {
-                    store.subscribe(() => {
-                        this.setState(store.state);
-                    });
-                    alert(options);
-                    if (options && options.componentWillMount) {
-                        options.componentWillMount();
-                    }
-                },
-            }
-        )(Comp);
+                if (options && options.componentWillMount) {
+                    options.componentWillMount();
+                }
+            },
+        };
+
+        return lifecycle(ops)(Comp);
     };
 };
 
