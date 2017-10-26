@@ -28,6 +28,7 @@ var state = function (lifecycle) {
                 store.subscribe(function () {
                     _this.setState(store.state);
                 });
+                alert(options);
                 if (options && options.componentWillMount) {
                     options.componentWillMount();
                 }

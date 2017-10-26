@@ -26,6 +26,7 @@ const state = function (lifecycle) {
                     store.subscribe(() => {
                         this.setState(store.state);
                     });
+                    alert(options);
                     if (options && options.componentWillMount) {
                         options.componentWillMount();
                     }

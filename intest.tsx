@@ -1,4 +1,4 @@
-
+declare const require;
 const React = require("react");
 const Test = require("./test.js").default;
 const chalk = require("chalk");
