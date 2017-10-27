@@ -19,17 +19,35 @@ var assure_1 = require("../helpers/assure");
 var state = function (lifecycle) {
     assure_1.system_.notNull(arguments);
     assure_1.assure_.required(lifecycle);
+    var subscriptions = [];
     return function (_a) {
         var store = _a.store, Comp = _a.Comp, options = _a.options;
         assure_1.system_.notNull(arguments);
         assure_1.assure_.required(store).required(Comp);
         var ops = __assign({}, (options || {}), { componentWillMount: function () {
                 var _this = this;
-                store.subscribe(function () {
+                subscriptions.push(store.subscribe(function () {
                     _this.setState(store.state);
-                });
+                }));
                 if (options && options.componentWillMount) {
                     options.componentWillMount();
+                }
+            }, componentWillUnmount: function () {
+                subscriptions.map(function (s) { return s; }).forEach(function (s) {
+                    if (s.dispose) {
+                        s.dispose();
+                    }
+                });
+                subscriptions.length = 0;
+                if (options && options.componentWillUnmount) {
+                    options.componentWillUnmount();
+                }
+            }, componentDidMount: function () {
+                if (options && options.componentDidMount) {
+                    options.componentDidMount();
+                }
+                if (options && options.componentDidMount) {
+                    options.componentDidMount();
                 }
             } });
         return lifecycle(ops)(Comp);

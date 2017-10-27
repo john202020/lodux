@@ -1,6 +1,6 @@
 {
   "name": "lodux",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Single store state management in a one-way observable pattern.",
   "main": "index_prod.js",
   "scripts": {
@@ -17,7 +17,8 @@
     "communication",
     "web module",
     "web component",
-    "redux model"
+    "redux model",
+    "recompose"
   ],
   "author": "john202020",
   "license": "MIT",
