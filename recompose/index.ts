@@ -47,12 +47,7 @@ const state = function (lifecycle) {
                 if (options && options.componentDidMount) {
                     options.componentDidMount();
                 }
-                
-                if (options && options.componentDidMount) {
-                    options.componentDidMount();
-                }
-            },
-
+            }
         };
 
         return lifecycle(ops)(Comp);
