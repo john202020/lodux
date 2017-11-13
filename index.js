@@ -32,4 +32,4 @@ if (!isAMD && !isModule) {
     root_1['lodux'] = __assign({}, modules_, { noConflict: noConflict });
 }
 module.exports = __assign({}, modules_);
-//# sourceMappingURL=index_prod.js.map
+//# sourceMappingURL=index.js.map

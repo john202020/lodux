@@ -15,7 +15,10 @@ const modules_ = {
     recompose
 };
 
+
+
 export = { ...modules_ };
+
 
 const isAMD = typeof define === "function" && define['amd'];
 const isModule = typeof module === "object" && module.exports;

@@ -33,6 +33,7 @@ var assure_1 = require("../helpers/assure");
 var Dispatcher_1 = require("./Dispatcher");
 var emitter_1 = require("../helpers/emitter");
 var Entire_store_1 = require("./Entire_store");
+var proxy_1 = require("./proxy");
 var Store_subscribers = [];
 var stores_subscribers = {};
 var config_default = { isHMR: false };
@@ -67,6 +68,7 @@ var store_ = (function () {
         this.diduce = this.diduce.bind(this);
         this.subscribe = this.subscribe.bind(this);
     }
+    func.prototype.proxy = function () { return proxy_1.proxy(this); };
     func.prototype.dispatch = function (action, feedback_fn) {
         assure_1.system_.notNull(arguments);
         assure_1.assure_.string(action.type);
@@ -92,17 +94,32 @@ var store_ = (function () {
         }, clone.dispatch);
         return clone;
     };
-    func.prototype.diduce = function (action) {
-        var _this = this;
-        assure_1.system_.notNull(arguments);
-        assure_1.assure_.string(action.type);
-        var subs = this.reduce(action.type, function (action) {
-            subs.dispose();
-            var new_state = pouch(action);
-            return __assign({}, _this.state, new_state);
-        });
-        this.dispatch(action);
-    };
+    func.prototype.update = (function () {
+        var index = 0;
+        return function (action) {
+            assure_1.system_.notNull(arguments);
+            var type = "update-" + Date.now() + '-' + (index++);
+            var subs = this.reduce(type, function (action_ignore) {
+                subs.dispose();
+                return __assign({}, action, { type: "udpate" });
+            });
+            this.dispatch(__assign({}, action, { type: type }));
+        };
+    }());
+    func.prototype.diduce = (function () {
+        var index = 0;
+        return function (action) {
+            var _this = this;
+            assure_1.system_.notNull(arguments);
+            assure_1.assure_.string(action.type);
+            var type = action.type + (index++);
+            var subs = this.reduce(type, function (action_ignore) {
+                subs.dispose();
+                return __assign({}, _this.state, action);
+            });
+            this.dispatch(__assign({}, action, { type: type }));
+        };
+    }());
     func.prototype.subscribe = function (func) {
         assure_1.system_.notNull(arguments);
         var store_key = this.store_key;
@@ -121,11 +138,11 @@ var store_ = (function () {
     };
     return func;
     //remove property type
-    function pouch(action) {
-        return Object.entries(action).reduce(function (acc, val) {
-            return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
-        }, {});
-    }
+    // function pouch(action) {
+    //     return Object.entries(action).reduce((acc, val) => {
+    //         return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
+    //     }, {});
+    // }
 })();
 //this is specifically for react-lodux
 function createConfigurableStore(name) {

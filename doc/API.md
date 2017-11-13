@@ -62,6 +62,7 @@ store.dispatch({type:'add person', name:'Sam'}, d => {
 });
 ```
 __diduce(action)__  
+@deprecated. use `update(action)` instead.  
 Consider `diduce()` as `dispatch()` plus internal `reduce()`.  
 
 Internally it invokes a full dispatch/reduce cycle. The internal reducer will first remove the property 'type' of the action and then return {...store.state, ...new_state}.  
@@ -79,6 +80,14 @@ type = 'minus';
 // prepare new state (internal reducer)
 new_state = { count: store.state.count - 1 };
 store.diduce({type, ...new_state});
+```
+
+__update(action)__   
+Internally it invokes a full dispatch/reduce cycle. Explicit action.type is not required. A default type 'update' will be added to the action. Consider providing action as being provided to the reducer.
+
+Standard usage of update()
+```javascript
+store.update({...store.state, count: 0});
 ```
 
 __subscribe(callback_fn): disposable__  

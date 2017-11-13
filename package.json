@@ -1,8 +1,8 @@
 {
   "name": "lodux",
-  "version": "1.4.8",
+  "version": "1.5.8",
   "description": "Single store state management in a one-way observable pattern.",
-  "main": "index_prod.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.prod.js --env.prod",

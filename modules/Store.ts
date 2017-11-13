@@ -3,6 +3,7 @@ import { assure_, system_ } from "../helpers/assure";
 import { reduce_, dispatch_ } from "./Dispatcher";
 import emitter_factory from "../helpers/emitter";
 import { entire_store, entire_store_initial, exist, get_unique_id } from "./Entire_store";
+import { proxy } from "./proxy";
 
 let Store_subscribers: Array<Function | undefined> = [];
 const stores_subscribers = {};
@@ -49,6 +50,9 @@ const store_ = (() => {
     }
 
 
+    func.prototype.proxy = function () { return proxy(this); }
+
+
     func.prototype.dispatch = function (action, feedback_fn?: Function) {
 
         system_.notNull(arguments);
@@ -91,25 +95,47 @@ const store_ = (() => {
     }
 
 
-    func.prototype.diduce = function (action) {
+    func.prototype.update = (function () {
+        let index = 0;
+        return function (action) {
 
-        system_.notNull(arguments);
-        assure_.string(action.type);
+            system_.notNull(arguments);
 
-        const subs = this.reduce(action.type, action => {
-            subs.dispose();
-            const new_state = pouch(action);
-            return { ...this.state, ...new_state };
-        });
+            const type = "update-" + Date.now() + '-' + (index++);
 
-        this.dispatch(action);
-    }
+            const subs = this.reduce(type, action_ignore => {
+                subs.dispose();
+                return { ...action, type: "udpate" };
+            });
+
+            this.dispatch({ ...action, type });
+        }
+    }());
+
+
+    func.prototype.diduce = (function () {
+        let index = 0;
+        return function (action) {
+
+            system_.notNull(arguments);
+            assure_.string(action.type);
+
+            const type = action.type + (index++);
+
+            const subs = this.reduce(type, action_ignore => {
+                subs.dispose();
+                return { ...this.state, ...action };
+            });
+
+            this.dispatch({ ...action, type });
+        }
+    }());
 
 
     func.prototype.subscribe = function (func: Function) {
 
         system_.notNull(arguments);
-        
+
         const store_key = this.store_key;
 
         stores_subscribers[store_key] = stores_subscribers[store_key] || [];
@@ -139,11 +165,11 @@ const store_ = (() => {
 
 
     //remove property type
-    function pouch(action) {
-        return Object.entries(action).reduce((acc, val) => {
-            return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
-        }, {});
-    }
+    // function pouch(action) {
+    //     return Object.entries(action).reduce((acc, val) => {
+    //         return val[0] !== 'type' ? (acc[val[0]] = val[1], acc) : acc;
+    //     }, {});
+    // }
 
 })();
 

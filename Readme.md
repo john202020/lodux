@@ -10,6 +10,11 @@ Connects [`lodux`](https://www.npmjs.com/package/lodux) store to [`react`](https
 ## [lodux/vue](vue)
 Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`vuejs`](https://vuejs.org/) component.
 
+
+## [lodux/proxy](proxy)
+Connects [`store` instance]( https://www.npmjs.com/package/lodux) and [`es6 proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy).
+
+
 ## [API](doc/API.md)
 
 ## [Anomaly](doc/Anomaly.md)

@@ -37,7 +37,7 @@ var plugins = [
 module.exports = {
 
     entry: {
-        lodux: [path.resolve(source, "index_prod.js")]
+        lodux: [path.resolve(source, "index.js")]
     },
     output: {
         path: dest_WWWROOT,
