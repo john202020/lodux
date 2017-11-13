@@ -3,7 +3,7 @@ Connects [`store` instance]( https://www.npmjs.com/package/lodux) and [`es6 prox
 
 ### Usage
 ```javascript
-import {Store} from "lodux;
+import {Store} from "lodux";
 
 const store = Store.createStore().proxy();
 store.subscribe(()=>{
