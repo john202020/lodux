@@ -9,12 +9,13 @@ export function CRoute(React, Route) {
     render() {
 
       const props = this.props;
+      const path = props.location.pathname;
 
-      if(props.path.indexOf("..")>-1){
+      if (path.indexOf("..") > -1) {
         throw new Error("path must not include double dots.")
       }
 
-      if (props.path.indexOf("/") !== 0) {
+      if (path.indexOf("/") !== 0) {
         throw new Error("path must have leading slash.")
       }
 
@@ -23,7 +24,7 @@ export function CRoute(React, Route) {
 
       if (Lay) {
         return <Lay>
-          {Comp ? <Comp /> : super.render()}
+          {Comp ? <Comp {...props} /> : super.render()}
         </Lay>
       }
       return super.render();
