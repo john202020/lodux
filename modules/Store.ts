@@ -115,7 +115,10 @@ const store_ = (() => {
 
     func.prototype.diduce = (function () {
         let index = 0;
+
         return function (action) {
+            
+            console.warn("diduce is deprecated! Please use update() instead.");
 
             system_.notNull(arguments);
             assure_.string(action.type);

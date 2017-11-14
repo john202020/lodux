@@ -110,6 +110,7 @@ var store_ = (function () {
         var index = 0;
         return function (action) {
             var _this = this;
+            console.warn("diduce is deprecated! Please use update() instead.");
             assure_1.system_.notNull(arguments);
             assure_1.assure_.string(action.type);
             var type = action.type + (index++);
