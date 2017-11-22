@@ -48,7 +48,14 @@ var store_ = (function () {
         }
         Object.defineProperty(this, 'state', {
             configurable: isConfigurable,
-            get: function () { return Entire_store_1.entire_store()[store_key]; }
+            get: function () {
+                var state = Entire_store_1.entire_store()[store_key];
+                if (typeof state === "undefined") {
+                    return state;
+                }
+                var str = JSON.stringify(state);
+                return JSON.parse(str);
+            }
         });
         Object.defineProperty(this, 'store_key', {
             enumerable: true,

@@ -24,7 +24,14 @@ const store_ = (() => {
 
         Object.defineProperty(this, 'state', {
             configurable: isConfigurable,
-            get: function () { return entire_store()[store_key]; }
+            get: function () {
+                const state = entire_store()[store_key];
+                if (typeof state === "undefined") {
+                    return state;
+                }
+                const str = JSON.stringify(state);
+                return JSON.parse(str);
+            }
         });
 
         Object.defineProperty(this, 'store_key', {
@@ -117,7 +124,7 @@ const store_ = (() => {
         let index = 0;
 
         return function (action) {
-            
+
             console.warn("diduce is deprecated! Please use update() instead.");
 
             system_.notNull(arguments);
