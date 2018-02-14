@@ -1,95 +1,90 @@
 "use strict";
-var __values = (this && this.__values) || function (o) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
-    if (m) return m.call(o);
-    return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.system_ = {
-    notNull: function (args) {
-        if (args === undefined) {
-            throwError("notNull() will not work in lamda express!");
+var helper_1 = require("./helper");
+var assure_deep_1 = require("./assure_deep");
+exports.assure_deep_ = assure_deep_1.assure_deep_;
+var assure_ = Object.freeze({
+    compatible: function () {
+        if (arguments.length > 0) {
+            helper_1.throwError("does not accept any argument!");
         }
-        try {
-            for (var args_1 = __values(args), args_1_1 = args_1.next(); !args_1_1.done; args_1_1 = args_1.next()) {
-                var arg = args_1_1.value;
-                checkProp(arg);
-            }
+        var root = (0, eval)('this');
+        var compatible = !!root['Proxy'] && !!root['Object']['is'];
+        if (!compatible) {
+            throw new Error("'Proxy' and/or 'Object.is' are not supported. Please check whether your system support es2015!");
         }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (args_1_1 && !args_1_1.done && (_a = args_1.return)) _a.call(args_1);
-            }
-            finally { if (e_1) throw e_1.error; }
+    },
+    empty: function (argu) {
+        if (argu.length > 0) {
+            helper_1.throwError("does not accept any argument!");
         }
-        return;
-        function checkProp(obj) {
-            if (obj === undefined || typeof obj !== "object")
-                return;
-            if (!obj) {
-                throwError("null is not allowed");
-            }
-            for (var key in Object.getOwnPropertyNames(obj)) {
-                checkProp(obj[key]);
-            }
-        }
-        var e_1, _a;
-    }
-};
-exports.assure_ = {
+    },
     class: function (theClass, errormsg) {
         if (!(typeof theClass === 'function' && /^\s*class\s+/.test(theClass.toString()))) {
-            throwError(errormsg || theClass + " does not seems to be class! class is expected.");
+            helper_1.throwError(errormsg || theClass + " does not seems to be class! class is expected.");
         }
-        return exports.assure_;
+        return assure_;
     },
     required: function (obj, errormsg) {
-        if (obj === undefined) {
-            throwError(errormsg || "required");
+        if (typeof obj === "undefined") {
+            helper_1.throwError(errormsg || "required");
         }
-        return exports.assure_;
+        return assure_;
     },
     array: function (obj, errormsg) {
         if (!Array.isArray(obj)) {
-            throwError(errormsg || "array is expected");
+            helper_1.throwError(errormsg || "array is expected");
         }
-        return exports.assure_;
+        return assure_;
     },
     boolean: function (obj, errormsg) {
         if (typeof obj !== "boolean") {
-            throwError(errormsg || "boolean is expected");
+            helper_1.throwError(errormsg || "boolean is expected");
         }
-        return exports.assure_;
+        return assure_;
     },
     string: function (obj, errormsg) {
         if (typeof obj !== "string") {
-            throwError(errormsg || "string is expected");
+            helper_1.throwError(errormsg || "string is expected");
         }
-        return exports.assure_;
+        return assure_;
     },
-    nonFunc: function (value, errormsg) {
-        if (typeof value === "function") {
-            throwError(errormsg || "must be non function");
+    nonEmptyString: function (obj, errormsg) {
+        if (typeof obj !== "string" || obj === '') {
+            helper_1.throwError(errormsg || "non empty string is expected");
         }
-        return exports.assure_;
+        return assure_;
     },
-    func: function (func, errormsg) {
-        if (typeof func !== "function") {
-            throwError(errormsg || "must be function");
+    number: function (obj, errormsg) {
+        if (typeof obj !== "number") {
+            helper_1.throwError(errormsg || "number is expected");
         }
-        return exports.assure_;
-    }
-};
-//*********************************//
-//******* local helpers ***********//
-//*********************************//
-function throwError(msg) {
-    throw new Error(msg);
-}
+        return assure_;
+    },
+    primitive: function (obj, errormsg) {
+        if (!helper_1.isPrimitive(obj)) {
+            helper_1.throwError(errormsg || "primitive is expected");
+        }
+        return assure_;
+    },
+    nonPrimitive: function (obj, errormsg) {
+        if (helper_1.isPrimitive(obj)) {
+            helper_1.throwError(errormsg || "non primitive is expected");
+        }
+        return assure_;
+    },
+    func: function (obj, errormsg) {
+        if (typeof obj !== "function") {
+            helper_1.throwError(errormsg || "must be function");
+        }
+        return assure_;
+    },
+    nonFunc: function (obj, errormsg) {
+        if (typeof obj === "function") {
+            helper_1.throwError(errormsg || "must be non function");
+        }
+        return assure_;
+    },
+});
+exports.assure_ = assure_;
 //# sourceMappingURL=assure.js.map

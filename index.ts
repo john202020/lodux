@@ -1,21 +1,13 @@
 ﻿declare const define, module;
 
-import { assure_, system_ } from "./helpers/assure";
+import { assure_, assure_deep_ } from "./helpers/assure";
 import { Store } from "./modules/Store";
-import * as vue from './vue';
-import * as react from './react';
-import * as recompose from "./recompose";
+
+assure_.compatible();
 
 const modules_ = {
-    system_,
-    assure_,
-    Store,
-    vue,
-    react,
-    recompose
+    Store
 };
-
-
 
 export = { ...modules_ };
 
@@ -25,12 +17,12 @@ const isModule = typeof module === "object" && module.exports;
 
 if (!isAMD && !isModule) {
 
-    const root = this || (0, eval)('this');
+    const root = (0, eval)('this');
 
-    const previous_lodux = root['lodux'];
+    const previous_modux = root['lodux'];
 
     const noConflict = () => {
-        root['lodux'] = previous_lodux;
+        root['lodux'] = previous_modux;
         return {
             ...modules_,
             noConflict: () => { }

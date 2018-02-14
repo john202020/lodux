@@ -1,19 +1,9 @@
-# Single store management for web modules.
-Single store state management in a one-way observable pattern. Similar to Redux.
-
-## [lodux/react](react)
-Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`react`](https://facebook.github.io/react/) component.
-
-## [lodux/recompose](recompose)
-Connects [`lodux`](https://www.npmjs.com/package/lodux) store to [`react`](https://reactjs.org/docs/components-and-props.html) functional components using [recompose](https://www.npmjs.com/package/recompose) 
-
-## [lodux/vue](vue)
-Connects [`lodux`]( https://www.npmjs.com/package/lodux) store and [`vuejs`](https://vuejs.org/) component.
-
-
-## [lodux/proxy](proxy)
-Connects [`store` instance]( https://www.npmjs.com/package/lodux) and [`es6 proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy).
-
+# Immutable single store state management.  
+# lodux 2.0.0
+lodux version 2.0.0 is a rewrite of the store management. 
+It incorporates immutable state management. Directly assign store.state can be done and can be done on multiple level depth.
+  
+React, Vue and Recompose modules are removed. To keep useing those modules, use version 1.5.11.
 
 ## [API](doc/API.md)
 
@@ -22,26 +12,38 @@ Connects [`store` instance]( https://www.npmjs.com/package/lodux) and [`es6 prox
 ## Store(capital S)  
 It is the collection of all stores, the 'entire store'.  
 
-It has `createStore()` creates a unique store, `subscribe()` observes state changes of the entire store, and `reset_initial()` update the entire store to its initial state. One property, `state` returns a snapshot of the entire store state.
+It has two methods, `createStore()`, and `subscribe()`.  
 
-## store instance
-Each web module should have a unique store. A store instance has `dispatch()` an action, `reduce()` returns new store state, `diduce()` simplifies dispatch/reduce cycle, `subscribe()` observes state changes of this store, and `use()` applies middlewares to it's `cloned store`. One property, `state` returns a snapshot of this store state.  
+## store (lowercase s)
+A store instance is the key of immutable state management.  
 
-Store instances will not affect each other.
+Two most important properites that is the core of the store, 
+ `state`, `subscribe()`.
+It also has six more supplemental properties. `dispatch()`, `reduce()`, `update()`, `clone()`, `use()`, and `history`.  
+
+## Attention
+This store management use es6 functionalities (e.g. Proxy) heavily. 
+And special attention is to the value -0 (literal negative zero), the system will throw error when -0 exist in the store state. 
 
 ## Principles:
-1. action and state are required to be JSON serializable.
-2. use reducer to update the store state. directly update store state will throw error.
-3. there is no need to set an initial store state.
-4. never try to pass null argument, because error will be thrown.
-5. using `this` will not be guaranteed.
-6. methods, subscriptions, and callbacks are synchronously executed.
+1. action and state are required to be [JSON safe](doc/JSONSafe.md). 
+2. store.state is immutable.
+3. null argument is considerable illegitimate, error will be thrown.
+4. using `this` within callbacks will not be guaranteed.
+5. methods, subscriptions, and callbacks are synchronously executed.
+6. store instance will not affect other store instance.
 
-## store instance vs cloned store instance
-A store and its cloned store share the same store state. Cloned store serves as a separate working space for applying middlewares.
+## store instance and its clone
+A cloned store share the same state with its store. Cloned store serves as a separate working space for applying middlewares, dispatch and reduce.
 
 ```javascript
-const store = Store.createStore('project1');
+import { Store } from "lodux";
+
+const store = Store.createStore();
+
+const middlewares1;
+// ... create the middlewares1
+
 const cloned_store = store.use(middlewares1);
 
 // ignored by the middlewares1
@@ -53,17 +55,17 @@ cloned_store.dispatch({type : 'call', name : 'Mary'});
 
 ## Simple usage
 ```javascript
-import { Store } from "lodux";
+store.state = {type: 'add person', name: 'Sam', age :10};
+//{type: 'add person', name: 'Sam', age :10}
 
-const store = Store.createStore();
+store.state.status = 'boss';
+//{type: 'update', status: 'boss', name: 'Sam', age :10}
 
-store.reduce("add person", action => {
-    let new_state;// do something to get the new state  
-    return { ...store.state, ...new_state };
-});
+store.state.report = {sales: 'Singapore'};
+//{type: 'update', report:{sales:'Singapore'}, status: 'boss', name: 'Sam', age :10}
 
-const action = {type : 'add person', name : 'Sam', age : 10};
-store.dispatch(action);
+store.state.report.sales = 'Singapore and Malaysia';
+//{type: 'update', report:{sales:'Singapore and Malaysia'}, status: 'boss', name: 'Sam', age :10}
 ```
 
 # installation

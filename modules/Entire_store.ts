@@ -1,74 +1,61 @@
 ﻿
-import { assure_, system_ } from "../helpers/assure";
+import { assure_, assure_deep_ } from "../helpers/assure";
+import { isPrimitive } from "../helpers/helper";
 
-let store_object = {};//entire store
-let store_initial = {};//entire store
+/** 
+ * Entire store 
+*/
+let store_object = {};
 
-let _id = 1;
-//let hmrState: Object | undefined = undefined;
+export const get_unique_id = (function () {
 
-export function get_unique_id(name?: string) {
-    system_.notNull(arguments);
-    //check exist again 
-    return name || exist(++_id + "") ? (++_id + "") : (_id + "");
-};
+    let _id: number = 1;
+
+    return function (name?: string) {
+
+        assure_deep_.notNull(arguments);
+
+        if (typeof name !== 'undefined') {
+            assure_.nonEmptyString(name, "If name if provided, it must be non empty string!");
+        }
+
+        if (name && exist(name)) {
+            throw new Error("detected requesting duplicated store id!");
+        }
+
+        return name || ((exist(++_id + "") ? ++_id : _id) + "");
+    }
+}());
+
 
 export function exist(name: string) {
-    system_.notNull(arguments);
-    return entire_store()[name] !== undefined;
+
+    assure_deep_.notNull(arguments);
+
+    return store_object[name] !== undefined;
 }
 
-export function entire_store_initial() {
-    system_.notNull(arguments);
-    return { ...store_initial };
+
+export function set_store_object(new_state_of_a_store, subscribers) {
+
+    assure_deep_.notNull(arguments);
+
+    assure_
+        .required(new_state_of_a_store)
+        .required(subscribers);
+
+    store_object = { ...store_object, ...new_state_of_a_store };
+
+    subscribers.forEach(handler => {
+        handler.call({});
+    });
 }
 
-export function entire_store(argu?: any) {
-    system_.notNull(arguments);
 
-    if (arguments.length === 1) {
-        const { new_state_of_the_comp, subscribers } = argu;
+export function get_store_object() {
 
-        set_store_object(new_state_of_the_comp, subscribers);
+    assure_deep_.notNull(arguments);
 
-    }
-
-  //  hmrState = { ...store_object };
     return { ...store_object };
 }
 
-// export function get_hmrState() {
-//     return { ...hmrState };
-// }
-
-function get_store_object() {
-    system_.notNull(arguments);
-    return { ...store_object };
-}
-
-function set_store_object(new_state_of_the_comp, subscribers) {
-
-    system_.notNull(arguments);
-    assure_.required(new_state_of_the_comp);
-
-    const store_key = Object.keys(new_state_of_the_comp)[0];
-
-    const isInitial = !store_object[store_key];
-
-    if (isInitial) {
-        store_initial = { ...store_initial, ...new_state_of_the_comp };
-    }
-
-    const isNew = isInitial ||
-        JSON.stringify(store_object[store_key]) !== JSON.stringify(new_state_of_the_comp[store_key]);
-
-    store_object = { ...store_object, ...new_state_of_the_comp };
-
-    if (isNew) {
-        subscribers.forEach(function (handler) {
-            if (typeof handler === "function") {
-                handler.call({});
-            }
-        });
-    }
-}

@@ -1,88 +1,94 @@
-﻿
-export const system_ = {
-    notNull: function (args) {
+﻿import { isPrimitive, throwError } from "./helper";
+import { assure_deep_ } from "./assure_deep";
 
-        if (args === undefined) {
-            throwError("notNull() will not work in lamda express!");
+const assure_ = Object.freeze({
+    compatible() {
+        if (arguments.length > 0) {
+            throwError("does not accept any argument!");
         }
 
-        for (let arg of args) {
-            checkProp(arg);
+        const root = (0, eval)('this');
+        const compatible = !!root['Proxy'] && !!root['Object']['is'];
+
+        if (!compatible) {
+            throw new Error("'Proxy' and/or 'Object.is' are not supported. Please check whether your system support es2015!")
         }
-
-        return;
-
-        function checkProp(obj) {
-            if (obj === undefined || typeof obj !== "object")
-                return;
-
-            if (!obj) {
-                throwError("null is not allowed");
-            }
-
-            for (let key in Object.getOwnPropertyNames(obj)) {
-                checkProp(obj[key]);
-            }
+    },
+    empty(argu){
+        if (argu.length > 0) {
+            throwError("does not accept any argument!");
         }
-    }
-};
-
-export const assure_ = {
-    class: function (theClass, errormsg?: any) {
+    },
+    class(theClass, errormsg?: string) {
         if (!(typeof theClass === 'function' && /^\s*class\s+/.test(theClass.toString()))) {
             throwError(errormsg || theClass + " does not seems to be class! class is expected.");
         }
         return assure_;
     },
-
-    required: function (obj, errormsg?: any) {
-        if (obj === undefined) {
+    required(obj, errormsg?: string) {
+        if (typeof obj === "undefined") {
             throwError(errormsg || "required");
         }
         return assure_;
     },
-
-    array: function (obj, errormsg?: any) {
+    array(obj, errormsg?: string) {
         if (!Array.isArray(obj)) {
             throwError(errormsg || "array is expected");
         }
         return assure_;
     },
-
-    boolean: function (obj, errormsg) {
+    boolean(obj, errormsg?: string) {
         if (typeof obj !== "boolean") {
             throwError(errormsg || "boolean is expected");
         }
         return assure_;
     },
-
-    string: function (obj, errormsg?: any) {
+    string(obj, errormsg?: string) {
         if (typeof obj !== "string") {
             throwError(errormsg || "string is expected");
         }
         return assure_;
     },
-
-    nonFunc: function (value, errormsg?: any) {
-        if (typeof value === "function") {
+    nonEmptyString(obj, errormsg?: string) {
+        if (typeof obj !== "string" || obj === '') {
+            throwError(errormsg || "non empty string is expected");
+        }
+        return assure_;
+    },
+    number(obj, errormsg?: string) {
+        if (typeof obj !== "number") {
+            throwError(errormsg || "number is expected");
+        }
+        return assure_;
+    },
+    primitive(obj, errormsg?: string) {
+        if (!isPrimitive(obj)) {
+            throwError(errormsg || "primitive is expected");
+        }
+        return assure_;
+    },
+    nonPrimitive(obj, errormsg?: string) {
+        if (isPrimitive(obj)) {
+            throwError(errormsg || "non primitive is expected");
+        }
+        return assure_;
+    },
+    func(obj, errormsg?: string) {
+        if (typeof obj !== "function") {
+            throwError(errormsg || "must be function");
+        }
+        return assure_;
+    },
+    nonFunc(obj, errormsg?: string) {
+        if (typeof obj === "function") {
             throwError(errormsg || "must be non function");
         }
         return assure_;
     },
+});
 
-    func: function (func, errormsg?: any) {
-        if (typeof func !== "function") {
-            throwError(errormsg || "must be function");
-        }
-        return assure_;
-    }
+export {
+    assure_deep_,
+    assure_
 };
 
-
-//*********************************//
-//******* local helpers ***********//
-//*********************************//
-
-function throwError(msg) {
-    throw new Error(msg);
-}

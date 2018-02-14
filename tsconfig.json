@@ -4,15 +4,16 @@
         "module": "commonjs",
         "sourceMap": true,
         "strictNullChecks": true,
+        "strictFunctionTypes": true,
         "downlevelIteration": true,
         "watch": true,
         // "outDir":"project_public",
         "jsx": "react",
         "lib": [
-            "es2017",
+            "es2015",
             "dom"
         ],
-        "removeComments": false
+        // "removeComments": false
     },
     "exclude": [
         "node_modules"
