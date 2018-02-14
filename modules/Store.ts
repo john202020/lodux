@@ -1,4 +1,4 @@
-﻿import 'core-js/fn/object/entries';
+﻿// import 'core-js/fn/object/entries';
 import { assure_, assure_deep_ } from "../helpers/assure";
 import store_ from "./Store_instance";
 import { get_store_object, exist, get_unique_id } from "./Entire_store";

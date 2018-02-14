@@ -16,7 +16,7 @@ store.history.start();
 __stop()__  
 Stop recording state history.
 ```javascript
-store.history.start();
+store.history.stop();
 ```
 __back()__  
 Moves history pointer one step back and return the pointed history state. If history pointer was on initial index, no action and return the initial state.
