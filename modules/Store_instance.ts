@@ -69,7 +69,6 @@ store_.prototype.update = (function () {
             .isPlainJSONSafe(new_state)
             .notReservedKeywords(['key'], new_state);
 
-
         const temp_action_type = "update-default-" + counter;
 
         let subs;
@@ -81,7 +80,10 @@ store_.prototype.update = (function () {
                             subs.dispose();
                         }
                         subs = undefined;
-                        return { ...new_state, type: new_state.type || temp_action_type };
+                        let type = new_state.type || '';
+
+                        type = !type.startsWith("update-default-") ? type : temp_action_type;
+                        return { ...new_state, type };
                     }
                 );
         } catch (err) {

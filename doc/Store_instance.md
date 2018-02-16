@@ -103,6 +103,7 @@ disposable = undefined
 
 __use(array of middlewares): store (cloned)__  
 First, it clones the store, then applies the middleware to the `cloned store`.  
+note: it applies only to the explicit dispatch (i.e. store.dispatch()), not to the internal implied dispatch (i.e. not to the store.update() nor store.state = {}).  
 
 #### middleware plugins
 Redux's style middleware.  

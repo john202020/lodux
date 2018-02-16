@@ -18,7 +18,7 @@ function dispatch_(module, action, feedback_fn) {
     assure_1.assure_deep_
         .isPlainJSONSafe(action)
         .notReservedKeywords(['key'], action, 'action must not have "key" as property');
-    var feedback_type = "update-default-" + Entire_store_1.get_unique_id();
+    var feedback_type = "update-default-feedback-" + Entire_store_1.get_unique_id();
     if (typeof feedback_fn !== "undefined") {
         var subsr_1;
         try {

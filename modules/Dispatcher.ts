@@ -13,8 +13,8 @@ export function dispatch_(module, action, feedback_fn?: Function) {
         .isPlainJSONSafe(action)
         .notReservedKeywords(['key'], action, 'action must not have "key" as property');
 
-    const feedback_type = "update-default-"+get_unique_id();
-    
+    const feedback_type = "update-default-feedback-"+get_unique_id();
+
     if (typeof feedback_fn !== "undefined") {
         let subsr;
         try {

@@ -101,7 +101,9 @@ store_.prototype.update = (function () {
                         subs.dispose();
                     }
                     subs = undefined;
-                    return __assign({}, new_state, { type: new_state.type || temp_action_type });
+                    var type = new_state.type || '';
+                    type = !type.startsWith("update-default-") ? type : temp_action_type;
+                    return __assign({}, new_state, { type: type });
                 });
         }
         catch (err) {
