@@ -19,17 +19,17 @@ export function proxy_state(store, value) {
     get: function (target, prop) {
 
       const value = target[prop];
+      return value;
+      // if (isPrimitive(value)) {
+      //   return value;
+      // }
 
-      if (isPrimitive(value)) {
-        return value;
-      }
+      // const desc = Object.getOwnPropertyDescriptor(target, prop);
+      // if (desc && !desc.configurable) {
+      //   return value;
+      // }
 
-      const desc = Object.getOwnPropertyDescriptor(target, prop);
-      if (desc && !desc.configurable) {
-        return value;
-      }
-
-      return proxy_state(store, value);
+      // return proxy_state(store, value);
 
     },
 
@@ -44,14 +44,21 @@ export function proxy_state(store, value) {
       assure_deep_
         .isPlainJSONSafe(value)
         .notReservedKeywords(['key'], [prop, value]);
-
+      
       if (!isEqualContent(target[prop], value)) {
+
+        const level = levels(get_store_object()[store.store_key], target, prop);
+        if (level)
+          console.log('level.length', level.length);
+console.log(prop);
+        if (level && level.length > 1)
+          throw new Error("deep assignment is not allowed");
 
         const acc = remove_reserve(['key'],
           bubble_object_spread(
-            levels(get_store_object()[store.store_key], target, prop) || [],
+            level || [],
             prop,
-            value
+            deep_(store, value)
           )
         );
 
@@ -135,4 +142,18 @@ function levels(the_state, target, prop) {
 
     return undefined;
   }
+}
+
+
+function deep_(store, value) {
+  if (isPrimitive(value))
+    return value;
+
+  if (Array.isArray(value)) {
+    return proxy_state(store, Object.keys(value).reduce((acc: Array<any>, k) =>
+      [...acc, deep_(store, value[k])], []));
+  }
+
+  return proxy_state(store, Object.keys(value).reduce((acc, k) =>
+    ({ ...acc, [k]: deep_(store, value[k]) }), {}));
 }

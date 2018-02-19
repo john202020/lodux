@@ -41,14 +41,15 @@ function proxy_state(store, value) {
     return new Proxy(value, {
         get: function (target, prop) {
             var value = target[prop];
-            if (helper_1.isPrimitive(value)) {
-                return value;
-            }
-            var desc = Object.getOwnPropertyDescriptor(target, prop);
-            if (desc && !desc.configurable) {
-                return value;
-            }
-            return proxy_state(store, value);
+            return value;
+            // if (isPrimitive(value)) {
+            //   return value;
+            // }
+            // const desc = Object.getOwnPropertyDescriptor(target, prop);
+            // if (desc && !desc.configurable) {
+            //   return value;
+            // }
+            // return proxy_state(store, value);
         },
         set: function (target, prop, value) {
             assure_1.assure_deep_
@@ -59,7 +60,13 @@ function proxy_state(store, value) {
                 .isPlainJSONSafe(value)
                 .notReservedKeywords(['key'], [prop, value]);
             if (!helper_1.isEqualContent(target[prop], value)) {
-                var acc = remove_reserve(['key'], bubble_object_spread(levels(Entire_store_1.get_store_object()[store.store_key], target, prop) || [], prop, value));
+                var level = levels(Entire_store_1.get_store_object()[store.store_key], target, prop);
+                if (level)
+                    console.log('level.length', level.length);
+                console.log(prop);
+                if (level && level.length > 1)
+                    throw new Error("deep assignment is not allowed");
+                var acc = remove_reserve(['key'], bubble_object_spread(level || [], prop, deep_(store, value)));
                 store.update(__assign({}, Entire_store_1.get_store_object()[store.store_key], acc, { type: acc.type || 'update-proxy' }));
             }
             return true;
@@ -106,5 +113,18 @@ function levels(the_state, target, prop) {
         }
         return undefined;
     }
+}
+function deep_(store, value) {
+    if (helper_1.isPrimitive(value))
+        return value;
+    if (Array.isArray(value)) {
+        return proxy_state(store, Object.keys(value).reduce(function (acc, k) {
+            return __spread(acc, [deep_(store, value[k])]);
+        }, []));
+    }
+    return proxy_state(store, Object.keys(value).reduce(function (acc, k) {
+        return (__assign({}, acc, (_a = {}, _a[k] = deep_(store, value[k]), _a)));
+        var _a;
+    }, {}));
 }
 //# sourceMappingURL=proxy_state.js.map
