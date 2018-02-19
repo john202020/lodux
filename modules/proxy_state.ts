@@ -2,21 +2,22 @@ import { assure_, assure_deep_ } from "../helpers/assure";
 import { get_store_object } from "./Entire_store";
 import { isPrimitive, isEqualContent } from "../helpers/helper";
 declare const Proxy;
+declare const WeakSet;
 
 const proxy_watcher = new WeakSet();
 
 //deep proxy
 export function proxy_state(store, value) {
 
-  proxy_watcher.add(value);
-
+  
   assure_deep_.notNull(arguments);
   assure_.required(store);
-
+  
   if (isPrimitive(value)) {
     return value;
   }
-
+  
+  proxy_watcher.add(value);
 
   return new Proxy(value, {
 

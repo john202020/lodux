@@ -34,12 +34,12 @@ var helper_1 = require("../helpers/helper");
 var proxy_watcher = new WeakSet();
 //deep proxy
 function proxy_state(store, value) {
-    proxy_watcher.add(value);
     assure_1.assure_deep_.notNull(arguments);
     assure_1.assure_.required(store);
     if (helper_1.isPrimitive(value)) {
         return value;
     }
+    proxy_watcher.add(value);
     return new Proxy(value, {
         get: function (target, prop) {
             var val = target[prop];
