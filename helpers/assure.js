@@ -9,9 +9,9 @@ var assure_ = Object.freeze({
             helper_1.throwError("does not accept any argument!");
         }
         var root = (0, eval)('this');
-        var compatible = !!root['Proxy'] && !!root['Object']['is'];
+        var compatible = !!root['Proxy'] && !!root["WeakSet"] && !!root['Object']['is'];
         if (!compatible) {
-            throw new Error("'Proxy' and/or 'Object.is' are not supported. Please check whether your system support es2015!");
+            throw new Error("'Proxy', 'Object.is', or 'WeakSet' isare not supported. Please check whether your system support es2015!");
         }
     },
     empty: function (argu) {

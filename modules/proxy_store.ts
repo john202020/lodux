@@ -4,7 +4,6 @@ import { isPrimitive, isEqualContent } from "../helpers/helper";
 import { proxy_state } from "./proxy_state";
 declare const Proxy;
 
-
 //shallow proxy
 export function proxy_store(store) {
 
@@ -16,8 +15,7 @@ export function proxy_store(store) {
 
     get(target, prop, receiver) {
 
-      assure_deep_
-        .notNull([prop]);
+      assure_deep_.notNull([prop]);
 
       if (prop === 'state') {
         return proxy_state(store, get_store_object()[store.store_key]);
@@ -29,23 +27,24 @@ export function proxy_store(store) {
 
     set(target, prop: string, value) {
 
-      assure_deep_.notNull([prop, value]);
-
       assure_
-        .nonPrimitive(value, 'store.state must be non primitive type!')
-        .nonEmptyString(prop, 'property must be non empty string!');
-
-      assure_deep_
-        .isPlainJSONSafe(value)
-        .notReservedKeywords(['key'], [prop, value]);
+      .nonEmptyString(prop, 'property must be non empty string!');
 
       if (prop !== 'state') {
         throw new Error("the store manipulation can only be on state (i.e. store.state)!");
       }
 
+      assure_deep_.notNull(value);
+
+      assure_
+        .nonPrimitive(value, 'store.state must be non primitive type!');
+
+      assure_deep_
+        .isPlainJSONSafe(value)
+        .notReservedKeywords(['key'], [prop, value]);
+
       if (!isEqualContent(store.state, value)) {
         store.update(({
-          ...store.state,
           ...value,
           type: value.type || 'update-proxy'
         }));

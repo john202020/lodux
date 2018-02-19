@@ -17,9 +17,8 @@ It has two methods, `createStore()`, and `subscribe()`.
 ## store (lowercase s)
 A store instance is the key of immutable state management.  
 
-Two most important properites that is the core of the store, 
- `state`, `subscribe()`.
-It also has six more supplemental properties. `dispatch()`, `reduce()`, `update()`, `clone()`, `use()`, and `history`.  
+Two most important properites that are `state`, `subscribe()`.
+Plus six supplemental properties. `dispatch()`, `reduce()`, `update()`, `clone()`, `use()`, and `history`.  
 
 ## Attention
 This store management use es6 functionalities (e.g. Proxy) heavily. 

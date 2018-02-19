@@ -8,10 +8,10 @@ const assure_ = Object.freeze({
         }
 
         const root = (0, eval)('this');
-        const compatible = !!root['Proxy'] && !!root['Object']['is'];
+        const compatible = !!root['Proxy'] && !!root["WeakSet"] && !!root['Object']['is'];
 
         if (!compatible) {
-            throw new Error("'Proxy' and/or 'Object.is' are not supported. Please check whether your system support es2015!")
+            throw new Error("'Proxy', 'Object.is', or 'WeakSet' isare not supported. Please check whether your system support es2015!")
         }
     },
     empty(argu){
