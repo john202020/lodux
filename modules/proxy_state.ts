@@ -3,8 +3,12 @@ import { get_store_object } from "./Entire_store";
 import { isPrimitive, isEqualContent } from "../helpers/helper";
 declare const Proxy;
 
+const proxy_watcher = new WeakSet();
+
 //deep proxy
 export function proxy_state(store, value) {
+
+  proxy_watcher.add(value);
 
   assure_deep_.notNull(arguments);
   assure_.required(store);
@@ -18,18 +22,20 @@ export function proxy_state(store, value) {
 
     get: function (target, prop) {
 
-      const value = target[prop];
-      return value;
-      // if (isPrimitive(value)) {
-      //   return value;
-      // }
+      const val = target[prop];
+      if (isPrimitive(val)) {
+        return val;
+      }
 
-      // const desc = Object.getOwnPropertyDescriptor(target, prop);
-      // if (desc && !desc.configurable) {
-      //   return value;
-      // }
+      const desc = Object.getOwnPropertyDescriptor(target, prop);
+      if (desc && !desc.configurable) {
+        return val;
+      }
 
-      // return proxy_state(store, value);
+      if (proxy_watcher.has(val))
+        return val;
+
+      return proxy_state(store, val);
 
     },
 
@@ -44,21 +50,16 @@ export function proxy_state(store, value) {
       assure_deep_
         .isPlainJSONSafe(value)
         .notReservedKeywords(['key'], [prop, value]);
-      
+
       if (!isEqualContent(target[prop], value)) {
 
         const level = levels(get_store_object()[store.store_key], target, prop);
-        if (level)
-          console.log('level.length', level.length);
-console.log(prop);
-        if (level && level.length > 1)
-          throw new Error("deep assignment is not allowed");
 
         const acc = remove_reserve(['key'],
           bubble_object_spread(
             level || [],
             prop,
-            deep_(store, value)
+            value
           )
         );
 
@@ -67,6 +68,7 @@ console.log(prop);
           ...acc,
           type: acc.type || 'update-proxy'
         });
+
       }
 
       return true;

@@ -31,8 +31,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
 var Entire_store_1 = require("./Entire_store");
 var helper_1 = require("../helpers/helper");
+var proxy_watcher = new WeakSet();
 //deep proxy
 function proxy_state(store, value) {
+    proxy_watcher.add(value);
     assure_1.assure_deep_.notNull(arguments);
     assure_1.assure_.required(store);
     if (helper_1.isPrimitive(value)) {
@@ -40,16 +42,17 @@ function proxy_state(store, value) {
     }
     return new Proxy(value, {
         get: function (target, prop) {
-            var value = target[prop];
-            return value;
-            // if (isPrimitive(value)) {
-            //   return value;
-            // }
-            // const desc = Object.getOwnPropertyDescriptor(target, prop);
-            // if (desc && !desc.configurable) {
-            //   return value;
-            // }
-            // return proxy_state(store, value);
+            var val = target[prop];
+            if (helper_1.isPrimitive(val)) {
+                return val;
+            }
+            var desc = Object.getOwnPropertyDescriptor(target, prop);
+            if (desc && !desc.configurable) {
+                return val;
+            }
+            if (proxy_watcher.has(val))
+                return val;
+            return proxy_state(store, val);
         },
         set: function (target, prop, value) {
             assure_1.assure_deep_
@@ -61,12 +64,7 @@ function proxy_state(store, value) {
                 .notReservedKeywords(['key'], [prop, value]);
             if (!helper_1.isEqualContent(target[prop], value)) {
                 var level = levels(Entire_store_1.get_store_object()[store.store_key], target, prop);
-                if (level)
-                    console.log('level.length', level.length);
-                console.log(prop);
-                if (level && level.length > 1)
-                    throw new Error("deep assignment is not allowed");
-                var acc = remove_reserve(['key'], bubble_object_spread(level || [], prop, deep_(store, value)));
+                var acc = remove_reserve(['key'], bubble_object_spread(level || [], prop, value));
                 store.update(__assign({}, Entire_store_1.get_store_object()[store.store_key], acc, { type: acc.type || 'update-proxy' }));
             }
             return true;
