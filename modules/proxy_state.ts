@@ -70,9 +70,8 @@ export function proxy_state(store, value) {
         );
 
         store.update({
-          ...acc,
-          type: acc.type || 'update-proxy'
-        });
+          ...acc
+           });
 
       }
 
@@ -94,7 +93,7 @@ function bubble_spread(the_state, level, prop, value) {
 
   return {
     ...the_state,
-    ...remove_reserve(['key'], acc)
+    ...remove_reserve('key', acc)
   };
 
 
@@ -113,15 +112,15 @@ function bubble_spread(the_state, level, prop, value) {
 
   }
 
-  function remove_reserve(keys, value) {
+  function remove_reserve(reservedKey, value) {
 
     if (isPrimitive(value) || Array.isArray(value)) {
       return value;
     }
 
     return Object.keys(value).reduce(
-      (acc, k) => keys.includes(k) ? acc : {
-        ...acc, [k]: remove_reserve(keys, value[k])
+      (acc, k) => reservedKey===k ? acc : {
+        ...acc, [k]: remove_reserve(reservedKey, value[k])
       },
       {}
     );

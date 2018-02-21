@@ -69,7 +69,7 @@ function proxy_state(store, value) {
             if (!helper_1.isEqualContent(target[prop], value)) {
                 var the_state = Entire_store_1.get_store_object()[store.store_key];
                 var acc = bubble_spread(the_state, levels(the_state, target, prop), prop, value);
-                store.update(__assign({}, acc, { type: acc.type || 'update-proxy' }));
+                store.update(__assign({}, acc));
             }
             return true;
         }
@@ -78,7 +78,7 @@ function proxy_state(store, value) {
 exports.proxy_state = proxy_state;
 function bubble_spread(the_state, level, prop, value) {
     var acc = bubble_(level, __assign({}, level[level.length - 1], (_a = {}, _a[prop] = value, _a)));
-    return __assign({}, the_state, remove_reserve(['key'], acc));
+    return __assign({}, the_state, remove_reserve('key', acc));
     function bubble_(level, acc) {
         if (level.length < 2) {
             return acc;
@@ -86,12 +86,12 @@ function bubble_spread(the_state, level, prop, value) {
         return bubble_(level.slice(0, level.length - 1), __assign({}, level[level.length - 2], (_a = {}, _a[level[level.length - 1]['key']] = acc, _a)));
         var _a;
     }
-    function remove_reserve(keys, value) {
+    function remove_reserve(reservedKey, value) {
         if (helper_1.isPrimitive(value) || Array.isArray(value)) {
             return value;
         }
         return Object.keys(value).reduce(function (acc, k) {
-            return keys.includes(k) ? acc : __assign({}, acc, (_a = {}, _a[k] = remove_reserve(keys, value[k]), _a));
+            return reservedKey === k ? acc : __assign({}, acc, (_a = {}, _a[k] = remove_reserve(reservedKey, value[k]), _a));
             var _a;
         }, {});
     }
