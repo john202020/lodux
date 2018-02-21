@@ -37,7 +37,7 @@ function proxy_store(store) {
                 .isPlainJSONSafe(value)
                 .notReservedKeywords(['key'], [prop, value]);
             if (!helper_1.isEqualContent(store.state, value)) {
-                store.update((__assign({}, value, { type: value.type || 'update-proxy' })));
+                store.update((__assign({}, value)));
             }
             return true;
         }

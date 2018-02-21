@@ -45,8 +45,7 @@ export function proxy_store(store) {
 
       if (!isEqualContent(store.state, value)) {
         store.update(({
-          ...value,
-          type: value.type || 'update-proxy'
+          ...value
         }));
       }
 
