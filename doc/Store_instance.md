@@ -58,13 +58,15 @@ const disposable = store.reduce(type, action => {
 
     return {
             ...store.state, 
-            count: store.state ? store.state.count + amount : amount
+            count: store.state ? store.state.count + amount : amount,
+            type
         };
 });
 ```
 
 __dispatch(action [, disposable => {}])__  
 disposable=>{} is the function that observes the reducer's return.
+action.type must be non empty string.  
 ```javascript
 store.dispatch({type:'add person', name:'Sam'}, disposable => {
     // reducer has just returned
@@ -80,11 +82,11 @@ store.dispatch({type:'add person', name:'Sam'}, disposable => {
 __update(action)__   
 Internally it invokes a full dispatch/reduce cycle.  
 
-The action is in fact the new state (i.e. internal reducer will return this new state). action.type is optional. If action.type is not provided, system will set action.type = 'update-default-[counter]';
+The action is in fact the new state (i.e. internal reducer will return this new state). action.type is optional.;
 
 Standard usage of update()
 ```javascript
-store.update({...store.state, type:'empty the count', count: 0});
+store.update({...store.state, count: 0});
 ```
 
 __subscribe(callback_fn): disposable__  

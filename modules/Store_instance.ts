@@ -80,10 +80,7 @@ store_.prototype.update = (function () {
                             subs.dispose();
                         }
                         subs = undefined;
-                        let type = new_state.type || '';
-
-                        type = !type.startsWith("update-default-") ? type : temp_action_type;
-                        return { ...new_state, type };
+                        return new_state;
                     }
                 );
         } catch (err) {

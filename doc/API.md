@@ -21,5 +21,4 @@ const disposable = Store.subscribe(() => {
 });
 ```
 
-## store instance
-## [API](Store_instance.md)
+## [store instance](Store_instance.md)

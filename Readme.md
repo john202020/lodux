@@ -20,10 +20,6 @@ A store instance is the key of immutable state management.
 Two most important properites that are `state`, `subscribe()`.
 Plus six supplemental properties. `dispatch()`, `reduce()`, `update()`, `clone()`, `use()`, and `history`.  
 
-## Attention
-This store management use es6 functionalities (e.g. Proxy) heavily. 
-And special attention is to the value -0 (literal negative zero), the system will throw error when -0 exist in the store state. 
-
 ## Principles:
 1. action and state are required to be [JSON safe](doc/JSONSafe.md). 
 2. store.state is immutable.
@@ -32,8 +28,12 @@ And special attention is to the value -0 (literal negative zero), the system wil
 5. methods, subscriptions, and callbacks are synchronously executed.
 6. store instance will not affect other store instance.
 
+## Attention
+1. this store management use es6 functionalities (e.g. Proxy). 
+2. special attention to the value -0 (literal negative zero), error will be thrown when passing -0 to the store state.  
+
 ## store instance and its clone
-A cloned store share the same state with its store. Cloned store serves as a separate working space for applying middlewares, dispatch and reduce.
+A cloned store shares the same state with its store. It serves as a separate working space for middlewares, and explicit dispatch.
 
 ```javascript
 import { Store } from "lodux";
@@ -55,16 +55,16 @@ cloned_store.dispatch({type : 'call', name : 'Mary'});
 ## Simple usage
 ```javascript
 store.state = {type: 'add person', name: 'Sam', age :10};
-//{type: 'add person', name: 'Sam', age :10}
+//{ type: 'add person', name: 'Sam', age :10}
 
 store.state.status = 'boss';
-//{type: 'update', status: 'boss', name: 'Sam', age :10}
+//{ status: 'boss', name: 'Sam', age :10}
 
 store.state.report = {sales: 'Singapore'};
-//{type: 'update', report:{sales:'Singapore'}, status: 'boss', name: 'Sam', age :10}
+//{ report:{sales:'Singapore'}, status: 'boss', name: 'Sam', age :10}
 
 store.state.report.sales = 'Singapore and Malaysia';
-//{type: 'update', report:{sales:'Singapore and Malaysia'}, status: 'boss', name: 'Sam', age :10}
+//{ report:{sales:'Singapore and Malaysia'}, status: 'boss', name: 'Sam', age :10}
 ```
 
 # installation
