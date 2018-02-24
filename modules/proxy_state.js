@@ -69,7 +69,7 @@ function proxy_state(store, value) {
             if (!helper_1.isEqualContent(target[prop], value)) {
                 var the_state = Entire_store_1.get_store_object()[store.store_key];
                 var acc = bubble_spread(the_state, levels(the_state, target, prop), prop, value);
-                store.update(__assign({}, acc));
+                store.update(acc);
             }
             return true;
         }

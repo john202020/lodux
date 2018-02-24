@@ -1,12 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
 var Entire_store_1 = require("./Entire_store");
@@ -37,7 +29,7 @@ function proxy_store(store) {
                 .isPlainJSONSafe(value)
                 .notReservedKeywords(['key'], [prop, value]);
             if (!helper_1.isEqualContent(store.state, value)) {
-                store.update((__assign({}, value)));
+                store.update(value);
             }
             return true;
         }

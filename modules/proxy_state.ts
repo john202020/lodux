@@ -69,9 +69,7 @@ export function proxy_state(store, value) {
           value
         );
 
-        store.update({
-          ...acc
-           });
+        store.update(acc);
 
       }
 

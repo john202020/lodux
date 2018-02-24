@@ -44,9 +44,7 @@ export function proxy_store(store) {
         .notReservedKeywords(['key'], [prop, value]);
 
       if (!isEqualContent(store.state, value)) {
-        store.update(({
-          ...value
-        }));
+        store.update(value);
       }
 
       return true;
