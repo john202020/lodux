@@ -3,7 +3,7 @@
 lodux version 2.0.0 is a rewrite of the store management. 
 It incorporates immutable state management. Directly assign store.state can be done and can be done on multiple level depth.
   
-React, Vue and Recompose modules are removed. To keep useing those modules, use version 1.5.11.
+React, Vue and Recompose modules are removed. To use those modules, use version 1.5.11.
 
 ## [API](doc/API.md)
 
@@ -22,11 +22,11 @@ Plus six supplemental properties. `dispatch()`, `reduce()`, `update()`, `clone()
 
 ## Principles:
 1. action and state are required to be [JSON safe](doc/JSONSafe.md). 
-2. store.state is immutable.
+2. store.state assignment is immutable.
 3. null argument is considerable illegitimate, error will be thrown.
 4. using `this` within callbacks will not be guaranteed.
 5. methods, subscriptions, and callbacks are synchronously executed.
-6. store instance will not affect other store instance.
+6. store instance will not affect other store instance, except cloned store.
 
 ## Attention
 1. this store management use es6 functionalities (e.g. Proxy). 
