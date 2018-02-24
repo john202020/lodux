@@ -19,9 +19,9 @@ store.subscribe(()=>{
 // setting the current immutable state new state
 store.state.count = 1;
 
-const count = state.count; // still {count:0}
+state.count; // still count=0
 
-const store_state_count = store.state.count; // it has the new state {count:1}
+store.state.count; // it has the new state {count:1}
 ```
 
 __history__  
