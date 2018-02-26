@@ -119,6 +119,8 @@ store_.prototype.dispatch = function (action, feedback_fn) {
     assure_1.assure_
         .required(action)
         .nonEmptyString(action.type);
+    assure_1.assure_deep_
+        .isPlainJSONSafe(action);
     if (feedback_fn) {
         assure_1.assure_.func(feedback_fn);
     }
@@ -183,11 +185,12 @@ store_.prototype.subscribe = function (func) {
     };
 };
 function update_state_fn(store, new_state) {
-    assure_1.assure_deep_
-        .notNull(arguments);
     assure_1.assure_
-        .required(store).
-        required(new_state);
+        .required(store)
+        .required(new_state);
+    assure_1.assure_deep_
+        .isPlainJSONSafe(new_state)
+        .notReservedKeywords(['key'], new_state);
     Entire_store_1.set_store_object((_a = {}, _a[store.store_key] = new_state, _a), __spread(Store_1.get_Store_subscribers(), (stores_subscribers[store.store_key] || [])));
     store.history.push();
     var _a;

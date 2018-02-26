@@ -104,6 +104,9 @@ store_.prototype.dispatch = function (action, feedback_fn?: Function) {
         .required(action)
         .nonEmptyString(action.type);
 
+    assure_deep_
+        .isPlainJSONSafe(action);
+
     if (feedback_fn) {
         assure_.func(feedback_fn);
     }
@@ -194,12 +197,13 @@ store_.prototype.subscribe = function (func: Function) {
 
 function update_state_fn(store, new_state) {
 
-    assure_deep_
-        .notNull(arguments);
-
     assure_
-        .required(store).
-        required(new_state);
+        .required(store)
+        .required(new_state);
+
+    assure_deep_
+        .isPlainJSONSafe(new_state)
+        .notReservedKeywords(['key'], new_state);
 
     set_store_object(
         { [store.store_key]: new_state },
