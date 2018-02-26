@@ -23,7 +23,7 @@ Plus six supplemental properties. `dispatch()`, `reduce()`, `update()`, `clone()
 ## Principles:
 1. action and state are required to be [JSON safe](doc/JSONSafe.md). 
 2. store.state assignment is immutable.
-3. null argument is considerable illegitimate, error will be thrown.
+3. null argument is considered illegitimate, error will be thrown.
 4. using `this` within callbacks will not be guaranteed.
 5. methods, subscriptions, and callbacks are synchronously executed.
 6. store instance will not affect other store instance, except cloned store.
