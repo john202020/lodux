@@ -5,23 +5,43 @@
 
 __state__  
 Immutable state of the store instance. 
+The store.state assignment must be a non-primitive type.
 ```javascript
-store.state = {count : 0};
+store.state = {
+    count : 0, 
+    patients:{'James':{name:'James', age:30}}
+};
 
 // state.count will always be 0 from now on
 const state = store.state;
 
-store.subscribe(()=>{
+let sub = store.subscribe(()=>{
+    sub.dispose();
+    sub=undefined;
     // when store.state.count = 1;
     console.log(store.state.count);
 });
 
 // setting the current immutable state new state
-store.state.count = 1;
+store.state = {...store.state, count: 1};
 
-state.count; // still count=0
+store.state.patients = {
+    ...store.state.patients, 
+    'Peter':{name:'Peter', age:28}
+}
 
-store.state.count; // it has the new state {count:1}
+sub = store.subscribe(()=>{
+    sub.dispose();
+    sub=undefined;
+    // when store.state.count = 2;
+    console.log(store.state.count);
+});
+
+store.state = {...store.state, count: 2};
+
+console.log(state.count); // still count=0
+
+console.log(store.state.count); // count=2
 ```
 
 __history__  

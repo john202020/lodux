@@ -58,8 +58,10 @@ function proxy_state(store, value) {
             return proxy_state(store, val);
         },
         set: function (target, prop, value) {
-            assure_1.assure_deep_.notNull([prop, value]);
-            assure_1.assure_.nonEmptyString(prop, 'property must be non empty string!');
+            assure_1.assure_deep_.notNull(value);
+            assure_1.assure_
+                .nonPrimitive(value, 'directly assign primitive to store.state is not allowed!')
+                .nonEmptyString(prop, 'property must be non empty string!');
             if (prop === 'key') {
                 throw new Error("key is reserved keyword. Please use other as object key!");
             }

@@ -46,10 +46,12 @@ export function proxy_state(store, value) {
 
     set: function (target, prop: string, value) {
 
-      assure_deep_.notNull([prop, value]);
+      assure_deep_.notNull(value);
 
-      assure_.nonEmptyString(prop, 'property must be non empty string!');
-     
+      assure_
+        .nonPrimitive(value, 'directly assign primitive to store.state is not allowed!')
+        .nonEmptyString(prop, 'property must be non empty string!');
+
       if (prop === 'key') {
         throw new Error("key is reserved keyword. Please use other as object key!");
       }
@@ -68,7 +70,6 @@ export function proxy_state(store, value) {
           prop,
           value
         );
-
         store.update(acc);
 
       }
@@ -117,7 +118,7 @@ function bubble_spread(the_state, level, prop, value) {
     }
 
     return Object.keys(value).reduce(
-      (acc, k) => reservedKey===k ? acc : {
+      (acc, k) => reservedKey === k ? acc : {
         ...acc, [k]: remove_reserve(reservedKey, value[k])
       },
       {}

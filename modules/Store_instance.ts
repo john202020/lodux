@@ -6,6 +6,7 @@ import { historyFactory } from "./history";
 import { set_store_object, exist } from "./Entire_store";
 import { get_Store_subscribers } from "./Store";
 import { proxy_store } from "./proxy_store";
+import { isPrimitive } from "../helpers/helper";
 
 //(store_key: string, subscribes: Array)
 const stores_subscribers = {};
