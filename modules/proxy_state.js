@@ -54,6 +54,9 @@ function proxy_state(store, value) {
             if (shouldSkip(target, prop)) {
                 return val;
             }
+            if (proxy_watcher.has(val))
+                return val;
+            proxy_watcher.add(val);
             return proxy_state(store, val);
         },
         set: function (target, prop, value) {

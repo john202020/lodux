@@ -28,7 +28,6 @@ export function proxy_state(store, value) {
     return value;
   }
 
-
   return new Proxy(value, {
 
     get: function (target, prop) {
@@ -38,6 +37,11 @@ export function proxy_state(store, value) {
       if (shouldSkip(target, prop)) {
         return val;
       }
+      
+      if (proxy_watcher.has(val))
+        return val;
+
+      proxy_watcher.add(val);
 
       return proxy_state(store, val);
 
