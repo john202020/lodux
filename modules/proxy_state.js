@@ -32,7 +32,7 @@ var assure_1 = require("../helpers/assure");
 var Entire_store_1 = require("./Entire_store");
 var helper_1 = require("../helpers/helper");
 var proxy_watcher = new WeakSet();
-function shouldPass(target, prop) {
+function shouldSkip(target, prop) {
     var val = target[prop];
     if (helper_1.isPrimitive(val)) {
         return true;
@@ -48,11 +48,10 @@ function proxy_state(store, value) {
     if (helper_1.isPrimitive(value)) {
         return value;
     }
-    proxy_watcher.add(value);
     return new Proxy(value, {
         get: function (target, prop) {
             var val = target[prop];
-            if (shouldPass(target, prop) || proxy_watcher.has(val)) {
+            if (shouldSkip(target, prop)) {
                 return val;
             }
             return proxy_state(store, val);

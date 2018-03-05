@@ -6,7 +6,7 @@ declare const WeakSet;
 
 const proxy_watcher = new WeakSet();
 
-function shouldPass(target, prop) {
+function shouldSkip(target, prop) {
   const val = target[prop];
 
   if (isPrimitive(val)) {
@@ -28,7 +28,6 @@ export function proxy_state(store, value) {
     return value;
   }
 
-  proxy_watcher.add(value);
 
   return new Proxy(value, {
 
@@ -36,7 +35,7 @@ export function proxy_state(store, value) {
 
       const val = target[prop];
 
-      if (shouldPass(target, prop) || proxy_watcher.has(val)) {
+      if (shouldSkip(target, prop)) {
         return val;
       }
 
