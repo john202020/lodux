@@ -1,7 +1,7 @@
 ﻿// import 'core-js/fn/object/entries';
 import { assure_, assure_deep_ } from "../helpers/assure";
 import store_ from "./Store_instance";
-import { get_store_object, exist, get_unique_id } from "./Entire_store";
+import { exist, get_unique_id } from "./Entire_store";
 import { proxy_store } from "./proxy_store";
 declare const Proxy;
 
@@ -27,14 +27,14 @@ export const Store = Object.freeze({
         assure_deep_.notNull(arguments);
 
         return proxy_store(
-            new store_(
-                get_unique_id(name),
+            new store_(get_unique_id(name),
                 {
                     ...config_default,
                     ...(config !== undefined ? config : {}),
                     isConfigurable: false
                 }
-            )
+            ),
+            false
         );
     },
 

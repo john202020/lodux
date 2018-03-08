@@ -6,6 +6,7 @@ import { historyFactory } from "./history";
 import { set_store_object, exist } from "./Entire_store";
 import { get_Store_subscribers } from "./Store";
 import { proxy_store } from "./proxy_store";
+
 import { isPrimitive } from "../helpers/helper";
 
 //(store_key: string, subscribes: Array)
@@ -60,16 +61,16 @@ store_.prototype.update = (function () {
 
     return function (new_state) {
         counter++;
-
         assure_deep_.notNull(arguments);
-
+        
         assure_
-            .required(new_state);
-
+        .required(new_state, 'update new state is required');
+        
         assure_deep_
-            .isPlainJSONSafe(new_state)
-            .notReservedKeywords(['key'], new_state);
-
+        .isPlainJSONSafe(new_state);
+        assure_deep_
+        .notReservedKeywords(['key'], new_state);
+        
         const temp_action_type = "update-default-" + counter;
 
         let subs;
@@ -92,7 +93,7 @@ store_.prototype.update = (function () {
             throw err;
         }
 
-        dispatch_(this, { ...new_state, type: temp_action_type });
+        dispatch_(this, { type: temp_action_type });
     };
 }());
 
@@ -152,7 +153,7 @@ store_.prototype.use = function (wares: Array<Function>) {
         return ware(clone)(dispatch.bind(clone));
     }, clone.dispatch);
 
-    return proxy_store(clone);
+    return proxy_store(clone, true);
 
 }
 
@@ -162,7 +163,7 @@ store_.prototype.clone = function () {
     assure_.empty(arguments);
 
     const cloned = new store_(this.store_key, { isConfigurable: true, isHMR: false });
-    return proxy_store(cloned);
+    return proxy_store(cloned, true);
 }
 
 
@@ -179,6 +180,9 @@ store_.prototype.subscribe = function (func: Function) {
         func
     ];
 
+    // console.log('total subs', stores_subscribers[store_key].length);
+
+    //console.log('subs count',stores_subscribers[store_key].length);
     return {
         dispose: function () {
             assure_.empty(arguments);
@@ -199,15 +203,16 @@ store_.prototype.subscribe = function (func: Function) {
 function update_state_fn(store, new_state) {
 
     assure_
-        .required(store)
-        .required(new_state);
+        .required(store, 'store is required')
+        .required(new_state, 'new state is required');
 
     assure_deep_
         .isPlainJSONSafe(new_state)
         .notReservedKeywords(['key'], new_state);
 
     set_store_object(
-        { [store.store_key]: new_state },
+        store,
+         new_state,
         [
             ...get_Store_subscribers(),
             ...(stores_subscribers[store.store_key] || [])

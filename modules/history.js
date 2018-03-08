@@ -47,6 +47,9 @@ function historyFactory(store_key) {
         get state() {
             return store_history[point_index];
         },
+        list: function (max) {
+            return store_history.slice(max * -1);
+        },
         start: function () {
             assure_1.assure_.empty(arguments);
             isContinue = true;
@@ -59,7 +62,7 @@ function historyFactory(store_key) {
             assure_1.assure_deep_.notNull(arguments);
             if (isContinue) {
                 store_history = __spread(store_history, [
-                    setDeepProxy(Entire_store_1.get_store_object()[store_key])
+                    setDeepProxy(Entire_store_1.get_store_object(store_key))
                 ]);
                 point_index = store_history.length - 1;
             }
@@ -108,7 +111,6 @@ function setDeepProxy(obj) {
         },
         set: function (target, prop, value) {
             throw new Error('changing history is not allowed!');
-            return false;
         }
     });
 }

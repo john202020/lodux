@@ -46,7 +46,7 @@ exports.get_Store_subscribers = get_Store_subscribers;
 exports.Store = Object.freeze({
     createStore: function (name, config) {
         assure_1.assure_deep_.notNull(arguments);
-        return proxy_store_1.proxy_store(new Store_instance_1.default(Entire_store_1.get_unique_id(name), __assign({}, config_default, (config !== undefined ? config : {}), { isConfigurable: false })));
+        return proxy_store_1.proxy_store(new Store_instance_1.default(Entire_store_1.get_unique_id(name), __assign({}, config_default, (config !== undefined ? config : {}), { isConfigurable: false })), false);
     },
     subscribe: function (func) {
         assure_1.assure_deep_.notNull(arguments);

@@ -8,7 +8,7 @@ declare const Proxy;
 // collection of all stores' history
 const stores_history = {};
 
-export function historyFactory(store_key: string) {
+export function historyFactory(store_key) {
 
     if (stores_history[store_key]) {
         return stores_history[store_key];
@@ -17,7 +17,6 @@ export function historyFactory(store_key: string) {
     let store_history: Array<Object> = [];
     let point_index = -1;
     let isContinue = false;
-
 
     stores_history[store_key] = Object.freeze({
 
@@ -28,7 +27,9 @@ export function historyFactory(store_key: string) {
         get state() {
             return store_history[point_index];
         },
-
+        list(max) {
+            return store_history.slice(max * -1);
+        },
         start() {
             assure_.empty(arguments);
 
@@ -37,7 +38,7 @@ export function historyFactory(store_key: string) {
 
         stop() {
             assure_.empty(arguments);
-            
+
             isContinue = false;
         },
 
@@ -47,7 +48,7 @@ export function historyFactory(store_key: string) {
             if (isContinue) {
                 store_history = [
                     ...store_history,
-                    setDeepProxy(get_store_object()[store_key])
+                    setDeepProxy(get_store_object(store_key))
                 ];
 
                 point_index = store_history.length - 1;
@@ -118,7 +119,6 @@ function setDeepProxy(obj) {
             },
             set(target, prop, value) {
                 throw new Error('changing history is not allowed!');
-                return false;
             }
         }
     );

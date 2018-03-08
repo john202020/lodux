@@ -1,122 +1,48 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
-var __read = (this && this.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
-var Entire_store_1 = require("./Entire_store");
 var helper_1 = require("../helpers/helper");
-var proxy_watcher = new WeakSet();
+var proxy_state_deep_1 = require("./proxy_state_deep");
 function shouldSkip(target, prop) {
-    var val = target[prop];
-    if (helper_1.isPrimitive(val)) {
-        return true;
-    }
     var desc = Object.getOwnPropertyDescriptor(target, prop);
     if (desc && !desc.configurable) {
         return true;
     }
     return false;
 }
+var watcher = new WeakMap();
 //deep proxy
 function proxy_state(store, value) {
-    if (helper_1.isPrimitive(value)) {
+    if (helper_1.isPrimitive(value))
         return value;
+    if (watcher.has(value)) {
+        return watcher.get(value);
     }
-    return new Proxy(value, {
+    watcher.set(value, new Proxy(value, {
         get: function (target, prop) {
-            var val = target[prop];
-            if (shouldSkip(target, prop)) {
-                return val;
+            if (prop === 'it') {
+                return value;
             }
-            if (proxy_watcher.has(val))
-                return val;
-            proxy_watcher.add(val);
-            return proxy_state(store, val);
+            return target[prop];
         },
         set: function (target, prop, value) {
             assure_1.assure_deep_.notNull(value);
             assure_1.assure_
-                .nonPrimitive(value, 'directly assign primitive to store.state is not allowed!')
+                .nonPrimitive(target, 'assignment to primitive type is not allowed!')
+                .nonPrimitive(value, "directly assign primitive to store.state is not allowed! \n       target:" + JSON.stringify(target) + "  prop:" + prop + "  value:" + value)
                 .nonEmptyString(prop, 'property must be non empty string!');
-            if (prop === 'key') {
-                throw new Error("key is reserved keyword. Please use other as object key!");
+            if (prop === 'it') {
+                throw new Error("[it] is a reserved keyword. Please use other as object key!");
             }
             assure_1.assure_deep_
-                .isPlainJSONSafe(value)
-                .notReservedKeywords(['key'], value);
+                .isPlainJSONSafe(value);
             if (!helper_1.isEqualContent(target[prop], value)) {
-                var the_state = Entire_store_1.get_store_object()[store.store_key];
-                var acc = bubble_spread(the_state, levels(the_state, target, prop), prop, value);
-                store.update(acc);
+                store.update(proxy_state_deep_1.bubble(store.state, target, prop, value));
             }
             return true;
         }
-    });
+    }));
+    return watcher.get(value);
 }
 exports.proxy_state = proxy_state;
-function bubble_spread(the_state, level, prop, value) {
-    var acc = bubble_(level, __assign({}, level[level.length - 1], (_a = {}, _a[prop] = value, _a)));
-    return __assign({}, the_state, remove_reserve('key', acc));
-    function bubble_(level, acc) {
-        if (level.length < 2) {
-            return acc;
-        }
-        return bubble_(level.slice(0, level.length - 1), __assign({}, level[level.length - 2], (_a = {}, _a[level[level.length - 1]['key']] = acc, _a)));
-        var _a;
-    }
-    function remove_reserve(reservedKey, value) {
-        if (helper_1.isPrimitive(value) || Array.isArray(value)) {
-            return value;
-        }
-        return Object.keys(value).reduce(function (acc, k) {
-            return reservedKey === k ? acc : __assign({}, acc, (_a = {}, _a[k] = remove_reserve(reservedKey, value[k]), _a));
-            var _a;
-        }, {});
-    }
-    var _a;
-}
-function levels(the_state, target, prop) {
-    return trace(the_state, [], '') || [];
-    function trace(obj, track, key) {
-        if (helper_1.isPrimitive(obj)) {
-            return undefined;
-        }
-        track.push(__assign({}, obj, { key: key }));
-        if ((obj === target)) {
-            return track;
-        }
-        for (var k in obj) {
-            var result = trace(obj[k], __spread(track), k);
-            if (result)
-                return result;
-        }
-        return undefined;
-    }
-}
 //# sourceMappingURL=proxy_state.js.map

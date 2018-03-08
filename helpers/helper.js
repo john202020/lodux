@@ -11,8 +11,9 @@ exports.isPrimitive = isPrimitive;
 exports.isJSONSafe = (function () {
     return function check(value) {
         var type = typeof value;
-        if (type === "function" || type === 'symbol')
+        if (type === "function" || type === 'symbol') {
             return false;
+        }
         if (value instanceof Map || value instanceof Set) {
             return false;
         }
@@ -20,22 +21,21 @@ exports.isJSONSafe = (function () {
         if (Object.is(value, NaN))
             return false;
         // -0 not allow
-        if (Object.is(1 / value, -Infinity))
-            return false;
-        if (type !== 'undefined') {
-            var prototype = value.prototype;
-            if (prototype !== Object.prototype &&
-                prototype !== null &&
-                prototype !== undefined) {
+        try {
+            if (Object.is(1 / value, -Infinity))
                 return false;
-            }
+        }
+        catch (err) { }
+        if (type === "object") {
+            if (!isSimpleObject(value))
+                return false;
         }
         if (!isPrimitive(value)) {
             if (Object.getOwnPropertySymbols(value).length > 0) {
                 return false;
             }
             for (var k in value) {
-                if (typeof k !== 'string')
+                if (typeof k !== 'string' && typeof k !== 'number')
                     return false;
                 if (!check(value[k]))
                     return false;
@@ -52,5 +52,25 @@ function isEqualContent(value1, value2) {
     return JSON.stringify(value1) === JSON.stringify(value2);
 }
 exports.isEqualContent = isEqualContent;
+function isSimpleObject(value) {
+    if (typeof value === 'undefined')
+        return false;
+    if (isPrimitive(value) || Array.isArray(value))
+        return true;
+    if (typeof value !== 'object')
+        return false;
+    // for (let k in value) {
+    //     const val = value[k];
+    //     if (typeof val === 'object') {
+    //         if (!isSimpleObject(val)) {
+    //             return false;
+    //         }
+    //     }
+    //     if (typeof val !== 'string') {
+    //         return false;
+    //     }
+    // }
+    return true;
+}
 exports.NOT_FOUND_ERROR = {};
 //# sourceMappingURL=helper.js.map

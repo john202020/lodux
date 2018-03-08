@@ -1,12 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 var __values = (this && this.__values) || function (o) {
     var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
     if (m) return m.call(o);
@@ -88,9 +80,10 @@ store_.prototype.update = (function () {
         counter++;
         assure_1.assure_deep_.notNull(arguments);
         assure_1.assure_
-            .required(new_state);
+            .required(new_state, 'update new state is required');
         assure_1.assure_deep_
-            .isPlainJSONSafe(new_state)
+            .isPlainJSONSafe(new_state);
+        assure_1.assure_deep_
             .notReservedKeywords(['key'], new_state);
         var temp_action_type = "update-default-" + counter;
         var subs;
@@ -111,7 +104,7 @@ store_.prototype.update = (function () {
             subs = undefined;
             throw err;
         }
-        Dispatcher_1.dispatch_(this, __assign({}, new_state, { type: temp_action_type }));
+        Dispatcher_1.dispatch_(this, { type: temp_action_type });
     };
 }());
 store_.prototype.dispatch = function (action, feedback_fn) {
@@ -159,13 +152,13 @@ store_.prototype.use = function (wares) {
     clone.dispatch = reversed_wares.reduce(function (dispatch, ware) {
         return ware(clone)(dispatch.bind(clone));
     }, clone.dispatch);
-    return proxy_store_1.proxy_store(clone);
+    return proxy_store_1.proxy_store(clone, true);
     var e_1, _a;
 };
 store_.prototype.clone = function () {
     assure_1.assure_.empty(arguments);
     var cloned = new store_(this.store_key, { isConfigurable: true, isHMR: false });
-    return proxy_store_1.proxy_store(cloned);
+    return proxy_store_1.proxy_store(cloned, true);
 };
 store_.prototype.subscribe = function (func) {
     assure_1.assure_deep_.notNull(arguments);
@@ -174,6 +167,8 @@ store_.prototype.subscribe = function (func) {
     stores_subscribers[store_key] = __spread((stores_subscribers[store_key] || []), [
         func
     ]);
+    // console.log('total subs', stores_subscribers[store_key].length);
+    //console.log('subs count',stores_subscribers[store_key].length);
     return {
         dispose: function () {
             assure_1.assure_.empty(arguments);
@@ -186,14 +181,13 @@ store_.prototype.subscribe = function (func) {
 };
 function update_state_fn(store, new_state) {
     assure_1.assure_
-        .required(store)
-        .required(new_state);
+        .required(store, 'store is required')
+        .required(new_state, 'new state is required');
     assure_1.assure_deep_
         .isPlainJSONSafe(new_state)
         .notReservedKeywords(['key'], new_state);
-    Entire_store_1.set_store_object((_a = {}, _a[store.store_key] = new_state, _a), __spread(Store_1.get_Store_subscribers(), (stores_subscribers[store.store_key] || [])));
+    Entire_store_1.set_store_object(store, new_state, __spread(Store_1.get_Store_subscribers(), (stores_subscribers[store.store_key] || [])));
     store.history.push();
-    var _a;
 }
 exports.default = store_;
 //# sourceMappingURL=Store_instance.js.map

@@ -39,7 +39,7 @@ exports.assure_deep_ = Object.freeze({
     },
     isPlainJSONSafe: function (obj, errormsg) {
         if (!helper_1.isJSONSafe(obj)) {
-            console.warn(obj, 'is not JSON safe!');
+            // console.warn(obj, 'is not JSON safe!');
             if (errormsg)
                 throw new Error(errormsg);
             else

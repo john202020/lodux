@@ -14,9 +14,9 @@ export const isJSONSafe = (function () {
 
         const type = typeof value;
 
-        if (type === "function" || type === 'symbol')
+        if (type === "function" || type === 'symbol') {
             return false;
-
+        }
         if (value instanceof Map || value instanceof Set) {
             return false;
         }
@@ -26,18 +26,14 @@ export const isJSONSafe = (function () {
             return false;
 
         // -0 not allow
-        if (Object.is(1 / value, -Infinity))
-            return false;
-
-        if (type !== 'undefined') {
-            const prototype = value.prototype;
-            if (
-                prototype !== Object.prototype &&
-                prototype !== null &&
-                prototype !== undefined
-            ) {
+        try {
+            if (Object.is(1 / value, -Infinity))
                 return false;
-            }
+        } catch (err) { }
+
+        if (type === "object") {
+            if (!isSimpleObject(value))
+                return false;
         }
 
         if (!isPrimitive(value)) {
@@ -47,7 +43,7 @@ export const isJSONSafe = (function () {
             }
 
             for (let k in value) {
-                if (typeof k !== 'string')
+                if (typeof k !== 'string' && typeof k !== 'number')
                     return false;
                 if (!check(value[k]))
                     return false;
@@ -58,7 +54,7 @@ export const isJSONSafe = (function () {
     }
 }());
 
-export const WHAT_IS_JSON_SAFE =`
+export const WHAT_IS_JSON_SAFE = `
 1. is simple key,value pair object.  
 2. key must be string.  
 3. key,value pair do not include Map, Set, Symbol, literal NaN, function, literal NaN, literal -0.
@@ -80,6 +76,31 @@ export function isEqualContent(value1, value2) {
 
 }
 
+
+function isSimpleObject(value) {
+    if (typeof value === 'undefined')
+        return false;
+
+    if (isPrimitive(value) || Array.isArray(value))
+        return true;
+
+    if (typeof value !== 'object')
+        return false;
+
+    // for (let k in value) {
+    //     const val = value[k];
+    //     if (typeof val === 'object') {
+    //         if (!isSimpleObject(val)) {
+    //             return false;
+    //         }
+    //     }
+    //     if (typeof val !== 'string') {
+    //         return false;
+    //     }
+
+    // }
+    return true;
+}
 
 export const NOT_FOUND_ERROR = {};
 

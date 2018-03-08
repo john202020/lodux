@@ -1,18 +1,11 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
 /**
  * Entire store
 */
 var store_object = {};
+var store_object_etag = {};
 exports.get_unique_id = (function () {
     var _id = 1;
     return function (name) {
@@ -31,20 +24,34 @@ function exist(name) {
     return store_object[name] !== undefined;
 }
 exports.exist = exist;
-function set_store_object(new_state_of_a_store, subscribers) {
+function set_store_object(store, new_state_of_a_store, subscribers) {
     assure_1.assure_deep_.notNull(arguments);
     assure_1.assure_
         .required(new_state_of_a_store)
         .required(subscribers);
-    store_object = __assign({}, store_object, new_state_of_a_store);
+    store_object[store.store_key] = new_state_of_a_store;
+    if (typeof store_object_etag[store.store_key] === "undefined") {
+        store_object_etag[store.store_key] = 0;
+    }
+    store_object_etag[store.store_key] = 1 + store_object_etag[store.store_key];
     subscribers.forEach(function (handler) {
-        handler.call({});
+        try {
+            handler.call({});
+        }
+        catch (err) {
+            console.error(err.message);
+        }
     });
 }
 exports.set_store_object = set_store_object;
-function get_store_object() {
+function get_store_object_etag(store_key) {
+    return store_object_etag[store_key];
+}
+exports.get_store_object_etag = get_store_object_etag;
+function get_store_object(store_key) {
     assure_1.assure_deep_.notNull(arguments);
-    return __assign({}, store_object);
+    // return { ...store_object };
+    return store_object[store_key];
 }
 exports.get_store_object = get_store_object;
 //# sourceMappingURL=Entire_store.js.map
