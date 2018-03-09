@@ -31,9 +31,10 @@ function proxy_store(store, forceNew) {
             }
             assure_1.assure_deep_
                 .notNull(value)
-                .isPlainJSONSafe(value);
+                .isPlainJSONSafe(value)
+                .notReservedKeywords(['it'], value);
             assure_1.assure_
-                .nonPrimitive(value, 'store.state must be non primitive type!');
+                .nonPrimitive(value, 'store.state assignment must be non primitive type!');
             if (!helper_1.isEqualContent(store.state, value)) {
                 store.update(value);
             }

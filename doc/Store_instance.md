@@ -4,7 +4,7 @@
 ## store instance
 
 __state__  
-Immutable state of the store instance. 
+Immutable state of the store instance.   
 The store.state assignment must be a non-primitive type.
 ```javascript
 store.state = {

@@ -44,8 +44,6 @@ export function proxy_state(store, value) {
 
       assure_
         .nonPrimitive(target, 'assignment to primitive type is not allowed!')
-        .nonPrimitive(value, `directly assign primitive to store.state is not allowed! 
-       target:${JSON.stringify(target)}  prop:${prop}  value:${value}`)
         .nonEmptyString(prop, 'property must be non empty string!');
 
       if (prop === 'it') {
@@ -53,7 +51,8 @@ export function proxy_state(store, value) {
       }
 
       assure_deep_
-        .isPlainJSONSafe(value);
+        .isPlainJSONSafe(value)
+        .notReservedKeywords(['it'], value);
 
       if (!isEqualContent(target[prop], value)) {
         store.update(bubble(store.state, target, prop, value));

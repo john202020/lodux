@@ -29,13 +29,13 @@ function proxy_state(store, value) {
             assure_1.assure_deep_.notNull(value);
             assure_1.assure_
                 .nonPrimitive(target, 'assignment to primitive type is not allowed!')
-                .nonPrimitive(value, "directly assign primitive to store.state is not allowed! \n       target:" + JSON.stringify(target) + "  prop:" + prop + "  value:" + value)
                 .nonEmptyString(prop, 'property must be non empty string!');
             if (prop === 'it') {
                 throw new Error("[it] is a reserved keyword. Please use other as object key!");
             }
             assure_1.assure_deep_
-                .isPlainJSONSafe(value);
+                .isPlainJSONSafe(value)
+                .notReservedKeywords(['it'], value);
             if (!helper_1.isEqualContent(target[prop], value)) {
                 store.update(proxy_state_deep_1.bubble(store.state, target, prop, value));
             }

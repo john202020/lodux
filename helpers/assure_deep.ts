@@ -1,4 +1,5 @@
 ﻿import { isPrimitive, isJSONSafe, WHAT_IS_JSON_SAFE, throwError } from "./helper";
+const SYSTEM_reservedKeys = Object.freeze(['it', 'key']);
 
 export const assure_deep_ = Object.freeze({
     notNull(args, errormsg?: string) {
@@ -36,6 +37,17 @@ export const assure_deep_ = Object.freeze({
         return assure_deep_;
     },
     notReservedKeywords(reservedKeys, args, errormsg?: string) {
+        reservedKeys = mergeArrayAndOverride_shallow(reservedKeys, SYSTEM_reservedKeys);
+
+
+        function mergeArrayAndOverride_shallow(arr1, arr2) {
+            const obj1 = arr1.reduce((acc, a) => ({ ...acc, [a]: a }), {});
+            const obj2 = arr2.reduce((acc, a) => ({ ...acc, [a]: a }), {});
+            const obj = { ...obj1, ...obj2 };
+            return Object.keys(obj).reduce(
+                (acc: Array<any>, k) => [...acc, obj[k]]
+                , []);
+        }
 
         deep_check(
             args,
