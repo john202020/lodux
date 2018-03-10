@@ -80,7 +80,7 @@ store_.prototype.update = (function () {
             .required(new_state, 'update new state is required');
         assure_1.assure_deep_
             .isPlainJSONSafe(new_state)
-            .notReservedKeywords(['key'], new_state);
+            .notReservedKeywords([], new_state);
         var temp_action_type = "update-default-" + counter;
         var subs;
         try {
@@ -105,15 +105,6 @@ store_.prototype.update = (function () {
 }());
 store_.prototype.dispatch = function (action, feedback_fn) {
     assure_1.assure_deep_.notNull(arguments);
-    assure_1.assure_
-        .required(action)
-        .nonEmptyString(action.type);
-    assure_1.assure_deep_
-        .isPlainJSONSafe(action)
-        .notReservedKeywords([], action, 'action must not have "key" as property');
-    if (feedback_fn) {
-        assure_1.assure_.func(feedback_fn);
-    }
     if (action.type.startsWith('update')) {
         throw new Error("action type should not start with 'update'. Please use a more descriptive action type.");
     }

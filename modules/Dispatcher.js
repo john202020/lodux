@@ -11,6 +11,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
 var Entire_store_1 = require("./Entire_store");
 function dispatch_(module, action, feedback_fn) {
+    assure_1.assure_
+        .required(action)
+        .nonEmptyString(action.type);
+    assure_1.assure_deep_
+        .isPlainJSONSafe(action)
+        .notReservedKeywords([], action, 'action must not have "key" as property');
+    if (feedback_fn) {
+        assure_1.assure_.func(feedback_fn);
+    }
     var feedback_type = "update-default-feedback-" + Entire_store_1.get_unique_id();
     if (typeof feedback_fn !== "undefined") {
         var subsr_1;
@@ -34,8 +43,11 @@ function dispatch_(module, action, feedback_fn) {
 exports.dispatch_ = dispatch_;
 function reduce_(module, update_state_fn, type, callback) {
     assure_1.assure_.nonEmptyString(type);
-    return module.emitter.listen(type, function (action) {
-        var _action = JSON.parse(action);
+    return module.emitter.listen(type, function (actionString) {
+        var _action = JSON.parse(actionString);
+        assure_1.assure_deep_
+            .isPlainJSONSafe(_action)
+            .notReservedKeywords([], _action);
         var return_state = callback.call({}, _action);
         if (typeof return_state !== "undefined") {
             update_state_fn(module, return_state);

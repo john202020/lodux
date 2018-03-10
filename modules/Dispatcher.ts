@@ -4,6 +4,19 @@ import { get_unique_id } from "./Entire_store";
 
 export function dispatch_(module, action, feedback_fn?: Function) {
 
+    assure_
+        .required(action)
+        .nonEmptyString(action.type);
+
+    assure_deep_
+        .isPlainJSONSafe(action)
+        .notReservedKeywords([], action, 'action must not have "key" as property');
+
+    if (feedback_fn) {
+        assure_.func(feedback_fn);
+    }
+
+
     const feedback_type = "update-default-feedback-" + get_unique_id();
 
     if (typeof feedback_fn !== "undefined") {
@@ -33,10 +46,14 @@ export function reduce_(module, update_state_fn, type: string, callback: Functio
 
     assure_.nonEmptyString(type);
 
-    return module.emitter.listen(type, function (action) {
+    return module.emitter.listen(type, function (actionString) {
 
-        const _action = JSON.parse(action);
+        const _action = JSON.parse(actionString);
 
+        assure_deep_
+            .isPlainJSONSafe(_action)
+            .notReservedKeywords([], _action);
+            
         const return_state = callback.call({}, _action);
 
         if (typeof return_state !== "undefined") {
