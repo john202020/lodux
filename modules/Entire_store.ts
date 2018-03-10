@@ -41,8 +41,6 @@ export function exist(name: string) {
 
 export function set_store_object(store, new_state_of_a_store, subscribers) {
 
-    assure_deep_.notNull(arguments);
-
     assure_
         .required(new_state_of_a_store)
         .required(subscribers);
@@ -70,10 +68,6 @@ export function get_store_object_etag(store_key) {
 }
 
 export function get_store_object(store_key) {
-
-    assure_deep_.notNull(arguments);
-
-    // return { ...store_object };
     return store_object[store_key];
 }
 

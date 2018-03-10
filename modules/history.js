@@ -48,6 +48,8 @@ function historyFactory(store_key) {
             return store_history[point_index];
         },
         list: function (max) {
+            assure_1.assure_deep_.notNull(arguments);
+            assure_1.assure_.number(max);
             return store_history.slice(max * -1);
         },
         start: function () {
@@ -59,7 +61,7 @@ function historyFactory(store_key) {
             isContinue = false;
         },
         push: function () {
-            assure_1.assure_deep_.notNull(arguments);
+            assure_1.assure_.empty(arguments);
             if (isContinue) {
                 store_history = __spread(store_history, [
                     setDeepProxy(Entire_store_1.get_store_object(store_key))

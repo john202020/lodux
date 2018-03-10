@@ -5,7 +5,7 @@ var Entire_store_1 = require("./Entire_store");
 var helper_1 = require("../helpers/helper");
 var proxy_state_deep_1 = require("./proxy_state_deep");
 var last_store_etag = -1;
-var last_proxied_store = new WeakMap();
+var proxied_stores = new WeakMap();
 //shallow proxy
 function proxy_store(store, forceNew) {
     assure_1.assure_deep_.notNull(arguments);
@@ -17,11 +17,11 @@ function proxy_store(store, forceNew) {
                 var store_key = store.store_key;
                 var hasChange = last_store_etag !== Entire_store_1.get_store_object_etag(store_key);
                 last_store_etag = Entire_store_1.get_store_object_etag(store_key);
-                if (!forceNew && !hasChange && last_proxied_store.get(store)) {
-                    return last_proxied_store.get(store);
+                if (!forceNew && !hasChange && proxied_stores.get(store)) {
+                    return proxied_stores.get(store);
                 }
-                last_proxied_store.set(store, proxy_state_deep_1.proxy_state_deep(proxied_store, Entire_store_1.get_store_object(store_key)));
-                return last_proxied_store.get(store);
+                proxied_stores.set(store, proxy_state_deep_1.proxy_state_deep(proxied_store, Entire_store_1.get_store_object(store_key)));
+                return proxied_stores.get(store);
             }
             return target[prop];
         },
@@ -32,7 +32,7 @@ function proxy_store(store, forceNew) {
             assure_1.assure_deep_
                 .notNull(value)
                 .isPlainJSONSafe(value)
-                .notReservedKeywords(['it'], value);
+                .notReservedKeywords([], value);
             assure_1.assure_
                 .nonPrimitive(value, 'store.state assignment must be non primitive type!');
             if (!helper_1.isEqualContent(store.state, value)) {

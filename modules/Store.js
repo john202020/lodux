@@ -28,7 +28,6 @@ var __spread = (this && this.__spread) || function () {
     return ar;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// import 'core-js/fn/object/entries';
 var assure_1 = require("../helpers/assure");
 var Store_instance_1 = require("./Store_instance");
 var Entire_store_1 = require("./Entire_store");

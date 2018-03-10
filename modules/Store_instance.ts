@@ -14,10 +14,6 @@ const stores_subscribers = {};
 
 function store_(store_key: string, config: Object) {
 
-    assure_
-        .nonEmptyString(store_key)
-        .nonPrimitive(config);
-
     if (!config['isConfigurable'] && exist(store_key)) {
         if (config['isConfigurable']['isHMR'] === true)
             console.warn(store_key + " is already exist in store!");
@@ -61,16 +57,16 @@ store_.prototype.update = (function () {
 
     return function (new_state) {
         counter++;
+
         assure_deep_.notNull(arguments);
-        
+
         assure_
-        .required(new_state, 'update new state is required');
-        
+            .required(new_state, 'update new state is required');
+
         assure_deep_
-        .isPlainJSONSafe(new_state);
-        assure_deep_
-        .notReservedKeywords(['key'], new_state);
-        
+            .isPlainJSONSafe(new_state)
+            .notReservedKeywords(['key'], new_state);
+
         const temp_action_type = "update-default-" + counter;
 
         let subs;
@@ -107,7 +103,8 @@ store_.prototype.dispatch = function (action, feedback_fn?: Function) {
         .nonEmptyString(action.type);
 
     assure_deep_
-        .isPlainJSONSafe(action);
+        .isPlainJSONSafe(action)
+        .notReservedKeywords([], action, 'action must not have "key" as property');
 
     if (feedback_fn) {
         assure_.func(feedback_fn);
@@ -180,9 +177,6 @@ store_.prototype.subscribe = function (func: Function) {
         func
     ];
 
-    // console.log('total subs', stores_subscribers[store_key].length);
-
-    //console.log('subs count',stores_subscribers[store_key].length);
     return {
         dispose: function () {
             assure_.empty(arguments);
@@ -203,16 +197,16 @@ store_.prototype.subscribe = function (func: Function) {
 function update_state_fn(store, new_state) {
 
     assure_
-        .required(store, 'store is required')
         .required(new_state, 'new state is required');
 
     assure_deep_
+        .notNull(new_state)
         .isPlainJSONSafe(new_state)
-        .notReservedKeywords(['key'], new_state);
+        .notReservedKeywords([], new_state);
 
     set_store_object(
         store,
-         new_state,
+        new_state,
         [
             ...get_Store_subscribers(),
             ...(stores_subscribers[store.store_key] || [])

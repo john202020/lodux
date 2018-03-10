@@ -7,7 +7,7 @@ declare const Proxy;
 declare const WeakMap;
 
 let last_store_etag = -1;
-const last_proxied_store = new WeakMap();
+const proxied_stores = new WeakMap();
 //shallow proxy
 export function proxy_store(store, forceNew) {
 
@@ -26,14 +26,14 @@ export function proxy_store(store, forceNew) {
         const hasChange = last_store_etag !== get_store_object_etag(store_key);
 
         last_store_etag = get_store_object_etag(store_key);
-        if (!forceNew && !hasChange && last_proxied_store.get(store)) {
-          return last_proxied_store.get(store);
+        if (!forceNew && !hasChange && proxied_stores.get(store)) {
+          return proxied_stores.get(store);
         }
 
-        last_proxied_store.set(store,
+        proxied_stores.set(store,
           proxy_state_deep(proxied_store, get_store_object(store_key)));
 
-        return last_proxied_store.get(store);
+        return proxied_stores.get(store);
       }
 
       return target[prop];
@@ -49,7 +49,7 @@ export function proxy_store(store, forceNew) {
       assure_deep_
         .notNull(value)
         .isPlainJSONSafe(value)
-        .notReservedKeywords(['it'], value);
+        .notReservedKeywords([], value);
 
       assure_
         .nonPrimitive(value, 'store.state assignment must be non primitive type!');

@@ -40,9 +40,6 @@ var proxy_store_1 = require("./proxy_store");
 //(store_key: string, subscribes: Array)
 var stores_subscribers = {};
 function store_(store_key, config) {
-    assure_1.assure_
-        .nonEmptyString(store_key)
-        .nonPrimitive(config);
     if (!config['isConfigurable'] && Entire_store_1.exist(store_key)) {
         if (config['isConfigurable']['isHMR'] === true)
             console.warn(store_key + " is already exist in store!");
@@ -82,8 +79,7 @@ store_.prototype.update = (function () {
         assure_1.assure_
             .required(new_state, 'update new state is required');
         assure_1.assure_deep_
-            .isPlainJSONSafe(new_state);
-        assure_1.assure_deep_
+            .isPlainJSONSafe(new_state)
             .notReservedKeywords(['key'], new_state);
         var temp_action_type = "update-default-" + counter;
         var subs;
@@ -113,7 +109,8 @@ store_.prototype.dispatch = function (action, feedback_fn) {
         .required(action)
         .nonEmptyString(action.type);
     assure_1.assure_deep_
-        .isPlainJSONSafe(action);
+        .isPlainJSONSafe(action)
+        .notReservedKeywords([], action, 'action must not have "key" as property');
     if (feedback_fn) {
         assure_1.assure_.func(feedback_fn);
     }
@@ -167,8 +164,6 @@ store_.prototype.subscribe = function (func) {
     stores_subscribers[store_key] = __spread((stores_subscribers[store_key] || []), [
         func
     ]);
-    // console.log('total subs', stores_subscribers[store_key].length);
-    //console.log('subs count',stores_subscribers[store_key].length);
     return {
         dispose: function () {
             assure_1.assure_.empty(arguments);
@@ -181,11 +176,11 @@ store_.prototype.subscribe = function (func) {
 };
 function update_state_fn(store, new_state) {
     assure_1.assure_
-        .required(store, 'store is required')
         .required(new_state, 'new state is required');
     assure_1.assure_deep_
+        .notNull(new_state)
         .isPlainJSONSafe(new_state)
-        .notReservedKeywords(['key'], new_state);
+        .notReservedKeywords([], new_state);
     Entire_store_1.set_store_object(store, new_state, __spread(Store_1.get_Store_subscribers(), (stores_subscribers[store.store_key] || [])));
     store.history.push();
 }

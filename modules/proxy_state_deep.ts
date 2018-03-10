@@ -1,63 +1,45 @@
-import { assure_, assure_deep_ } from "../helpers/assure";
-import { isPrimitive, isEqualContent } from "../helpers/helper";
+import { isPrimitive } from "../helpers/helper";
 import { proxy_state } from "./proxy_state";
+declare const WeakMap;
+
+export const proxies_watcher = new WeakMap();
 
 export function proxy_state_deep(store, value) {
 
-  return psd(store, value);
-
-  function psd(store, value) {
-
-    if (isPrimitive(value)) {
-      return value;
-    }
-
-    return proxy_state(store, traverse(value, psd));
+  if (isPrimitive(value)) {
+    return value;
   }
 
-  function traverse(value, transformation) {
-    if (Array.isArray(value)) {
-      return value.map(v => transformation(store, v));
-    }
-    else {
-      return Object.keys(value).reduce((acc, k) => {
-        return { ...acc, [k]: transformation(store, value[k]) };
-      }, {});
-    }
-  }
+  return proxy_state(store, Array.isArray(value) ?
+    value.map(v => proxy_state_deep(store, v)) :
+    Object.keys(value).reduce((acc, k) => {
+      return { ...acc, [k]: proxy_state_deep(store, value[k]) };
+    }, {})
+  )
 }
 
+
 export function bubble(the_state, target, prop, value) {
+  return { ...the_state, ...bubble_(the_state, target, prop, value) };
+}
 
-  if (typeof target !== 'undefined' && isPrimitive(target)) {
-    throw new Error("not able to assign to primitive target");
-  }
 
-  return { ...the_state, ...bubble_(the_state, '') };
+function bubble_(state, target, prop, value) {
 
-  function bubble_(state, prop_) {
-
-    if (isPrimitive(state)) {
-      return undefined;
-    }
-
-    //need to optimize
-    if (isEqualContent(state, target)) {
-      return { [prop]: value };
-    }
-
-    if (!isPrimitive(state)) {
-      for (let k in state) {
-        const rr = bubble_(state[k], k);
-        if (rr) {
-          return { [k]: { ...state[k], ...rr } };
-        }
-      }
-    }
-    else {
-      return state;
-    }
-
+  if (isPrimitive(state)) {
     return undefined;
   }
+
+  if (proxies_watcher.get(state) === target) {
+    return { [prop]: value };
+  }
+
+  for (let k in state) {
+    const rr = bubble_(state[k], target, prop, value);
+    if (rr) {
+      return { [k]: { ...state[k], ...rr } };
+    }
+  }
+
+  return undefined;
 }

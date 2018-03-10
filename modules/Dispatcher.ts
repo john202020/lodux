@@ -4,15 +4,6 @@ import { get_unique_id } from "./Entire_store";
 
 export function dispatch_(module, action, feedback_fn?: Function) {
 
-    assure_
-        .required(action)
-        .nonEmptyString(action.type)
-        .required(module.emitter);
-
-    assure_deep_
-        .isPlainJSONSafe(action)
-        .notReservedKeywords(['key'], action, 'action must not have "key" as property');
-
     const feedback_type = "update-default-feedback-" + get_unique_id();
 
     if (typeof feedback_fn !== "undefined") {
@@ -44,8 +35,6 @@ export function reduce_(module, update_state_fn, type: string, callback: Functio
 
     return module.emitter.listen(type, function (action) {
 
-        assure_deep_.notNull(arguments);
-
         const _action = JSON.parse(action);
 
         const return_state = callback.call({}, _action);
@@ -60,7 +49,8 @@ export function reduce_(module, update_state_fn, type: string, callback: Functio
 
     //remove feedback_type
     function remove_feedback_type(action) {
-        assure_deep_.notNull(arguments);
+
+        // assure_deep_.notNull(arguments);
 
         return Object.keys(action)
             .filter(key => key !== 'feedback_type')

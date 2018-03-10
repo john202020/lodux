@@ -39,7 +39,6 @@ export const assure_deep_ = Object.freeze({
     notReservedKeywords(reservedKeys, args, errormsg?: string) {
         reservedKeys = mergeArrayAndOverride_shallow(reservedKeys, SYSTEM_reservedKeys);
 
-
         function mergeArrayAndOverride_shallow(arr1, arr2) {
             const obj1 = arr1.reduce((acc, a) => ({ ...acc, [a]: a }), {});
             const obj2 = arr2.reduce((acc, a) => ({ ...acc, [a]: a }), {});

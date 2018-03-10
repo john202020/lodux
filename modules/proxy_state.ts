@@ -1,6 +1,6 @@
 import { assure_, assure_deep_ } from "../helpers/assure";
 import { isPrimitive, isEqualContent } from "../helpers/helper";
-import { proxy_state_deep, bubble } from "./proxy_state_deep";
+import { proxy_state_deep, bubble, proxies_watcher } from "./proxy_state_deep";
 declare const WeakMap;
 declare const Proxy;
 
@@ -27,32 +27,19 @@ export function proxy_state(store, value) {
     return watcher.get(value);
   }
 
-  watcher.set(value, new Proxy(value, {
-
-    get: function (target, prop) {
-
-      if (prop === 'it') {
-        return value;
-      }
-      return target[prop];
-
-    },
+  const proxied = new Proxy(value, {
 
     set: function (target, prop: string, value) {
 
       assure_deep_.notNull(value);
 
       assure_
-        .nonPrimitive(target, 'assignment to primitive type is not allowed!')
         .nonEmptyString(prop, 'property must be non empty string!');
 
-      if (prop === 'it') {
-        throw new Error("[it] is a reserved keyword. Please use other as object key!");
-      }
-
       assure_deep_
+        .notReservedKeywords([], prop)
         .isPlainJSONSafe(value)
-        .notReservedKeywords(['it'], value);
+        .notReservedKeywords([], value);
 
       if (!isEqualContent(target[prop], value)) {
         store.update(bubble(store.state, target, prop, value));
@@ -60,8 +47,10 @@ export function proxy_state(store, value) {
 
       return true;
     }
-  }));
+  });
 
-  return watcher.get(value);
+  watcher.set(value, proxied);
+  proxies_watcher.set(proxied, value);
+
+  return proxied;
 }
-

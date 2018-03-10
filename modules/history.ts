@@ -28,6 +28,11 @@ export function historyFactory(store_key) {
             return store_history[point_index];
         },
         list(max) {
+            
+            assure_deep_.notNull(arguments);
+
+            assure_.number(max);
+
             return store_history.slice(max * -1);
         },
         start() {
@@ -43,7 +48,7 @@ export function historyFactory(store_key) {
         },
 
         push() {
-            assure_deep_.notNull(arguments);
+            assure_.empty(arguments);
 
             if (isContinue) {
                 store_history = [
@@ -56,6 +61,7 @@ export function historyFactory(store_key) {
         },
 
         get(index: number) {
+
             assure_deep_.notNull(arguments);
 
             assure_.number(index);
@@ -68,6 +74,7 @@ export function historyFactory(store_key) {
         },
 
         to(index: number) {
+
             assure_deep_.notNull(arguments);
 
             assure_.number(index);
@@ -82,6 +89,7 @@ export function historyFactory(store_key) {
         },
 
         back() {
+
             assure_.empty(arguments);
 
             if (point_index > 0) {
@@ -92,6 +100,7 @@ export function historyFactory(store_key) {
         },
 
         next() {
+            
             assure_.empty(arguments);
 
             if (point_index < store_history.length - 1) {

@@ -1,6 +1,6 @@
 {
   "name": "lodux",
-  "version": "2.0.15",
+  "version": "2.0.16",
   "description": "Immutable single store management.",
   "main": "index.js",
   "scripts": {

@@ -25,7 +25,6 @@ function exist(name) {
 }
 exports.exist = exist;
 function set_store_object(store, new_state_of_a_store, subscribers) {
-    assure_1.assure_deep_.notNull(arguments);
     assure_1.assure_
         .required(new_state_of_a_store)
         .required(subscribers);
@@ -49,8 +48,6 @@ function get_store_object_etag(store_key) {
 }
 exports.get_store_object_etag = get_store_object_etag;
 function get_store_object(store_key) {
-    assure_1.assure_deep_.notNull(arguments);
-    // return { ...store_object };
     return store_object[store_key];
 }
 exports.get_store_object = get_store_object;

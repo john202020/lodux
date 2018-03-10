@@ -18,31 +18,24 @@ function proxy_state(store, value) {
     if (watcher.has(value)) {
         return watcher.get(value);
     }
-    watcher.set(value, new Proxy(value, {
-        get: function (target, prop) {
-            if (prop === 'it') {
-                return value;
-            }
-            return target[prop];
-        },
+    var proxied = new Proxy(value, {
         set: function (target, prop, value) {
             assure_1.assure_deep_.notNull(value);
             assure_1.assure_
-                .nonPrimitive(target, 'assignment to primitive type is not allowed!')
                 .nonEmptyString(prop, 'property must be non empty string!');
-            if (prop === 'it') {
-                throw new Error("[it] is a reserved keyword. Please use other as object key!");
-            }
             assure_1.assure_deep_
+                .notReservedKeywords([], prop)
                 .isPlainJSONSafe(value)
-                .notReservedKeywords(['it'], value);
+                .notReservedKeywords([], value);
             if (!helper_1.isEqualContent(target[prop], value)) {
                 store.update(proxy_state_deep_1.bubble(store.state, target, prop, value));
             }
             return true;
         }
-    }));
-    return watcher.get(value);
+    });
+    watcher.set(value, proxied);
+    proxy_state_deep_1.proxies_watcher.set(proxied, value);
+    return proxied;
 }
 exports.proxy_state = proxy_state;
 //# sourceMappingURL=proxy_state.js.map
