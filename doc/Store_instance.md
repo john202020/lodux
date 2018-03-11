@@ -17,7 +17,7 @@ const state = store.state;
 
 let sub = store.subscribe(()=>{
     sub.dispose();
-    sub=undefined;
+    sub = undefined;
     // when store.state.count = 1;
     console.log(store.state.count);
 });
@@ -32,7 +32,7 @@ store.state.patients = {
 
 sub = store.subscribe(()=>{
     sub.dispose();
-    sub=undefined;
+    sub = undefined;
     // when store.state.count = 2;
     console.log(store.state.count);
 });
