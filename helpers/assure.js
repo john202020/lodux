@@ -14,9 +14,14 @@ var assure_ = Object.freeze({
             throw new Error("'Proxy', 'Object.is', or 'WeakSet' isare not supported. Please check whether your system support es2015!");
         }
     },
-    empty: function (argu) {
+    defined: function (argu, errormsg) {
+        if (argu === undefined) {
+            helper_1.throwError(errormsg || "does not accept undefined as the argument!");
+        }
+    },
+    empty: function (argu, errormsg) {
         if (argu.length > 0) {
-            helper_1.throwError("does not accept any argument!");
+            helper_1.throwError(errormsg || "does not accept any argument!");
         }
     },
     class: function (theClass, errormsg) {

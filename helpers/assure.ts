@@ -14,9 +14,14 @@ const assure_ = Object.freeze({
             throw new Error("'Proxy', 'Object.is', or 'WeakSet' isare not supported. Please check whether your system support es2015!")
         }
     },
-    empty(argu){
+    defined(argu, errormsg?:string) {
+        if (argu === undefined) {
+            throwError(errormsg || "does not accept undefined as the argument!");
+        }
+    },
+    empty(argu, errormsg?:string) {
         if (argu.length > 0) {
-            throwError("does not accept any argument!");
+            throwError(errormsg || "does not accept any argument!");
         }
     },
     class(theClass, errormsg?: string) {

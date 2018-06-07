@@ -1,12 +1,13 @@
 {
   "name": "lodux",
-  "version": "2.0.18",
+  "version": "2.0.19",
   "description": "Immutable single store management.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.prod.js --env.prod",
-    "push": "npm run build && npm publish"
+    "push": "npm run build && npm publish",
+    "tsc": "tsc -w"
   },
   "keywords": [
     "single store",

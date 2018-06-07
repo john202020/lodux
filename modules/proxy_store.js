@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
-var Entire_store_1 = require("./Entire_store");
 var helper_1 = require("../helpers/helper");
+var Entire_store_1 = require("./Entire_store");
 var proxy_state_deep_1 = require("./proxy_state_deep");
 var last_store_etag = -1;
 var proxied_stores = new WeakMap();
@@ -29,10 +29,13 @@ function proxy_store(store, forceNew) {
             if (prop !== 'state') {
                 throw new Error("the store manipulation can only be on state (i.e. store.state)!");
             }
-            assure_1.assure_deep_
-                .notNull(value)
-                .isPlainJSONSafe(value)
-                .notReservedKeywords([], value);
+            assure_1.assure_.defined(value, 'not allow to set undefined to store.state');
+            if (value !== undefined) {
+                assure_1.assure_deep_
+                    .notNull(value)
+                    .isPlainJSONSafe(value)
+                    .notReservedKeywords([], value);
+            }
             assure_1.assure_
                 .nonPrimitive(value, 'store.state assignment must be non primitive type!');
             if (!helper_1.isEqualContent(store.state, value)) {

@@ -8,6 +8,7 @@ It incorporates immutable state management. Directly assign store.state can be d
 ## [Anomaly](Anomaly.md)
 
 ## Store(capital S)  
+
 It is the collection of all stores, the 'entire store'.  
 
 It has two methods, `createStore()`, and `subscribe()`.  

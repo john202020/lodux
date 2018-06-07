@@ -1,10 +1,11 @@
 import { assure_, assure_deep_ } from "../helpers/assure";
-import { get_store_object, get_store_object_etag } from "./Entire_store";
 import { isPrimitive, isEqualContent } from "../helpers/helper";
+import { get_store_object, get_store_object_etag } from "./Entire_store";
 import { proxy_state_deep } from "./proxy_state_deep";
 import { proxy_state } from "./proxy_state";
 declare const Proxy;
 declare const WeakMap;
+
 
 let last_store_etag = -1;
 const proxied_stores = new WeakMap();
@@ -46,10 +47,14 @@ export function proxy_store(store, forceNew) {
         throw new Error("the store manipulation can only be on state (i.e. store.state)!");
       }
 
-      assure_deep_
-        .notNull(value)
-        .isPlainJSONSafe(value)
-        .notReservedKeywords([], value);
+      assure_.defined(value, 'not allow to set undefined to store.state');
+      
+      if (value !== undefined) {
+        assure_deep_
+          .notNull(value)
+          .isPlainJSONSafe(value)
+          .notReservedKeywords([], value);
+      }
 
       assure_
         .nonPrimitive(value, 'store.state assignment must be non primitive type!');

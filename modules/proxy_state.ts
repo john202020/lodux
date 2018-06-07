@@ -30,8 +30,10 @@ export function proxy_state(store, value) {
   const proxied = new Proxy(value, {
 
     set: function (target, prop: string, value) {
-
-      assure_deep_.notNull(value);
+      
+      if (value !== undefined) {
+        assure_deep_.notNull(value);
+      }
 
       assure_
         .nonEmptyString(prop, 'property must be non empty string!');
