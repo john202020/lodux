@@ -5,12 +5,12 @@ var helper_1 = require("../helpers/helper");
 var proxy_state_deep_1 = require("./proxy_state_deep");
 function shouldSkip(target, prop) {
     var desc = Object.getOwnPropertyDescriptor(target, prop);
-    if (desc && !desc.configurable) {
+    if (desc && !desc.configurable)
         return true;
-    }
     return false;
 }
 var watcher = new WeakMap();
+var nonRecommendedFunctions = ['push', 'unshift', 'pop', 'shift', 'sort', 'reverse'];
 //deep proxy
 function proxy_state(store, value) {
     if (helper_1.isPrimitive(value))
@@ -19,6 +19,15 @@ function proxy_state(store, value) {
         return watcher.get(value);
     }
     var proxied = new Proxy(value, {
+        get: function (target, prop) {
+            var v = target[prop];
+            if (typeof v === 'function') {
+                if (nonRecommendedFunctions.indexOf(prop) > -1) {
+                    throw new Error('"' + prop + '" is trying to mutate the state, which is not allowed!\nuse object spreading or Object.assign to manipulate instead.');
+                }
+            }
+            return v;
+        },
         set: function (target, prop, value) {
             if (value !== undefined) {
                 assure_1.assure_deep_.notNull(value);

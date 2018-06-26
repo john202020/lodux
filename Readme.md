@@ -259,4 +259,6 @@ const {Store} = lodux.noConflict();
 
 Versions
 2.0.19 - 
-1. fixed undefined assignment to sub level of store.state is allowed.
+1. fixed: assign undefined to sub level of store.state is allowed.
+2.0.20 -
+1. fixed: array methods that manipulate store.state is disallowed.  

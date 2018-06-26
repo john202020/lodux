@@ -8,14 +8,13 @@ declare const Proxy;
 function shouldSkip(target, prop) {
 
   const desc = Object.getOwnPropertyDescriptor(target, prop);
-  if (desc && !desc.configurable) {
+  if (desc && !desc.configurable)
     return true;
-  }
   return false;
-
 }
 
 const watcher = new WeakMap();
+const nonRecommendedFunctions = ['push', 'unshift', 'pop', 'shift', 'sort', 'reverse'];
 
 //deep proxy
 export function proxy_state(store, value) {
@@ -29,8 +28,21 @@ export function proxy_state(store, value) {
 
   const proxied = new Proxy(value, {
 
+    get: function (target, prop: string) {
+
+      const v = target[prop];
+
+      if (typeof v === 'function') {
+        if (nonRecommendedFunctions.indexOf(prop) > -1) {
+          throw new Error('"' + prop + '" is trying to mutate the state, which is not allowed!\nuse object spreading or Object.assign to manipulate instead.');
+        }
+      }
+
+      return v;
+    },
+
     set: function (target, prop: string, value) {
-      
+
       if (value !== undefined) {
         assure_deep_.notNull(value);
       }

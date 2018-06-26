@@ -18,7 +18,7 @@ export function proxy_store(store, forceNew) {
 
   const proxied_store = new Proxy(store, {
 
-    get(target, prop) {
+    get(target, prop: string) {
 
       assure_deep_.notNull(prop);
 
