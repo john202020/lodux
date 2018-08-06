@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var assure_1 = require("../helpers/assure");
+// import { isPrimitive } from "../helpers/helper";
+// import { proxy_state_deep } from "./proxy_state_deep";
+// import { proxy_state } from "./proxy_state";
 /**
  * Entire store
 */

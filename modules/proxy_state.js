@@ -10,7 +10,7 @@ function shouldSkip(target, prop) {
     return false;
 }
 var watcher = new WeakMap();
-var nonRecommendedFunctions = ['push', 'unshift', 'pop', 'shift', 'sort', 'reverse'];
+var nonRecommendedFunctions = ['push', 'unshift', 'splice', 'pop', 'shift', 'sort', 'reverse'];
 //deep proxy
 function proxy_state(store, value) {
     if (helper_1.isPrimitive(value))

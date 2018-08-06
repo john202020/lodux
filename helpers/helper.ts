@@ -4,6 +4,7 @@ export function throwError(msg: string) {
     throw new Error(msg);
 }
 
+
 export function isPrimitive(value) {
     return typeof value !== "object" || value === null;
 }

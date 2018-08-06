@@ -36,8 +36,24 @@ function bubble_(state, target, prop, value) {
 
   for (let k in state) {
     const rr = bubble_(state[k], target, prop, value);
+
     if (rr) {
-      return { [k]: { ...state[k], ...rr } };
+      if (Array.isArray(state[k])) {
+        const keyof_rr = Object.keys(rr)[0];
+        if (state[k][keyof_rr]) {
+          return {
+            [k]: state[k].map((s, i) => rr[i] || s)
+          };
+        }
+        return {
+          [k]: [...state[k], rr[keyof_rr]]
+        }
+      }
+
+      return {
+        [k]: { ...state[k], ...rr }
+      };
+
     }
   }
 

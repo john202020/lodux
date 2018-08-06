@@ -14,7 +14,7 @@ function shouldSkip(target, prop) {
 }
 
 const watcher = new WeakMap();
-const nonRecommendedFunctions = ['push', 'unshift', 'pop', 'shift', 'sort', 'reverse'];
+const nonRecommendedFunctions = ['push', 'unshift', 'splice', 'pop', 'shift', 'sort', 'reverse'];
 
 //deep proxy
 export function proxy_state(store, value) {

@@ -257,8 +257,13 @@ npm install --save lodux
 const {Store} = lodux.noConflict();
 ```
 
-Versions
-2.0.19 - 
-1. fixed: assign undefined to sub level of store.state is allowed.
-2.0.20 -
+Versions  
+2.0.19 -   
+1. fixed: assign undefined to sub level of store.state is allowed.  
+  
+2.0.20 -  
 1. fixed: array methods that manipulate store.state is disallowed.  
+  
+2.0.21 -  
+1. fixed: array methods 'splice' that manipulate store.state directly is disallowed.
+2. fixed: array assignment

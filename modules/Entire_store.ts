@@ -1,12 +1,12 @@
 ﻿
 import { assure_, assure_deep_ } from "../helpers/assure";
-import { isPrimitive } from "../helpers/helper";
-import { proxy_state_deep } from "./proxy_state_deep";
-import { proxy_state } from "./proxy_state";
+// import { isPrimitive } from "../helpers/helper";
+// import { proxy_state_deep } from "./proxy_state_deep";
+// import { proxy_state } from "./proxy_state";
 /** 
  * Entire store 
 */
-let store_object = {};
+const store_object = {};
 const store_object_etag = {};
 
 
@@ -67,7 +67,9 @@ export function get_store_object_etag(store_key) {
     return store_object_etag[store_key];
 }
 
+
 export function get_store_object(store_key) {
+
     return store_object[store_key];
 }
 
